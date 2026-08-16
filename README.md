@@ -50,11 +50,15 @@ These are intentional and still need real values before launch:
 
 - **Prices** show `₹X` throughout.
 - **Class batch dates and seat counts** show `X`.
-- **Instagram handle** is a guess: `sp.boutique`.
 - **Photography** — around 39 images are Unsplash stock URLs pending replacement with
   real shop photos.
 - **Address** — the page currently reads *Sai Tharun Hospital Lane, near Fly Over, Indira
-  Nagar, Tandur, Telangana 501141*, which does not match the *Adarsh Nagar* address used
-  elsewhere. Worth confirming which is correct.
+  Nagar, Tandur, Telangana 501141*, which does not match the *Adarsh Nagar, Tandur -
+  501141, Vikarabad Dist.* address on the shop signboard. Confirmation pending. The
+  locality name is coupled across three places: the contact-list text, the Google Maps
+  iframe `?q=` string, and the "Get Directions" link — and that last one is an opaque
+  `maps.app.goo.gl` shortlink encoding a map pin, so it cannot be text-edited and must be
+  regenerated from Google Maps if the pin changes.
 
-The phone number (`+91 98480 54521`) and WhatsApp links are real and current.
+The phone number (`+91 98480 54521`), WhatsApp links, and Instagram handle
+(`sp_boutique_tandur`) are real and current.
