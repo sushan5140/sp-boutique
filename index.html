@@ -333,6 +333,10 @@
     font-size: 1.8rem;
     color: var(--ink-900);
     font-weight: 600;
+    /* Hold the counting numbers steady: equal-width digits, and a floor wide
+       enough for the final value, so 0 -> 100 cannot reflow the hero. */
+    font-variant-numeric: tabular-nums;
+    min-width: 5ch;
   }
 
   .hero-meta-item span {
@@ -1320,10 +1324,82 @@
     .hero-meta { flex-wrap: wrap; }
   }
 
+  /* ============ MOTION LAYER ============ */
+  /* Everything here applies only while html.motion is set, which happens in a
+     synchronous inline script and only when motion is allowed. No JS, no class,
+     nothing hidden — so the page cannot be stranded invisible. Containers are
+     neutralised (their .reveal fade is handed to the stagger) and their
+     children become the animated units. */
+
+  .motion .hero-copy,
+  .motion .services-grid.reveal,
+  .motion .category-grid.reveal,
+  .motion .pattern-grid.reveal,
+  .motion .process-list.reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* 1. Hero load sequence — pure CSS, staggered 80ms apart, runs on load. */
+  @keyframes heroIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .motion .hero-copy > * {
+    opacity: 0;
+    animation: heroIn 0.6s var(--ease-out-expo) forwards;
+  }
+
+  .motion .hero-copy > *:nth-child(1) { animation-delay: 0ms; }
+  .motion .hero-copy > *:nth-child(2) { animation-delay: 80ms; }
+  .motion .hero-copy > *:nth-child(3) { animation-delay: 160ms; }
+  .motion .hero-copy > *:nth-child(4) { animation-delay: 240ms; }
+  .motion .hero-copy > *:nth-child(5) { animation-delay: 320ms; }
+
+  /* 2 & 3. Grid and process staggers — transition-delay is set per child by
+     index in the IntersectionObserver callback, then .in-view on the container
+     releases them as a cascade. */
+  .motion .services-grid > *,
+  .motion .category-grid > *,
+  .motion .pattern-grid > *,
+  .motion .process-list .process-item {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.55s var(--ease-out-expo), transform 0.55s var(--ease-out-expo);
+  }
+
+  .motion .services-grid.in-view > *,
+  .motion .category-grid.in-view > *,
+  .motion .pattern-grid.in-view > *,
+  .motion .process-list.in-view .process-item {
+    opacity: 1;
+    transform: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   }
 </style>
+
+<noscript>
+  <!-- Without JS the IntersectionObserver never runs, so make .reveal content
+       visible rather than leaving it permanently at opacity 0. -->
+  <style>.reveal { opacity: 1 !important; transform: none !important; }</style>
+</noscript>
+
+<script>
+  /* Runs synchronously before paint, so animated elements are hidden without a
+     flash of visible content. Under reduced-motion this returns early and the
+     class is never set, which disables the whole motion layer at the CSS level. */
+  (function () {
+    try {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      document.documentElement.classList.add('motion');
+    } catch (e) { /* no matchMedia — leave content visible */ }
+  })();
+</script>
 </head>
 <body>
 
@@ -1347,7 +1423,7 @@
 <section class="hero">
   <div class="container">
     <div class="hero-grid">
-      <div class="reveal">
+      <div class="reveal hero-copy">
         <p class="eyebrow">Tandur, Telangana</p>
         <h1>Clothes cut to <em>you</em>, not the other way around.</h1>
         <p class="hero-lede">SP Boutique stitches women's wear to your exact measure, restyles what you already own, and teaches the craft itself, so the skill outlasts the garment.</p>
@@ -1619,7 +1695,7 @@
       <p>No surprises between the first visit and the final fitting.</p>
     </div>
     <div class="process">
-      <ol class="process-list">
+      <ol class="process-list reveal">
         <li class="process-item reveal">
           <span class="n">01</span>
           <div>
@@ -1883,17 +1959,74 @@
 </a>
 
 <script>
+  // Motion layer is opt-in: html.motion is set synchronously in the head, and
+  // never under prefers-reduced-motion. Without it this stays a plain reveal.
+  const motion = document.documentElement.classList.contains('motion');
+
+  // Containers whose children cascade in, and the gap between each child (ms).
+  const STAGGERS = [
+    ['.services-grid', ':scope > *', 45],
+    ['.category-grid', ':scope > *', 55],
+    ['.pattern-grid',  ':scope > *', 40],
+    ['.process-list',  '.process-item', 90]
+  ];
+
   // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in-view');
-        observer.unobserve(entry.target);
-      }
+      if (!entry.isIntersecting) return;
+      if (motion) stagger(entry.target);
+      entry.target.classList.add('in-view');
+      observer.unobserve(entry.target);
     });
   }, { threshold: 0.12 });
 
+  // Set transition-delay per child by index, just before the container is
+  // released. Doing it here (not up front) keeps it off the initial render path.
+  function stagger(container) {
+    const match = STAGGERS.find(([sel]) => container.matches(sel));
+    if (!match) return;
+    const [, childSel, step] = match;
+    container.querySelectorAll(childSel).forEach((child, i) => {
+      child.style.transitionDelay = (i * step) + 'ms';
+    });
+  }
+
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Stat count-up — runs once, when the number scrolls into view, and keeps
+  // whatever suffix the markup already had ("+", " yrs").
+  if (motion) {
+    const countObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        countObserver.unobserve(entry.target);
+        countUp(entry.target);
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.hero-meta-item strong').forEach(el => {
+      if (/^\d/.test(el.textContent.trim())) countObserver.observe(el);
+    });
+  }
+
+  function countUp(el) {
+    const parsed = el.textContent.trim().match(/^(\d+)(.*)$/);
+    if (!parsed) return;
+    const target = Number(parsed[1]);
+    const suffix = parsed[2];
+    const duration = 1100;
+    let start = null;
+
+    requestAnimationFrame(function frame(now) {
+      if (start === null) start = now;
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(eased * target) + suffix;
+      if (p < 1) requestAnimationFrame(frame);
+      else el.textContent = target + suffix;
+    });
+  }
 
   // Contact form (no backend — demo confirmation state)
   const form = document.getElementById('contactForm');
