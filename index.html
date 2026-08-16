@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SP Boutique — Stitched in Tandur, Worn Everywhere</title>
+<meta name="description" content="SP Boutique — custom Indian clothing, tailoring, and stitching classes in Tandur, Telangana. Boutique wear, alterations, and hands-on tailoring courses.">
+
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="apple-touch-icon" href="assets/logo.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SP Boutique">
+<meta property="og:title" content="SP Boutique — Stitched in Tandur, Worn Everywhere">
+<meta property="og:description" content="Custom Indian clothing, tailoring, and stitching classes in Tandur, Telangana. Boutique wear, alterations, and hands-on tailoring courses.">
+<meta property="og:image" content="https://sushan5140.github.io/sp-boutique/assets/shopfront.jpg">
+<meta property="og:image:alt" content="The SP Boutique shopfront in Tandur, Telangana">
+<meta property="og:url" content="https://sushan5140.github.io/sp-boutique/">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Petrona:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --hero-bg: url('assets/shopfront.jpg');
+    /* Brand hue: navy, measured from logo wordmark (rgb 0,37,68 → oklch hue 249) */
+    --hue: 249;
+
+    /* Neutrals — light tones softly tinted navy; dark tones keep real navy richness, not flattened to gray */
+    --cream-50:  oklch(98.3% 0.004 var(--hue));
+    --cream-100: oklch(96.3% 0.008 var(--hue));
+    --cream-200: oklch(92.2% 0.012 var(--hue));
+    --sand-300:  oklch(84% 0.018 var(--hue));
+    --sand-400:  oklch(69% 0.026 var(--hue));
+    --thread-500:oklch(51% 0.038 var(--hue));
+    --thread-600:oklch(39% 0.045 var(--hue));
+    --ink-700:   oklch(32% 0.058 var(--hue));
+    --ink-800:   oklch(25% 0.065 var(--hue));
+    --ink-900:   oklch(18% 0.062 var(--hue));
+
+    /* Primary accent — coral, measured from logo mark (rgb 232,101,108 → oklch hue 19) */
+    --rust-400:  oklch(76% 0.128 19);
+    --rust-500:  oklch(67% 0.163 19);
+    --rust-600:  oklch(57% 0.158 18);
+    --rust-700:  oklch(47% 0.132 16);
+
+    /* Secondary accent — deep navy, used sparingly */
+    --pine-500:  oklch(30% 0.072 249);
+    --pine-600:  oklch(23% 0.062 249);
+
+    /* Semantic */
+    --surface:      var(--cream-50);
+    --surface-alt:  var(--cream-100);
+    --surface-card: oklch(99% 0.003 var(--hue));
+    --border-soft:  var(--sand-300);
+    --text-body:    var(--ink-800);
+    --text-muted:   var(--thread-600);
+    --text-heading: var(--ink-900);
+
+    --font-display: 'Petrona', Georgia, serif;
+    --font-body: 'Hanken Grotesk', -apple-system, sans-serif;
+
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 4rem;
+    --space-4xl: 6rem;
+
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--surface);
+    color: var(--text-body);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  img { max-width: 100%; display: block; }
+
+  a { color: inherit; }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--text-heading);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 var(--space-xl);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rust-600);
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+  }
+
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 22px;
+    height: 1px;
+    background: var(--rust-500);
+  }
+
+  /* ============ NAV ============ */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in oklch, var(--surface) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  nav {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 1.1rem var(--space-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+  }
+
+  .logo img {
+    height: 42px;
+    width: auto;
+    display: block;
+  }
+
+  .logo-text {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--ink-900);
+    letter-spacing: 0.02em;
+  }
+
+  .logo-text span { color: var(--rust-600); }
+
+  .nav-links {
+    display: flex;
+    gap: var(--space-2xl);
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.94rem;
+    color: var(--text-body);
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 3px;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 0; height: 1.5px;
+    background: var(--rust-500);
+    transition: width 0.3s var(--ease-out-expo);
+  }
+
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cta {
+    background: var(--rust-500);
+    color: var(--cream-50);
+    padding: 0.65rem 1.4rem;
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.25s var(--ease-out-expo), transform 0.25s var(--ease-out-expo);
+  }
+
+  .nav-cta:hover { background: var(--rust-600); transform: translateY(-1px); }
+
+  .nav-toggle { display: none; }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding: 0;
+    position: relative;
+    min-height: 88vh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--hero-bg);
+    background-size: cover;
+    background-position: center 62%;
+    z-index: 0;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+      oklch(18% 0.062 var(--hue) / 0.94) 0%,
+      oklch(18% 0.062 var(--hue) / 0.72) 38%,
+      oklch(18% 0.062 var(--hue) / 0.34) 72%,
+      oklch(18% 0.062 var(--hue) / 0.18) 100%);
+    z-index: 1;
+  }
+
+  .hero .container { position: relative; z-index: 2; padding-bottom: var(--space-3xl); padding-top: var(--space-4xl); }
+
+  .hero-grid {
+    display: block;
+    max-width: 900px;
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 7vw + 1rem, 7rem);
+    max-width: 14ch;
+    margin-bottom: var(--space-lg);
+    color: var(--cream-50);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+
+  .hero .eyebrow { color: var(--rust-400); }
+  .hero .eyebrow::before { background: var(--rust-400); }
+  .hero-lede { color: oklch(92% 0.01 var(--hue) / 0.88) !important; font-size: 1.22rem !important; }
+  .hero-meta { border-top-color: oklch(100% 0 0 / 0.22) !important; }
+  .hero-meta-item strong { color: var(--cream-50) !important; }
+  .hero-meta-item span { color: oklch(90% 0.01 var(--hue) / 0.7) !important; }
+  .hero .btn-primary { background: var(--rust-500); }
+  .hero .btn-primary:hover { background: var(--rust-400); }
+  .hero .btn-secondary { color: var(--cream-50); border-bottom-color: var(--cream-50); }
+  .hero .btn-secondary:hover { color: var(--rust-400); border-bottom-color: var(--rust-400); }
+  .hero-visual { display: none; }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--rust-600);
+  }
+
+  .hero-lede {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 46ch;
+    margin-bottom: var(--space-xl);
+    line-height: 1.65;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .btn-primary {
+    background: var(--ink-900);
+    color: var(--cream-50);
+    padding: 0.95rem 1.9rem;
+    border-radius: 3px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: background 0.3s var(--ease-out-expo), transform 0.3s var(--ease-out-expo);
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover { background: var(--rust-600); transform: translateY(-2px); }
+
+  .btn-secondary {
+    color: var(--ink-900);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.95rem 0.4rem;
+    border-bottom: 1px solid var(--ink-900);
+    transition: border-color 0.3s, color 0.3s;
+  }
+
+  .btn-secondary:hover { color: var(--rust-600); border-color: var(--rust-500); }
+
+  .hero-meta {
+    display: flex;
+    gap: var(--space-2xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .hero-meta-item strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--ink-900);
+    font-weight: 600;
+  }
+
+  .hero-meta-item span {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .hero-visual {
+    position: relative;
+    aspect-ratio: 4/5;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--sand-300);
+  }
+
+  .hero-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-swatch-tag {
+    position: absolute;
+    bottom: -1px;
+    left: -1px;
+    background: var(--surface-card);
+    padding: 1rem 1.3rem;
+    border-top-right-radius: 4px;
+    box-shadow: 0 -2px 20px oklch(20% 0.02 var(--hue) / 0.08);
+    max-width: 250px;
+  }
+
+  .hero-swatch-tag p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .hero-swatch-tag strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--ink-900);
+    margin-bottom: 0.2rem;
+  }
+
+  /* ============ MARQUEE STRIP ============ */
+  .strip {
+    background: var(--ink-900);
+    color: var(--cream-100);
+    padding: 0.9rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .strip-track {
+    display: inline-flex;
+    animation: scroll-left 32s linear infinite;
+  }
+
+  .strip-track span {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    padding: 0 2.2rem;
+    color: var(--cream-100);
+    opacity: 0.9;
+    display: inline-flex;
+    align-items: center;
+    gap: 2.2rem;
+  }
+
+  .strip-track span::after {
+    content: '✦';
+    font-style: normal;
+    color: var(--rust-400);
+    font-size: 0.7rem;
+  }
+
+  @keyframes scroll-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ============ SECTION SHARED ============ */
+  section { padding: calc(var(--space-4xl) * 1.5) 0; }
+
+  .section-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-3xl);
+  }
+
+  .section-head h2 {
+    font-size: clamp(2.4rem, 3.6vw + 1rem, 4rem);
+    max-width: 15ch;
+    letter-spacing: -0.022em;
+  }
+
+  .section-head p {
+    color: var(--text-muted);
+    max-width: 38ch;
+    font-size: 1rem;
+    padding-bottom: 0.3rem;
+  }
+
+  /* ============ SERVICES (three pillars) ============ */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .pillar {
+    padding: var(--space-2xl) var(--space-xl) var(--space-2xl) 0;
+    border-right: 1px solid var(--border-soft);
+    position: relative;
+  }
+
+  .pillar:last-child { border-right: none; padding-right: 0; }
+  .pillar:not(:first-child) { padding-left: var(--space-xl); }
+
+  .pillar-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--sand-400);
+    font-size: 1rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  .pillar h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .pillar p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    margin-bottom: var(--space-lg);
+  }
+
+  .pillar-link {
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--rust-600);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .pillar-link svg { transition: transform 0.25s var(--ease-out-expo); }
+  .pillar-link:hover svg { transform: translateX(3px); }
+
+  /* ============ GALLERY (asymmetric) ============ */
+  .gallery-wrap { background: var(--surface-alt); }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(2, 220px);
+    gap: var(--space-md);
+  }
+
+  .gallery-grid img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+
+  .g-1 { grid-column: span 3; grid-row: span 2; }
+  .g-2 { grid-column: span 2; grid-row: span 1; }
+  .g-3 { grid-column: span 1; grid-row: span 1; }
+  .g-4 { grid-column: span 3; grid-row: span 1; }
+
+  .gallery-note {
+    grid-column: span 1;
+    grid-row: span 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--ink-900);
+    color: var(--cream-100);
+    padding: var(--space-lg);
+    border-radius: 3px;
+  }
+
+  .gallery-note strong {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .gallery-note span {
+    font-size: 0.82rem;
+    color: var(--sand-300);
+  }
+
+  /* ============ PROCESS (stitching order) ============ */
+  .process {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: var(--space-3xl);
+  }
+
+  .process-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .process-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-xl) 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .process-item:first-child { padding-top: 0; }
+
+  .process-item .n {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 2rem;
+    color: var(--rust-500);
+    line-height: 1;
+  }
+
+  .process-item h4 {
+    font-size: 1.15rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .process-item p {
+    color: var(--text-muted);
+    font-size: 0.94rem;
+  }
+
+  .process-visual {
+    background: var(--surface-card);
+    border: 1px solid var(--border-soft);
+    border-radius: 4px;
+    padding: var(--space-2xl);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .measure-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.85rem 0;
+    border-bottom: 1px dashed var(--sand-300);
+    font-size: 0.92rem;
+  }
+
+  .measure-row:last-child { border-bottom: none; }
+  .measure-row span:first-child { color: var(--text-muted); }
+  .measure-row span:last-child { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .process-visual-cap {
+    margin-top: var(--space-xl);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: var(--font-display);
+  }
+
+  /* ============ CLASSES ============ */
+  .classes-wrap { background: var(--surface-alt); }
+
+  .class-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .class-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-soft);
+    border-radius: 4px;
+    padding: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.35s var(--ease-out-expo), box-shadow 0.35s var(--ease-out-expo);
+  }
+
+  .class-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px oklch(20% 0.02 var(--hue) / 0.08);
+  }
+
+  .class-level {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    color: var(--pine-600);
+    background: color-mix(in oklch, var(--pine-500) 12%, var(--surface-card));
+    padding: 0.3rem 0.7rem;
+    border-radius: 2px;
+    display: inline-block;
+    width: fit-content;
+    margin-bottom: var(--space-lg);
+  }
+
+  .class-card h3 {
+    font-size: 1.35rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .class-card p {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-bottom: var(--space-lg);
+    flex-grow: 1;
+  }
+
+  .class-card-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .class-price {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--ink-900);
+  }
+
+  .class-price span {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .class-cta {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--rust-600);
+    text-decoration: none;
+  }
+
+  /* ============ TESTIMONIAL ============ */
+  .testimonial {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: var(--space-3xl);
+    align-items: center;
+  }
+
+  .testimonial-img {
+    aspect-ratio: 3/4;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .testimonial-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  blockquote {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 1.6vw + 1rem, 1.9rem);
+    font-style: italic;
+    line-height: 1.45;
+    color: var(--ink-900);
+    margin-bottom: var(--space-xl);
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .author-mark {
+    width: 40px; height: 1px;
+    background: var(--rust-500);
+  }
+
+  .testimonial-author strong {
+    display: block;
+    font-size: 0.98rem;
+  }
+
+  .testimonial-author span {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  /* ============ CONTACT / CTA ============ */
+  .cta-band {
+    background: var(--ink-900);
+    color: var(--cream-100);
+  }
+
+  .cta-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-3xl);
+    align-items: start;
+  }
+
+  .cta-band h2 {
+    color: var(--cream-50);
+    font-size: clamp(2.2rem, 2.6vw + 1rem, 3rem);
+    max-width: 14ch;
+    margin-bottom: var(--space-lg);
+  }
+
+  .cta-band .hero-lede { color: var(--sand-300); }
+
+  .contact-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+  }
+
+  .contact-list li {
+    display: flex;
+    gap: var(--space-md);
+    align-items: baseline;
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid oklch(100% 0 0 / 0.1);
+  }
+
+  .contact-list li:last-child { border-bottom: none; }
+
+  .contact-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sand-400);
+    width: 90px;
+    flex-shrink: 0;
+  }
+
+  .contact-value {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--cream-50);
+  }
+
+  .contact-form {
+    background: var(--ink-800);
+    border-radius: 4px;
+    padding: var(--space-2xl);
+  }
+
+  .form-row { margin-bottom: var(--space-lg); }
+
+  .form-row label {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--sand-300);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .form-row input,
+  .form-row select,
+  .form-row textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid oklch(100% 0 0 / 0.25);
+    color: var(--cream-50);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.6rem 0;
+    outline: none;
+    transition: border-color 0.25s;
+  }
+
+  .form-row select option { color: var(--ink-900); }
+
+  .form-row input:focus,
+  .form-row select:focus,
+  .form-row textarea:focus {
+    border-color: var(--rust-400);
+  }
+
+  .form-row input::placeholder,
+  .form-row textarea::placeholder { color: oklch(85% 0.01 var(--hue) / 0.4); }
+
+  .form-submit {
+    background: var(--rust-500);
+    color: var(--cream-50);
+    border: none;
+    padding: 0.9rem 1.8rem;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    width: 100%;
+    margin-top: var(--space-sm);
+    transition: background 0.25s var(--ease-out-expo);
+  }
+
+  .form-submit:hover { background: var(--rust-600); }
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: var(--space-2xl) 0;
+  }
+
+  .form-success.show { display: block; }
+  .contact-form.hide-form .form-fields { display: none; }
+
+  .form-success h4 {
+    color: var(--cream-50);
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-success p { color: var(--sand-300); font-size: 0.9rem; }
+
+  /* ============ STATUS BADGE ============ */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem 0.4rem 0.6rem;
+    border-radius: 20px;
+    background: color-mix(in oklch, var(--pine-500) 10%, transparent);
+    color: var(--pine-600);
+    margin-bottom: var(--space-lg);
+  }
+
+  .status-badge.closed {
+    background: color-mix(in oklch, var(--rust-500) 10%, transparent);
+    color: var(--rust-600);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--pine-500);
+    position: relative;
+  }
+
+  .status-badge.closed .status-dot { background: var(--rust-500); }
+
+  .status-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: inherit;
+    animation: status-pulse 2s var(--ease-out-expo) infinite;
+  }
+
+  .status-badge.closed .status-dot::after { animation: none; }
+
+  @keyframes status-pulse {
+    0% { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+
+  /* ============ MAP ============ */
+  .map-wrap {
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid oklch(100% 0 0 / 0.12);
+    margin-top: var(--space-xl);
+    aspect-ratio: 16/11;
+    filter: grayscale(0.35) contrast(1.05);
+  }
+
+  .map-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  /* ============ SOCIAL / WHATSAPP ROW ============ */
+  .social-row {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.2rem;
+    border-radius: 3px;
+    border: 1px solid oklch(100% 0 0 / 0.18);
+    color: var(--cream-100);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.25s var(--ease-out-expo), border-color 0.25s var(--ease-out-expo);
+  }
+
+  .social-link:hover {
+    background: oklch(100% 0 0 / 0.06);
+    border-color: oklch(100% 0 0 / 0.35);
+  }
+
+  .social-link svg { flex-shrink: 0; }
+
+  /* Floating WhatsApp button */
+  .whatsapp-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 200;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: oklch(52% 0.140 152);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 8px 24px oklch(20% 0.02 var(--hue) / 0.28);
+    transition: transform 0.3s var(--ease-out-expo);
+  }
+
+  .whatsapp-float:hover { transform: scale(1.08); }
+
+  .whatsapp-float svg { width: 28px; height: 28px; }
+
+  @media (max-width: 900px) {
+    .whatsapp-float { bottom: 16px; right: 16px; width: 50px; height: 50px; }
+    .social-row { flex-wrap: wrap; }
+  }
+
+  /* ============ PRICING GUIDE ============ */
+  .pricing-wrap {
+    background: var(--surface-card);
+    border: 1px solid var(--border-soft);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .price-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: var(--space-lg) var(--space-xl);
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .price-row:last-child { border-bottom: none; }
+
+  .price-row:hover { background: var(--surface-alt); }
+
+  .price-name {
+    font-size: 1.02rem;
+    font-weight: 500;
+    color: var(--ink-900);
+    margin-bottom: 0.15rem;
+  }
+
+  .price-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .price-value {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--rust-600);
+    white-space: nowrap;
+  }
+
+  .price-value span {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .pricing-foot {
+    padding: var(--space-lg) var(--space-xl);
+    background: var(--surface-alt);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: var(--font-display);
+  }
+
+  /* ============ BATCH AVAILABILITY ============ */
+  .batch-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: var(--space-md) 0;
+    margin-bottom: var(--space-lg);
+    border-top: 1px dashed var(--sand-300);
+    border-bottom: 1px dashed var(--sand-300);
+  }
+
+  .batch-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+
+  .batch-row span:first-child { color: var(--text-muted); }
+
+  .seats-left {
+    font-weight: 700;
+    color: var(--pine-600);
+  }
+
+  .seats-left.low { color: var(--rust-600); }
+
+  .directions-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--space-md);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--rust-400);
+    text-decoration: none;
+  }
+
+  .directions-link svg { transition: transform 0.25s var(--ease-out-expo); }
+  .directions-link:hover svg { transform: translateX(3px); }
+  .directions-link:hover { color: var(--cream-50); }
+
+  /* ============ SERVICES LIST (visual cards) ============ */
+  .services-intro {
+    max-width: 62ch;
+    color: var(--text-muted);
+    font-size: 1.02rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-md);
+  }
+
+  .service-card {
+    position: relative;
+    aspect-ratio: 3/3.4;
+    border-radius: 4px;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+  }
+
+  .service-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s var(--ease-out-expo);
+  }
+
+  .service-card:hover img { transform: scale(1.07); }
+
+  .service-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, oklch(10% 0.02 var(--hue) / 0.82) 0%, oklch(10% 0.02 var(--hue) / 0.1) 60%, transparent 100%);
+  }
+
+  .service-label {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    z-index: 2;
+    padding: 0.8rem 0.7rem;
+    color: var(--cream-50);
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  /* ============ GARMENT CATEGORY GRID (CloudTailor-style) ============ */
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+  }
+
+  .category-tile {
+    aspect-ratio: 3/3.6;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    display: block;
+  }
+
+  .category-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+
+  .category-tile:hover img { transform: scale(1.06); }
+
+  .category-tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, oklch(10% 0.02 var(--hue) / 0.78) 0%, transparent 55%);
+  }
+
+  .category-label {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    z-index: 2;
+    padding: 1rem 1.1rem;
+    color: var(--cream-50);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .category-label svg {
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.3s var(--ease-out-expo), transform 0.3s var(--ease-out-expo);
+  }
+
+  .category-tile:hover .category-label svg {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* ============ DESIGN PATTERN GALLERY (visual, Basically Desi-style) ============ */
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-md);
+  }
+
+  .pattern-card {
+    display: block;
+    text-decoration: none;
+  }
+
+  .pattern-thumb {
+    aspect-ratio: 1/1;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.6rem;
+    position: relative;
+  }
+
+  .pattern-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s var(--ease-out-expo);
+  }
+
+  .pattern-card:hover .pattern-thumb img { transform: scale(1.08); }
+
+  .pattern-thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid oklch(100% 0 0 / 0.14);
+    border-radius: 4px;
+  }
+
+  .pattern-name {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    text-align: center;
+    transition: color 0.25s var(--ease-out-expo);
+  }
+
+  .pattern-card:hover .pattern-name { color: var(--rust-600); }
+
+  @media (max-width: 900px) {
+    .services-grid { grid-template-columns: repeat(3, 1fr); }
+    .category-grid { grid-template-columns: repeat(2, 1fr); }
+    .pattern-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 560px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .pattern-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    padding: var(--space-2xl) 0;
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+
+  .footer-row p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: var(--space-lg);
+    list-style: none;
+  }
+
+  .footer-links a {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover { color: var(--rust-600); }
+
+  /* ============ SCROLL REVEAL ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+  }
+
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .nav-toggle { display: block; background: none; border: none; cursor: pointer; }
+
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-visual { order: -1; }
+
+    .pillars { grid-template-columns: 1fr; }
+    .pillar { border-right: none; border-bottom: 1px solid var(--border-soft); padding: var(--space-xl) 0 !important; }
+    .pillar:last-child { border-bottom: none; }
+
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 160px); }
+    .g-1 { grid-column: span 2; grid-row: span 2; }
+    .g-2 { grid-column: span 2; grid-row: span 1; }
+    .g-3 { grid-column: span 1; }
+    .g-4 { grid-column: span 2; }
+    .gallery-note { grid-column: span 1; }
+
+    .process { grid-template-columns: 1fr; }
+    .class-cards { grid-template-columns: 1fr; }
+    .testimonial { grid-template-columns: 1fr; }
+    .cta-grid { grid-template-columns: 1fr; }
+    .section-head { grid-template-columns: 1fr; }
+    .hero-meta { flex-wrap: wrap; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#" class="logo">
+      <img src="assets/logo.png" alt="SP Boutique logo">
+      <span class="logo-text">SP <span>Boutique</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#stitching">Stitching</a></li>
+      <li><a href="#garments">Garments</a></li>
+      <li><a href="#gallery">Work</a></li>
+      <li><a href="#classes">Classes</a></li>
+      <li><a href="#contact">Visit Us</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Book a Fitting</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="reveal">
+        <p class="eyebrow">Tandur, Telangana</p>
+        <h1>Clothes cut to <em>you</em>, not the other way around.</h1>
+        <p class="hero-lede">SP Boutique stitches women's wear to your exact measure, restyles what you already own, and teaches the craft itself, so the skill outlasts the garment.</p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn-primary">
+            Book a fitting
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg>
+          </a>
+          <a href="#classes" class="btn-secondary">See class schedule</a>
+        </div>
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <strong>15+ yrs</strong>
+            <span>At the machine</span>
+          </div>
+          <div class="hero-meta-item">
+            <strong>100+</strong>
+            <span>Students trained</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual reveal">
+        <img src="https://images.unsplash.com/photo-1610030181087-540f6c706e28?w=900&q=80" alt="Handwoven Indian textile fabric detail" loading="eager">
+        <div class="hero-swatch-tag">
+          <strong>This week's bolt</strong>
+          <p>Mangalagiri cotton, hand-block printed — reserved for three custom orders already.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="strip-track">
+    <span>Custom Blouses</span>
+    <span>Lehenga Alterations</span>
+    <span>Salwar Sets</span>
+    <span>Saree Draping</span>
+    <span>Beginner Batches</span>
+    <span>Custom Blouses</span>
+    <span>Lehenga Alterations</span>
+    <span>Salwar Sets</span>
+    <span>Saree Draping</span>
+    <span>Beginner Batches</span>
+  </div>
+</div>
+
+<section id="stitching">
+  <div class="container">
+    <div class="section-head reveal">
+      <h2>Three ways to walk in, three ways to leave better dressed.</h2>
+      <p>Whether you need a garment made, a garment saved, or the skill to make your own.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar reveal">
+        <p class="pillar-num">01</p>
+        <h3>Custom Stitching</h3>
+        <p>Blouses, salwar sets, lehengas, and gowns cut from your measurements — not a size chart. Three fittings, your fabric or ours.</p>
+        <a href="#contact" class="pillar-link">Discuss a design <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg></a>
+      </div>
+      <div class="pillar reveal">
+        <p class="pillar-num">02</p>
+        <h3>Alterations &amp; Restyling</h3>
+        <p>A blouse that no longer fits, a saree fall that's come loose, an old lehenga cut down for a new occasion. Bring what you have.</p>
+        <a href="#contact" class="pillar-link">Bring a garment in <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg></a>
+      </div>
+      <div class="pillar reveal">
+        <p class="pillar-num">03</p>
+        <h3>Stitching Classes</h3>
+        <p>Hand-stitching to machine drafting, taught in small batches. Leave able to alter and make your own clothes, unsupervised.</p>
+        <a href="#classes" class="pillar-link">View batches <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="container">
+    <div class="section-head reveal">
+      <h2>Services we offer.</h2>
+      <p>Having the right tailor means one less thing to worry about — we handle the fitting, the finishing, and everything in between.</p>
+    </div>
+    <div class="services-grid reveal">
+      <a href="#contact" class="service-card">
+        <img src="https://images.unsplash.com/photo-1594736797933-d0c6c9dcbfb2?w=400&q=80" alt="Suit pant stitching" loading="lazy">
+        <span class="service-label">Suit Pant</span>
+      </a>
+      <a href="#contact" class="service-card">
+        <img src="https://images.unsplash.com/photo-1610030180777-fe6bd6c8f6ee?w=400&q=80" alt="Palazzo suit stitching" loading="lazy">
+        <span class="service-label">Palazzo Suit</span>
+      </a>
+      <a href="#contact" class="service-card">
+        <img src="https://images.unsplash.com/photo-1610189844312-6d6a8c4a5e8f?w=400&q=80" alt="Suit salwar stitching" loading="lazy">
+        <span class="service-label">Suit Salwar</span>
+      </a>
+      <a href="#contact" class="service-card">
+        <img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&q=80" alt="Blouse stitching" loading="lazy">
+        <span class="service-label">Blouse</span>
+      </a>
+      <a href="#contact" class="service-card">
+        <img src="https://images.unsplash.com/photo-1610030180739-33f24ee0d6a1?w=400&q=80" alt="Lehenga choli stitching" loading="lazy">
+        <span class="service-label">Lehenga Choli</span>
+      </a>
+      <a href="#contact" class="service-card">
+        <img src="https://images.unsplash.com/photo-1610030181087-540f6c706e28?w=400&q=80" alt="Crop-top stitching" loading="lazy">
+        <span class="service-label">Crop-Top</span>
+      </a>
+      <a href="#contact" class="service-card">
+        <img src="https://images.unsplash.com/photo-1610189844312-6d6a8c4a5e8f?w=400&q=80" alt="Kurti stitching" loading="lazy">
+        <span class="service-label">Kurti</span>
+      </a>
+      <a href="#contact" class="service-card">
+        <img src="https://images.unsplash.com/photo-1594736797933-d0c6c9dcbfb2?w=400&q=80" alt="Western dress stitching" loading="lazy">
+        <span class="service-label">Western Dress</span>
+      </a>
+      <a href="#contact" class="service-card">
+        <img src="https://images.unsplash.com/photo-1610030180777-fe6bd6c8f6ee?w=400&q=80" alt="Semi stitched lehenga" loading="lazy">
+        <span class="service-label">Semi Stitched Lehenga</span>
+      </a>
+      <a href="#contact" class="service-card">
+        <img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&q=80" alt="Gown stitching" loading="lazy">
+        <span class="service-label">Gown</span>
+      </a>
+      <a href="#contact" class="service-card">
+        <img src="https://images.unsplash.com/photo-1610030180739-33f24ee0d6a1?w=400&q=80" alt="Stitched saree" loading="lazy">
+        <span class="service-label">Stitched Saree</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="gallery-wrap" id="garments">
+  <div class="container">
+    <div class="section-head reveal">
+      <h2>What we stitch, by category.</h2>
+      <p>Every garment made to your measure — pick a category to see what's possible.</p>
+    </div>
+    <div class="category-grid reveal">
+      <a href="#contact" class="category-tile">
+        <img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=500&q=80" alt="Blouse stitching" loading="lazy">
+        <span class="category-label">Blouse <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      </a>
+      <a href="#contact" class="category-tile">
+        <img src="https://images.unsplash.com/photo-1610030180777-fe6bd6c8f6ee?w=500&q=80" alt="Lehenga stitching" loading="lazy">
+        <span class="category-label">Lehenga <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      </a>
+      <a href="#contact" class="category-tile">
+        <img src="https://images.unsplash.com/photo-1610189844312-6d6a8c4a5e8f?w=500&q=80" alt="Salwar suit stitching" loading="lazy">
+        <span class="category-label">Salwar Suit <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      </a>
+      <a href="#contact" class="category-tile">
+        <img src="https://images.unsplash.com/photo-1610030181087-540f6c706e28?w=500&q=80" alt="Kurta-Kurti stitching" loading="lazy">
+        <span class="category-label">Kurta / Kurti <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      </a>
+      <a href="#contact" class="category-tile">
+        <img src="https://images.unsplash.com/photo-1610030180739-33f24ee0d6a1?w=500&q=80" alt="Ready-to-wear saree stitching" loading="lazy">
+        <span class="category-label">Ready-to-wear Saree <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      </a>
+      <a href="#contact" class="category-tile">
+        <img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=500&q=80" alt="Gown stitching" loading="lazy">
+        <span class="category-label">Gown <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      </a>
+      <a href="#contact" class="category-tile">
+        <img src="https://images.unsplash.com/photo-1610030180777-fe6bd6c8f6ee?w=500&q=80" alt="Western dress stitching" loading="lazy">
+        <span class="category-label">Western Dress <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      </a>
+      <a href="#contact" class="category-tile">
+        <img src="https://images.unsplash.com/photo-1610189844312-6d6a8c4a5e8f?w=500&q=80" alt="Crop top stitching" loading="lazy">
+        <span class="category-label">Crop-Top <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="designs">
+  <div class="container">
+    <div class="section-head reveal">
+      <h2>Browse our blouse design styles.</h2>
+      <p>Explore embroidered, printed, and trending back-and-sleeve patterns for your next blouse.</p>
+    </div>
+    <div class="pattern-grid reveal">
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=300&q=80" alt="Border blouse design" loading="lazy"></div>
+        <span class="pattern-name">Border</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1610030180777-fe6bd6c8f6ee?w=300&q=80" alt="Brocade sleeves blouse design" loading="lazy"></div>
+        <span class="pattern-name">Brocade Sleeves</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1610189844312-6d6a8c4a5e8f?w=300&q=80" alt="Butta blouse design" loading="lazy"></div>
+        <span class="pattern-name">Butta</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1610030181087-540f6c706e28?w=300&q=80" alt="Fullset blouse design" loading="lazy"></div>
+        <span class="pattern-name">Fullset</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1610030180739-33f24ee0d6a1?w=300&q=80" alt="Kolam blouse design" loading="lazy"></div>
+        <span class="pattern-name">Kolam</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1594736797933-d0c6c9dcbfb2?w=300&q=80" alt="Lace blouse design" loading="lazy"></div>
+        <span class="pattern-name">Lace</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=300&q=80" alt="Longsleeves blouse design" loading="lazy"></div>
+        <span class="pattern-name">Longsleeves</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1610030180777-fe6bd6c8f6ee?w=300&q=80" alt="Mask blouse design" loading="lazy"></div>
+        <span class="pattern-name">Mask</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1610189844312-6d6a8c4a5e8f?w=300&q=80" alt="Modern blouse design" loading="lazy"></div>
+        <span class="pattern-name">Modern</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1610030181087-540f6c706e28?w=300&q=80" alt="Peplum blouse design" loading="lazy"></div>
+        <span class="pattern-name">Peplum</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1610030180739-33f24ee0d6a1?w=300&q=80" alt="Plain blouse design" loading="lazy"></div>
+        <span class="pattern-name">Plain</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1594736797933-d0c6c9dcbfb2?w=300&q=80" alt="Sleeveless blouse design" loading="lazy"></div>
+        <span class="pattern-name">Sleeveless Designs</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=300&q=80" alt="Teardrop blouse design" loading="lazy"></div>
+        <span class="pattern-name">Teardrop</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1610030180777-fe6bd6c8f6ee?w=300&q=80" alt="Tissue sleeveless blouse design" loading="lazy"></div>
+        <span class="pattern-name">Tissue Sleeveless</span>
+      </a>
+      <a href="#contact" class="pattern-card">
+        <div class="pattern-thumb"><img src="https://images.unsplash.com/photo-1610189844312-6d6a8c4a5e8f?w=300&q=80" alt="Tissue sleeves blouse design" loading="lazy"></div>
+        <span class="pattern-name">Tissue Sleeves</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="gallery-wrap" id="gallery">
+  <div class="container">
+    <div class="section-head reveal">
+      <h2>Recently off the table.</h2>
+      <p>A sample of what's left the boutique in the last few months.</p>
+    </div>
+    <div class="gallery-grid reveal">
+      <img class="g-1" src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=700&q=80" alt="Embroidered silk blouse detail" loading="lazy">
+      <img class="g-2" src="https://images.unsplash.com/photo-1610189844312-6d6a8c4a5e8f?w=700&q=80" alt="Custom stitched salwar set" loading="lazy">
+      <div class="gallery-note">
+        <strong>320+</strong>
+        <span>Blouses fitted this year</span>
+      </div>
+      <img class="g-3" src="https://images.unsplash.com/photo-1610030181087-540f6c706e28?w=400&q=80" alt="Cotton fabric swatch" loading="lazy">
+      <img class="g-4" src="https://images.unsplash.com/photo-1610030180777-fe6bd6c8f6ee?w=700&q=80" alt="Draped saree pleating detail" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <h2>How a custom order actually runs.</h2>
+      <p>No surprises between the first visit and the final fitting.</p>
+    </div>
+    <div class="process">
+      <ol class="process-list">
+        <li class="process-item reveal">
+          <span class="n">01</span>
+          <div>
+            <h4>Bring your fabric — or pick from ours</h4>
+            <p>Come with your own material, or choose from bolts already in the shop.</p>
+          </div>
+        </li>
+        <li class="process-item reveal">
+          <span class="n">02</span>
+          <div>
+            <h4>We take real measurements</h4>
+            <p>Sixteen points, not four. It's why the first fitting rarely needs redoing.</p>
+          </div>
+        </li>
+        <li class="process-item reveal">
+          <span class="n">03</span>
+          <div>
+            <h4>First fitting, adjusted on the spot</h4>
+            <p>You try it on before final stitching. Nothing leaves the shop unseen by you first.</p>
+          </div>
+        </li>
+        <li class="process-item reveal">
+          <span class="n">04</span>
+          <div>
+            <h4>Finished, pressed, ready to wear</h4>
+            <p>Typical turnaround is 5–8 days depending on the order and season.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="process-visual reveal">
+        <div>
+          <p class="eyebrow" style="margin-bottom: 1.5rem;">Sample measure sheet</p>
+          <div class="measure-row"><span>Blouse length</span><span>14.5"</span></div>
+          <div class="measure-row"><span>Chest round</span><span>36"</span></div>
+          <div class="measure-row"><span>Shoulder</span><span>14"</span></div>
+          <div class="measure-row"><span>Sleeve length</span><span>6.5"</span></div>
+          <div class="measure-row"><span>Armhole</span><span>17"</span></div>
+          <div class="measure-row"><span>Neck front</span><span>7"</span></div>
+        </div>
+        <p class="process-visual-cap">— kept on file for every repeat customer</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <h2>What common work runs, roughly.</h2>
+      <p>Every garment is different, so treat these as a starting point, not a quote.</p>
+    </div>
+    <div class="pricing-wrap reveal">
+      <div class="price-row">
+        <div>
+          <div class="price-name">Blouse fitting</div>
+          <div class="price-note">Stitching from your fabric, standard sleeve and neck styles</div>
+        </div>
+        <div class="price-value">From ₹X</div>
+      </div>
+      <div class="price-row">
+        <div>
+          <div class="price-name">Fall &amp; pico (saree)</div>
+          <div class="price-note">Fall stitching and edge finishing, same-day for walk-ins</div>
+        </div>
+        <div class="price-value">From ₹X</div>
+      </div>
+      <div class="price-row">
+        <div>
+          <div class="price-name">Salwar set stitching</div>
+          <div class="price-note">Top, bottom, and dupatta finishing</div>
+        </div>
+        <div class="price-value">From ₹X</div>
+      </div>
+      <div class="price-row">
+        <div>
+          <div class="price-name">Lehenga alteration</div>
+          <div class="price-note">Resizing, panel adjustment, or restyling an existing piece</div>
+        </div>
+        <div class="price-value">From ₹X</div>
+      </div>
+      <div class="price-row">
+        <div>
+          <div class="price-name">Basic garment repair</div>
+          <div class="price-note">Seam, zip, hook, or hem fixes</div>
+        </div>
+        <div class="price-value">From ₹X</div>
+      </div>
+      <div class="pricing-foot">— final price depends on fabric, design detail, and turnaround needed</div>
+    </div>
+  </div>
+</section>
+
+<section class="classes-wrap" id="classes">
+  <div class="container">
+    <div class="section-head reveal">
+      <h2>Learn to stitch. Keep the skill for life.</h2>
+      <p>Small batches, real machines, garments you actually finish and take home.</p>
+    </div>
+    <div class="class-cards">
+      <div class="class-card reveal">
+        <span class="class-level">Beginner</span>
+        <h3>Hand to Machine</h3>
+        <p>Start with hand-stitching basics, then move to the machine. By week six you'll finish a simple salwar top on your own.</p>
+        <div class="batch-info">
+          <div class="batch-row"><span>Next batch starts</span><span>X Month, X AM–X PM</span></div>
+          <div class="batch-row"><span>Seats left</span><span class="seats-left">X of X</span></div>
+        </div>
+        <div class="class-card-foot">
+          <span class="class-price">₹X<span> / 8 wks</span></span>
+          <a href="#contact" class="class-cta">Reserve seat →</a>
+        </div>
+      </div>
+      <div class="class-card reveal">
+        <span class="class-level">Intermediate</span>
+        <h3>Blouse Drafting</h3>
+        <p>Pattern drafting for blouses from raw measurements — princess cuts, boat necks, and sleeve variations included.</p>
+        <div class="batch-info">
+          <div class="batch-row"><span>Next batch starts</span><span>X Month, X PM–X PM</span></div>
+          <div class="batch-row"><span>Seats left</span><span class="seats-left low">X of X</span></div>
+        </div>
+        <div class="class-card-foot">
+          <span class="class-price">₹X<span> / 6 wks</span></span>
+          <a href="#contact" class="class-cta">Reserve seat →</a>
+        </div>
+      </div>
+      <div class="class-card reveal">
+        <span class="class-level">Advanced</span>
+        <h3>Lehenga &amp; Draping</h3>
+        <p>Multi-panel lehenga construction and saree pre-draping techniques, taught for those already comfortable at the machine.</p>
+        <div class="batch-info">
+          <div class="batch-row"><span>Next batch starts</span><span>X Month, X AM–X PM</span></div>
+          <div class="batch-row"><span>Seats left</span><span class="seats-left">X of X</span></div>
+        </div>
+        <div class="class-card-foot">
+          <span class="class-price">₹X<span> / 10 wks</span></span>
+          <a href="#contact" class="class-cta">Reserve seat →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="testimonial reveal">
+      <div class="testimonial-img">
+        <img src="https://images.unsplash.com/photo-1610030180739-33f24ee0d6a1?w=700&q=80" alt="Customer wearing custom stitched outfit" loading="lazy">
+      </div>
+      <div>
+        <blockquote>"I brought in my mother's old saree blouse thinking it was beyond saving. It came back fitting better than anything I've bought new."</blockquote>
+        <div class="testimonial-author">
+          <div class="author-mark"></div>
+          <div>
+            <strong>Lakshmi R.</strong>
+            <span>Customer, Tandur</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band" id="contact">
+  <div class="container">
+    <div class="cta-grid">
+      <div class="reveal">
+        <p class="eyebrow" style="color: var(--rust-400);">Get in touch</p>
+        <span class="status-badge" id="statusBadge">
+          <span class="status-dot"></span>
+          <span id="statusText">Checking hours…</span>
+        </span>
+        <h2>Come by, call ahead, or send your measurements first.</h2>
+        <p class="hero-lede">Walk-ins are welcome for alterations. For custom orders and class enrollment, a quick message ahead of time helps us set aside the right time slot.</p>
+        <ul class="contact-list">
+          <li>
+            <span class="contact-label">Visit</span>
+            <span class="contact-value">Sai Tharun Hospital Lane, near Fly Over, Indira Nagar, Tandur, Telangana 501141</span>
+          </li>
+          <li>
+            <span class="contact-label">Call</span>
+            <span class="contact-value">+91 98480 54521</span>
+          </li>
+          <li>
+            <span class="contact-label">Hours</span>
+            <span class="contact-value">Open 24 hours</span>
+          </li>
+          <li>
+            <span class="contact-label">Rating</span>
+            <span class="contact-value">5.0 ★ · 10 Google reviews</span>
+          </li>
+        </ul>
+        <div class="social-row">
+          <a href="https://wa.me/919848054521" target="_blank" rel="noopener" class="social-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.86 9.86 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.13-2.9-7.01A9.876 9.876 0 0 0 12.04 2zm5.8 14.07c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.14-4.9-4.33-.14-.19-1.17-1.56-1.17-2.98 0-1.42.74-2.11 1-2.4.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.57.81 1.98.88 2.12.07.14.12.31.02.5-.1.19-.15.31-.29.48-.14.17-.3.37-.43.5-.14.14-.29.29-.12.57.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.44.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.66.78 1.94.93.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>
+            WhatsApp
+          </a>
+          <a href="https://instagram.com/sp.boutique" target="_blank" rel="noopener" class="social-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/></svg>
+            Instagram
+          </a>
+        </div>
+        <div class="map-wrap">
+          <iframe src="https://www.google.com/maps?q=SP+Boutique,+Sai+Tharun+Hospital+Lane,+near+Fly+Over,+Indira+Nagar,+Tandur,+Telangana+501141&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="SP Boutique location map"></iframe>
+        </div>
+        <a href="https://maps.app.goo.gl/NTVmJQ5ktLZbze8V6" target="_blank" rel="noopener" class="directions-link">
+          Open in Google Maps for directions
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </div>
+      <div class="contact-form reveal">
+        <div class="form-fields">
+          <form id="contactForm">
+            <div class="form-row">
+              <label for="name">Your name</label>
+              <input type="text" id="name" placeholder="Full name" required>
+            </div>
+            <div class="form-row">
+              <label for="phone">Phone number</label>
+              <input type="tel" id="phone" placeholder="10-digit number" required>
+            </div>
+            <div class="form-row">
+              <label for="interest">I'm interested in</label>
+              <select id="interest">
+                <option>Custom stitching</option>
+                <option>Alterations</option>
+                <option>Stitching classes</option>
+                <option>Something else</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="message">Tell us a little more</label>
+              <textarea id="message" rows="3" placeholder="Garment type, occasion, or class you're interested in..."></textarea>
+            </div>
+            <button type="submit" class="form-submit">Send enquiry</button>
+          </form>
+        </div>
+        <div class="form-success" id="formSuccess">
+          <h4>Received — thank you.</h4>
+          <p>We'll call you back within a day to confirm a time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-row">
+      <p>© 2026 SP Boutique, Tandur. Stitched by hand, one order at a time.</p>
+      <ul class="footer-links">
+        <li><a href="#stitching">Stitching</a></li>
+        <li><a href="#classes">Classes</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/919848054521" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.86 9.86 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.13-2.9-7.01A9.876 9.876 0 0 0 12.04 2zm5.8 14.07c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.14-4.9-4.33-.14-.19-1.17-1.56-1.17-2.98 0-1.42.74-2.11 1-2.4.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.57.81 1.98.88 2.12.07.14.12.31.02.5-.1.19-.15.31-.29.48-.14.17-.3.37-.43.5-.14.14-.29.29-.12.57.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.44.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.66.78 1.94.93.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>
+</a>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Contact form (no backend — demo confirmation state)
+  const form = document.getElementById('contactForm');
+  const formFields = document.querySelector('.form-fields');
+  const formSuccess = document.getElementById('formSuccess');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    formFields.style.display = 'none';
+    formSuccess.classList.add('show');
+  });
+
+  // Status badge — listing shows open 24 hours
+  (function() {
+    const text = document.getElementById('statusText');
+    text.textContent = 'Open now · open 24 hours';
+  })();
+</script>
+
+</body>
+</html>
