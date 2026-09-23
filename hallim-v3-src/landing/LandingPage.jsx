@@ -2,6 +2,7 @@
 import { useState } from "react";
 import LevelJourney from "./LevelJourney";
 import FeatureAtlas from "./FeatureAtlas";
+import RealKorean from "./RealKorean";
 import s from "./landing.module.css";
 
 const moments=[
@@ -21,7 +22,8 @@ const faqs=[
  ["Do I need to know Hangul?","No. You can start with Hangul Lab, then move into the Companion curriculum when you feel ready."],
  ["Can I try Hallim before signing in?","Yes. The landing-page interactions here are public previews. Sign in to the main app to save an actual learning route and use personal account features."],
  ["Does Hallim grant an official TOPIK level?","No. Hallim supports practice and evidence-informed study, but its in-app assessments are not official TOPIK tests or certificates."],
- ["Can everyone see my Study Partners profile?","No. Study Partners discovery is opt-in. Shared spaces require mutual acceptance, and you choose which notes to share."]
+ ["Can everyone see my Study Partners profile?","No. Study Partners discovery is opt-in. Shared spaces require mutual acceptance, and you choose which notes to share."],
+ ["Is Partner Korean the same as Study Partners?","No. Partner Korean is a flirty and everyday phrase bank, mini-dialogues and an AI Message Makeover for writing your own Korean texts. Study Partners is a separate, opt-in workspace for learning with another Hallim user."]
 ];
 function Arrow(){return <span aria-hidden="true">↗</span>}
 function Logo(){return <span className={s.logoIcon} aria-hidden="true">ㅎ</span>}
@@ -44,11 +46,11 @@ export default function LandingPage({authHref,authError=""}){
   <header className={s.header}>
    <div className={s.nav}>
     <a className={s.brand} href="./" aria-label="Hallim landing page"><Logo/><span>hallim<small lang="ko">한림</small></span></a>
-    <nav className={s.navLinks} aria-label="Page navigation"><a href="#system">How it works</a><a href="#inside">Inside Hallim</a><a href="#connections">Learning together</a></nav>
+    <nav className={s.navLinks} aria-label="Page navigation"><a href="#system">How it works</a><a href="#inside">Inside Hallim</a><a href="#real-korean">Real Korean ♡</a><a href="#connections">Learning together</a></nav>
     <a className={s.navStart} href={entry}>Start learning <Arrow/></a>
     <button type="button" className={s.menuButton} aria-label={menu?"Close navigation":"Open navigation"} aria-controls="v2-menu" aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?"Close ×":"Menu ☰"}</button>
    </div>
-   {menu&&<nav id="v2-menu" className={s.mobileMenu} aria-label="Mobile navigation"><a href="#system" onClick={()=>setMenu(false)}>How it works</a><a href="#inside" onClick={()=>setMenu(false)}>Inside Hallim</a><a href="#connections" onClick={()=>setMenu(false)}>Learning together</a><a href={entry}>Start learning ↗</a></nav>}
+   {menu&&<nav id="v2-menu" className={s.mobileMenu} aria-label="Mobile navigation"><a href="#system" onClick={()=>setMenu(false)}>How it works</a><a href="#inside" onClick={()=>setMenu(false)}>Inside Hallim</a><a href="#real-korean" onClick={()=>setMenu(false)}>Real Korean ♡</a><a href="#connections" onClick={()=>setMenu(false)}>Learning together</a><a href={entry}>Start learning ↗</a></nav>}
   </header>
 
   <section className={s.hero} aria-labelledby="hero-title">
@@ -56,7 +58,7 @@ export default function LandingPage({authHref,authError=""}){
     <div className={s.heroCopy}>
      <span className={s.heroPill}><span aria-hidden="true">✳</span> A companion for the way you actually learn</span>
      <h1 id="hero-title">Your Korean world,<br/><em>all connected.</em></h1>
-     <p>Learn Korean inside a real study workspace: a level-based Companion route, a searchable Word Map, grammar and pronunciation guides, honest study checks, intelligent review, and people to practise with.</p>
+     <p>Learn Korean inside a real study workspace: a level-based Companion route, a searchable Word Map, grammar and pronunciation guides, honest study checks, intelligent review, flirty Korean for real messages, and people to practise with.</p>
      <div className={s.heroActions}><a className={s.primary} href="#system">Explore Hallim <Arrow/></a><a className={s.secondary} href={entry}>Start your journey <Arrow/></a></div>
      {authError&&<p className={s.authError} role="alert">{authError}</p>}
      <div className={s.heroAside}><span className={s.dotCluster} aria-hidden="true"><i lang="ko">가</i><i lang="ko">나</i><i lang="ko">다</i></span><span>Six entry levels, one connected learning route—from Starter to Advanced.</span></div>
@@ -104,17 +106,23 @@ export default function LandingPage({authHref,authError=""}){
   </section>
 
   <section className={s.connections} id="connections" aria-labelledby="connections-title">
-   <div className={s.connectionsHeading}><span className={s.kicker}>Beyond the lesson</span><h2 id="connections-title">Your next step isn't<br/>a guessing game.</h2><p>Hallim combines evidence-based AI learning tools with optional Study Partners—so you can work on your actual weak points, on your own or with someone whose strengths complement yours.</p></div>
+   <div className={s.connectionsHeading}><span className={s.kicker}>Beyond the lesson</span><h2 id="connections-title">Learn it here.<br/>Use it out there.</h2><p>Hallim helps with more than your next study session. Find the right words for someone close, ask AI to make a message sound natural, then return to evidence-based practice—or learn alongside another person.</p></div>
    <div className={s.connectionGrid}>
+    <div className={s.realKoreanRow}><RealKorean authHref={authHref}/></div>
     <article className={s.ai}><div className={s.connectionTop}><span className={s.connectionIcon} aria-hidden="true">✳</span><span>HALLIM INTELLIGENCE</span></div><h3>Six focused tools. Grounded in your work.</h3><p>Hallim's learning audit reads available progress and test history. Six Intelligence tools use that evidence to explain errors, adjust practice, suggest a plan and check level readiness—without inventing speaking scores or certifying TOPIK.</p><div className={s.aiTools}>{aiTools.map(([name,desc])=><div key={name}><span aria-hidden="true">↗</span><strong>{name}</strong><small>{desc}</small></div>)}</div><a href={other}>Explore learning intelligence <Arrow/></a></article>
     <article className={s.partner}><div className={s.connectionTop}><span className={s.connectionIcon} aria-hidden="true">↔</span><span>STUDY PARTNERS</span></div><h3>Find the learner who fills your gaps.</h3><p>Opt in to discover learners with complementary vocabulary and grammar strengths. After a mutual yes, use a shared room to exchange only the notes you choose, talk, and build a three-round practice session from your shared vocabulary and grammar.</p><div className={s.partnerDemo}><div><span className={s.partnerAvatar} lang="ko">가</span><span><small>LEARNER A</small><strong>Vocabulary comes naturally</strong><em>Working on grammar</em></span></div><div className={s.joinLine}><span>SELECTIVE NOTE SHARING · MUTUAL PRACTICE</span><b aria-hidden="true">↔</b></div><div><span className={s.partnerAvatar} lang="ko">문</span><span><small>LEARNER B</small><strong>Grammar comes naturally</strong><em>Working on vocabulary</em></span></div></div><small className={s.partnerDisclaimer}>Illustrative profiles. Notes can be shared selectively and access can be revoked; joint practice does not automatically grade either learner.</small><a href="https://hallium.vercel.app/study-partners">Explore Study Partners <Arrow/></a></article>
    </div>
   </section>
 
   <section className={s.end} aria-labelledby="end-title">
-   <div className={s.endText}><span className={s.kicker}>A learning home, at your level</span><h2 id="end-title">Come for a word.<br/>Stay for the journey.</h2><p>Start with Hangul, choose your Companion level or try Real Korean's everyday phrase bank and AI Message Makeover. Your own saved learning history begins after Google sign-in.</p></div>
+   <div className={s.endText}><span className={s.kicker}>A learning home, at your level</span><h2 id="end-title">Come for a word.<br/>Stay for the journey.</h2><p>Start with Hangul, practise your first words, or dive into real messages and conversations. Google sign-in keeps your lessons, test history and review progress together.</p></div>
    <div className={s.endActions}><a href={entry} className={s.primary}>Start learning with Google <Arrow/></a><a href="https://hallium.vercel.app/hangul" className={s.secondary}>Explore Hangul Lab <Arrow/></a></div>
-   <div className={s.endLinks}><a href="https://hallium.vercel.app/demo">Product tour ↗</a><a href={authHref("/?view=partner")}>Real Korean + Message Makeover ↗</a><a href="https://hallium.vercel.app/study-partners">Study Partners ↗</a><a href="https://hallium.vercel.app/flashcards">Starter flashcards ↗</a></div>
+   <div className={s.moreWays} aria-label="More Hallim learning spaces">
+    <a href="https://hallium.vercel.app/hangul"><span aria-hidden="true" lang="ko">가</span><strong>Hangul Lab</strong><small>Learn letters, build syllables and practise writing.</small><b aria-hidden="true">↗</b></a>
+    <a href="https://hallium.vercel.app/flashcards"><span aria-hidden="true">▦</span><strong>Starter flashcards</strong><small>Revisit essential beginner words another way.</small><b aria-hidden="true">↗</b></a>
+    <a href={authHref("/?view=profile")}><span aria-hidden="true">↺</span><strong>Your progress</strong><small>See completed lessons, study tests and review history.</small><b aria-hidden="true">↗</b></a>
+   </div>
+   <div className={s.endLinks}><a href="https://hallium.vercel.app/demo">Product tour ↗</a><a href={authHref("/?view=partner")}>Partner Korean + AI Makeover ↗</a><a href="https://hallium.vercel.app/study-partners">Study Partners ↗</a></div>
    <div className={s.faq}><h3>A few things to know.</h3><div>{faqs.map(([q,a])=><details key={q}><summary>{q}<span aria-hidden="true">+</span></summary><p>{a}</p></details>)}</div></div>
   </section>
  </main>

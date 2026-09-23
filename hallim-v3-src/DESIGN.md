@@ -36,3 +36,11 @@ Motion uses 155–210ms purpose-driven feedback, ease-out, reduced-motion overri
 ## Deployment boundary
 
 `hallim-v3-src/` → isolated Vite build `hallim-v3/` → existing GitHub Pages. No mutation to `hallim/`, `hallim-v2/`, or `sushan5140/hallium`. No Vercel.
+
+## Feature completeness update · Partner Korean / Real Korean
+
+The source-of-truth is `sushan5140/hallium/app/partner/PartnerKorean.jsx`. It is **NOT** the opt-in Study Partners matcher. Real Korean has 12 searchable phrase categories, including cheesy Korean flirting, Korean-only wordplay/jokes, daily check-ins, affection, teasing, apologies, relationship words, slang and reactions; five mini-dialogues; optional romanization; Korean audio; and casual/polite instant text presets.
+
+AI Message Makeover lets an authenticated learner enter their own English message, select relationship/recipient, choose vibe and a 0–100 flirt intensity, and request a natural Korean best match, romanization/meaning/why, plus softer, bolder and funnier variants. The static Pages showcase intentionally **does not call the AI** or submit user text: it demonstrates the settings and links to the existing live app.
+
+The Real Korean full-width feature is integrated within the same Beyond the Lesson chapter, followed by independent Intelligence and Study Partners cards. Compact links near the ending expose additional underrepresented app capabilities: Hangul Lab writing practice, Starter flashcards, and the saved progress/test/review workspace. Production `sushan5140/hallium`, approved V1 and approved V2 are unchanged.
