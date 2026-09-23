@@ -15,3 +15,6 @@ Interaction: fast response, motion only at the lesson switch, CSS focus rings, r
 
 ## Scope
 V1 source + compiled HTML untouched; `sushan5140/hallium` production repository untouched, and NO Vercel deployment. Deploy V2 only via the existing SP Boutique GitHub Pages service in `/hallim-v2/`.
+
+## V2 refinement after review (23 September 2026)
+The page now follows a single narrative: interactive route hero → integrated five-to-one learning circuit → one three-stage live learning workspace (Learn / Use / Return) → AI and Partners support → one conclusion and concise FAQ. Redundant standalone chapters and the full-width dark/navy panels were removed. No invented learner result bars. The circuit, use-it exercise, and route switch are genuine interactive React controls, not decorative imagery. Colors: cool-white #FCFDFF, cloud #F5F9FF, cobalt #365FCE only for selected actions, slate text #263B61, green #EDF7F1 for review, blush #F9EAF0 for Partners. Layout/mobile/keyboard and reduced-motion considerations apply to all interactions. The approved V1 is preserved unchanged.

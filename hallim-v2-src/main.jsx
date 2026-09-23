@@ -17,6 +17,7 @@ createRoot(document.getElementById("root")).render(
       <nav aria-label="Legal links">
         <a href={productionHost + "/privacy"}>Privacy Policy</a>
         <a href={productionHost + "/terms"}>Terms & Conditions</a>
+        <a href="./../hallim/">Compare V1</a>
         <a href={productionHost + "/demo"}>Product tour</a>
       </nav>
     </footer>
