@@ -1,0 +1,47 @@
+name: Build standalone Hallim Pages preview
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "hallim-src/**"
+      - ".github/workflows/build-hallim-preview.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: standalone-hallim-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install preview dependencies
+        working-directory: hallim-src
+        run: npm install --no-fund --no-audit
+      - name: Build separate static Hallim site
+        working-directory: hallim-src
+        run: npm run build
+      - name: Check compiled preview
+        run: |
+          test -s hallim/index.html
+          test -d hallim/assets
+          grep -q '/sp-boutique/hallim/assets/' hallim/index.html
+          ! grep -q 'src="./main.jsx"' hallim/index.html
+      - name: Commit only generated /hallim directory
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A hallim
+          if ! git diff --cached --quiet; then
+            git commit -m 'Build Hallim static GitHub Pages preview [skip ci]'
+            git push
+          fi
