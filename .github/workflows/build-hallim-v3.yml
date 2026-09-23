@@ -1,0 +1,50 @@
+name: Build Hallim V3 GitHub Pages preview
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "hallim-v3-src/**"
+      - ".github/workflows/build-hallim-v3.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: standalone-hallim-v3-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install standalone V3 dependencies
+        working-directory: hallim-v3-src
+        run: npm install --no-fund --no-audit
+      - name: Build isolated Hallim V3
+        working-directory: hallim-v3-src
+        run: npm run build
+      - name: Verify V1 V2 are still available and V3 is compiled
+        run: |
+          test -s index.html
+          test -s hallim/index.html
+          test -s hallim-v2/index.html
+          test -s hallim-v3/index.html
+          test -d hallim-v3/assets
+          grep -q '/sp-boutique/hallim-v3/assets/' hallim-v3/index.html
+          ! grep -q 'src="./main.jsx"' hallim-v3/index.html
+      - name: Publish V3 files only without touching earlier designs
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A hallim-v3
+          if ! git diff --cached --quiet; then
+            git commit -m 'Build Hallim V3 GitHub Pages preview [skip ci]'
+            git push
+          fi
