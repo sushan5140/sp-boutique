@@ -66,10 +66,11 @@ export default function LandingPage({ authHref, authError = "" }) {
       <a className={styles.skip} href="#features">Skip to content</a>
       <header className={styles.header}>
         <div className={styles.navInner}>
-          <a href="./" className={styles.logo} onClick={closeMenu} aria-label="Hallim home"><Mark/><span>hallim<span className={styles.logoDot}>.</span></span></a>
+          <a href="./" className={styles.logo} onClick={closeMenu} aria-label="Hallim home"><Mark/><span>hallim<span className={styles.logoDot}>.</span><small lang="ko">한림</small></span></a>
           <nav className={styles.nav} aria-label="Primary navigation">
-            <a href="#features">Explore Hallim</a>
-            <a href="#try-a-moment">Try a moment</a>
+            <a href="#features">The system</a>
+            <a href="#lesson-lab">Inside a lesson</a>
+            <a href="#try-a-moment">Try Korean</a>
             <a href="#study-together">Study together</a>
             <a href="https://hallium.vercel.app/demo">Product tour <Arrow diagonal/></a>
           </nav>
@@ -77,8 +78,9 @@ export default function LandingPage({ authHref, authError = "" }) {
           <button className={styles.menuButton} type="button" onClick={() => setMenuOpen(o => !o)} aria-expanded={menuOpen} aria-controls="hallim-menu" aria-label={menuOpen ? "Close menu" : "Open menu"}>{menuOpen ? "Close ×" : "Menu ☰"}</button>
         </div>
         {menuOpen && <nav className={styles.mobileMenu} id="hallim-menu" aria-label="Mobile navigation">
-          <a href="#features" onClick={closeMenu}>Explore Hallim</a>
-          <a href="#try-a-moment" onClick={closeMenu}>Try a moment</a>
+          <a href="#features" onClick={closeMenu}>The system</a>
+          <a href="#lesson-lab" onClick={closeMenu}>Inside a lesson</a>
+          <a href="#try-a-moment" onClick={closeMenu}>Try Korean</a>
           <a href="#study-together" onClick={closeMenu}>Study together</a>
           <a href="https://hallium.vercel.app/demo" onClick={closeMenu}>Product tour ↗</a>
           <a href={entry} onClick={closeMenu}>Start learning ↗</a>
@@ -87,12 +89,12 @@ export default function LandingPage({ authHref, authError = "" }) {
 
       <section className={styles.hero} aria-labelledby="hero-title">
         <div className={styles.heroCopy}>
-          <span className={styles.pill}><span className={styles.pillStar}>✳</span> 15 UNITS · 76 LESSONS & CHECKPOINTS · ONE CONNECTED ROUTE</span>
-          <h1 id="hero-title">Everything you need to <em>learn</em> Korean.<br/><span>Finally connected.</span></h1>
-          <p className={styles.heroLead}>Companion lessons, listening, grammar, study checks, spaced review, AI learning tools and Study Partners—built to work together, not send you between five apps.</p>
+          <span className={styles.pill}><span className={styles.pillStar}>✳</span> One place for your whole Korean journey</span>
+          <h1 id="hero-title">Meet your whole<br/><em>Korean world.</em><span> All in one place.</span></h1>
+          <p className={styles.heroLead}>Start with Hangul. Grow through connected lessons, listening, grammar, review, AI-guided practice, and learners who can help you along the way. No scattered study tabs required.</p>
           <div className={styles.heroActions}>
-            <a href={entry} className={styles.primary}>Explore the learning system <Arrow diagonal/></a>
-            <a href="#features" className={styles.secondary}>See how it all connects <span aria-hidden="true">↓</span></a>
+            <a href="#features" className={styles.primary}>Explore the Hallim system <Arrow diagonal/></a>
+            <a href={entry} className={styles.secondary}>Start learning <span aria-hidden="true">↗</span></a>
           </div>
           {authError && <p className={styles.authError} role="alert">{authError}</p>}
           <div className={styles.heroFoot}>
@@ -103,12 +105,12 @@ export default function LandingPage({ authHref, authError = "" }) {
         <HallimHeroGraph />
       </section>
 
-      <section className={styles.ribbon} aria-label="Hallim learning approach">
-        <div><span>01 / LEARN</span><b>Understand the moment</b></div>
-        <span className={styles.ribbonArrow} aria-hidden="true">↗</span>
-        <div><span>02 / PRACTISE</span><b>Make it your own</b></div>
-        <span className={styles.ribbonArrow} aria-hidden="true">↗</span>
-        <div><span>03 / RETURN</span><b>Remember what matters</b></div>
+      <section className={styles.ribbon} aria-label="Hallim by the numbers">
+        <div><span>15</span><b>CURRICULUM UNITS</b></div>
+        <span className={styles.ribbonArrow} aria-hidden="true">✳</span>
+        <div><span>76</span><b>LESSONS & CHECKPOINTS</b></div>
+        <span className={styles.ribbonArrow} aria-hidden="true">✳</span>
+        <div><span>5 → 1</span><b>LEARNING INPUTS, ONE ROUTE</b></div>
       </section>
 
       <HallimFeatureSystem authHref={authHref} />
