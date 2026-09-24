@@ -143,13 +143,26 @@ function filteredAwards(){return SCHOLARSHIPS.filter(s=>{
 });}
 function renderCards(){const awards=filteredAwards();$('#catalog-count').textContent=awards.length+' of '+SCHOLARSHIPS.length+' shown';$('#catalog-grid').innerHTML=awards.length?awards.map(card).join(''):'<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⌕</div><h3>No awards in this view</h3><p>Try another university or remove the profile-criterion filter.</p><button class="btn btn-primary" id="clear-filters">Clear filters</button></div>';}
 function discover(){
- const profileButton='<button class="btn btn-primary" data-view="eligibility">'+(completeness()>=5?'Review my profile':'Build my profile')+' <span aria-hidden="true">↗</span></button>'; 
- let html=header('Your next chapter,<br><em>made possible.</em>','Discover Korean university scholarships, understand published criteria, and give every application a clear place to grow.',profileButton)+stats()+
- '<div class="banner"><span>ⓘ</span><div><strong>Curated preview, not a live admissions feed.</strong> Award details were checked against official university pages on '+SOURCE_DATE+'. Deadlines follow individual admissions rounds. Always verify current intake requirements at the source.</div></div>'+
- '<div class="section-heading"><div><div class="eyebrow">Discover opportunities</div><h2>Explore scholarships</h2><p>Source-linked university awards. Your criteria insights appear on every card.</p></div><div class="no-gks"><span class="pulse"></span> Non-GKS awards only</div></div>'+
- '<div class="filters"><input id="search" class="input" type="search" placeholder="Search university, award or benefit…" value="'+esc(filters.search)+'" aria-label="Search scholarships"><select id="uni-filter" class="select" aria-label="Filter university"><option value="all">All universities</option>'+Object.keys(UNIVERSITY).map(u=>'<option value="'+esc(u)+'" '+(filters.uni===u?'selected':'')+'>'+esc(u)+'</option>').join('')+'</select><select id="match-filter" class="select" aria-label="Filter profile signals"><option value="all">All profile signals</option><option value="good" '+(filters.match==='good'?'selected':'')+'>Criterion met</option><option value="gap" '+(filters.match==='gap'?'selected':'')+'>Needs attention</option><option value="check" '+(filters.match==='check'?'selected':'')+'>Review required</option></select><div id="catalog-count" class="filter-count"></div></div>'+
- '<div class="filter-toolbar"><div class="filter-tabs"><span class="filter-tabs-label">QUICK VIEW</span><button class="filter-chip '+(!filters.tracked?'is-selected':'')+'" id="all-awards">All awards</button><button class="filter-chip '+(filters.tracked?'is-selected':'')+'" id="tracked-only">My tracked awards <span>'+state.apps.length+'</span></button></div><button class="filter-clear" id="clear-filters">Reset filters ↺</button></div>'+
- '<div id="catalog-grid" class="card-grid"></div>'; 
+ const searchText=esc(filters.search);
+ const uniOpts=Object.keys(UNIVERSITY).map(u=>'<option value="'+esc(u)+'" '+(filters.uni===u?'selected':'')+'>'+esc(u)+'</option>').join('');
+ let html=
+ '<section class="page-mast page-mast-discover" aria-label="Scholarship discovery">'+
+ '<div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">✳</span> SCHOLARSHIP EXPLORER <span class="mast-eyebrow-line"></span> NON-GKS ONLY</div>'+
+ '<h1>Find your <em>next opportunity.</em></h1>'+
+ '<p>Search university-funded scholarships, check published criteria and save what matters to you.</p>'+
+ '<div class="mast-meta"><span><b>'+SCHOLARSHIPS.length+'</b> curated awards</span><span><b>4</b> university sources</span><span>Snapshot · '+SOURCE_DATE+'</span></div></div>'+
+ '<div class="mast-side mast-side-discover"><span class="mast-side-kicker">YOUR SEARCH, YOUR WAY</span>'+
+ '<div class="mast-search-mark">⌕</div><strong>Start with a university, award or benefit.</strong>'+
+ '<p>Refine your results below, then track or compare awards in one click.</p>'+
+ '<button class="mast-link" data-view="eligibility">Set my criteria <span>↗</span></button></div></section>'+
+ '<div class="discovery-workbench"><div class="discovery-workbench-head"><div><span class="section-kicker">YOUR OPPORTUNITY LIBRARY</span><h2>Explore university awards</h2><p>Source-linked opportunities, with your criteria insight on every card.</p></div><span class="workbench-source-tag"><span class="pulse"></span> 4 official sources</span></div>'+
+ '<div class="filters discovery-filters"><label class="discovery-search-label"><span aria-hidden="true">⌕</span><input id="search" class="input" type="search" placeholder="Search universities, awards, funding…" value="'+searchText+'" aria-label="Search scholarships"></label>'+
+ '<select id="uni-filter" class="select" aria-label="Filter university"><option value="all">All universities</option>'+uniOpts+'</select>'+
+ '<select id="match-filter" class="select" aria-label="Filter profile signals"><option value="all">All profile signals</option><option value="good" '+(filters.match==='good'?'selected':'')+'>Criterion met</option><option value="gap" '+(filters.match==='gap'?'selected':'')+'>Needs attention</option><option value="check" '+(filters.match==='check'?'selected':'')+'>Review required</option></select>'+
+ '<div id="catalog-count" class="filter-count"></div></div>'+
+ '<div class="filter-toolbar"><div class="filter-tabs"><span class="filter-tabs-label">QUICK VIEW</span><button class="filter-chip '+(!filters.tracked?'is-selected':'')+'" id="all-awards">All awards</button><button class="filter-chip '+(filters.tracked?'is-selected':'')+'" id="tracked-only">My tracked awards <span>'+state.apps.length+'</span></button></div><button class="filter-clear" id="clear-filters">Reset filters ↺</button></div></div>'+
+ '<div class="banner page-source-note"><span>ⓘ</span><div><strong>Curated preview, not a live admissions feed.</strong> Award information checked '+SOURCE_DATE+'. Confirm intake-specific eligibility and exact dates on the university’s current official page.</div></div>'+
+ '<div id="catalog-grid" class="card-grid"></div>';
  $('#view-root').innerHTML=shell(html);renderCards();
 }
 function field(label,name,type,opts,extra){
@@ -159,7 +172,13 @@ function field(label,name,type,opts,extra){
 function eligibility(){
  const p=state.profile;
  const assessment=SCHOLARSHIPS.map(s=>({s,m:statusFor(s)}));
- let html=header('One profile.<br><em>Every opportunity.</em>','Tell us a little about your study plans. We compare only explicitly published award criteria — never invent admission probabilities.','<button class="btn" data-view="discover">← Browse scholarships</button>')+
+ let html='<section class="page-mast page-mast-eligibility" aria-label="My eligibility overview"><div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">◎</span> PERSONAL CRITERIA CHECK</div>'+
+ '<h1>My <em>eligibility.</em></h1><p>Organize your academic and language profile, then check it against published scholarship criteria. Not an admissions prediction.</p>'+
+ '<div class="mast-meta"><span>'+esc(p.degree||'Degree not set')+'</span><span>'+esc(p.major||'Major not set')+'</span><span>'+esc(p.intake||'Intake not set')+'</span></div></div>'+
+ '<div class="mast-side eligibility-side"><span class="mast-side-kicker">YOUR PROFILE READINESS</span><div class="eligibility-progress-number">'+completeness()+'<span> / 5</span></div><strong>Essentials completed</strong>'+
+ '<div class="progress-track" role="progressbar" aria-label="Profile essentials completed" aria-valuemin="0" aria-valuemax="5" aria-valuenow="'+completeness()+'"><span style="width:'+(completeness()*20)+'%"></span></div>'+
+ '<p>'+ (completeness()===5?'Your essentials are recorded. Check individual university rules.':'Finish your essentials to make scholarship criteria checks more useful.')+'</p>'+
+ '<button class="mast-link" data-view="discover">Browse source-linked awards <span>↗</span></button></div></section>'+
  '<div class="two-col"><section class="panel"><div class="panel-title"><h3>My scholarship profile</h3><span class="tag">'+completeness()+'/5 essentials</span></div><p class="panel-subtitle">Your information is stored locally in this browser, not sent to KMate or any university.</p><form id="profile-form"><div class="field-grid">'+
  field('Display name','name','text',null,'maxlength="80" placeholder="How should we address you?"')+
  field('Nationality / citizenship','nationality','text',null,'maxlength="80" placeholder="e.g. India"')+
@@ -179,8 +198,12 @@ function eligibility(){
  $('#view-root').innerHTML=shell(html);
 }
 function apps(){
- let intro=header('Every application,<br><em>in its place.</em>','Move each opportunity through research, preparation and submission. Your dates, notes and checklist stay on this device.','<button class="btn btn-primary" data-view="discover">＋ Discover an award</button>');
- let overview= '<div class="stats-strip">'+stat('In your workspace',state.apps.length,'Independent award records',true)+stat('Preparing',state.apps.filter(a=>a.stage==='Preparing documents').length,'Document stage')+stat('Submitted',state.apps.filter(a=>a.stage==='Submitted').length,'Recorded by you')+stat('Offers recorded',state.apps.filter(a=>a.stage==='Offer received').length,'Not validated by KMate')+'</div>';
+ let intro='<section class="page-mast page-mast-applications" aria-label="Application control center"><div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">▤</span> APPLICATION CONTROL CENTER</div>'+
+ '<h1>Your applications, <em>under control.</em></h1><p>Manage university opportunities from first research to final decision, with checklists, notes and your next-action dates.</p>'+
+ '<div class="mast-meta"><span><b>'+state.apps.length+'</b> tracked</span><span><b>'+state.apps.filter(a=>a.stage==="Submitted").length+'</b> submitted</span><span>Saved locally on this device</span></div></div>'+
+ '<div class="mast-side applications-side"><span class="mast-side-kicker">NEXT MOVE</span><div class="mast-side-symbol">↗</div><strong>Keep every application moving.</strong><p>Add an opportunity, update its stage, and give it a next action.</p>'+
+ '<button class="btn btn-primary" data-view="discover">＋ Add an application</button><button class="mast-secondary" id="export-data">↧ Export records</button></div></section>';
+ let overview= '<div class="stats-strip">'+stat('In your workspace',state.apps.length,'Independent award records',true)+stat('Preparing',state.apps.filter(a=>a.stage==='Preparing documents').length,'Document stage')+stat('Submitted',state.apps.filter(a=>a.stage==='Submitted').length,'Recorded by you')+stat('Offers recorded',state.apps.filter(a=>a.stage==='Offer received').length,'Entered by you')+'</div>';
  let content=state.apps.length?'<div class="app-list">'+state.apps.map(appCard).join('')+'</div>':'<div class="empty-state"><div class="empty-icon">▤</div><h3>No applications tracked yet</h3><p>Pick an award from Discover and choose “Track application”. You’ll get an independent checklist, status, notes and deadline field.</p><button class="btn btn-primary" data-view="discover">Explore scholarships →</button></div>';
  $('#view-root').innerHTML=shell(intro+overview+'<div class="section-heading"><div><div class="eyebrow">Your application desk</div><h2>My applications</h2><p>Manual tracking — this demo does not submit university applications.</p></div></div>'+content);
 }
@@ -194,8 +217,18 @@ function appCard(a){
  '<div class="app-tools"><span class="app-status">Personal tracker · not connected to admissions portal</span>'+sourceLink(s,'Check official award ↗')+'</div></article>';
 }
 function compare(){
- const title=header('The details,<br><em>side by side.</em>','Select up to three university awards. See documented funding, selection route, continuation and your personal criteria signal without misleading ranking or guessed eligibility.','<button class="btn" data-view="discover">← Find awards</button>');
- let picks='<div class="section-heading"><div><div class="eyebrow">The details that matter</div><h2>Choose your comparison set</h2><p>'+state.compare.length+' of 3 awards selected · click to add or remove</p></div><button class="btn btn-small" id="clear-comparison">Clear selection</button></div>'+
+ const slots=Array.from({length:3},(_,i)=>{
+ const s=byId(state.compare[i]);
+ return '<div class="compare-slot '+(s?'filled':'')+'"><span>SLOT 0'+(i+1)+'</span>'+
+ (s?'<strong>'+esc(s.name)+'</strong><small>'+esc(s.uni)+' · '+esc(s.benefit)+'</small><button data-compare="'+s.id+'" aria-label="Remove '+esc(s.name)+' from comparison">×</button>':
+ '<strong>Choose an award</strong><small>Select below or from Discover</small><span class="compare-slot-plus" aria-hidden="true">＋</span>')+'</div>';
+ }).join('');
+ const title='<section class="page-mast page-mast-compare" aria-label="Scholarship comparison builder"><div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">⊞</span> COMPARISON DESK</div>'+
+ '<h1>See the <em>whole picture.</em></h1><p>Compare documented funding, selection routes and continuation rules without invented rankings or acceptance scores.</p>'+
+ '<div class="mast-meta"><span><b>'+state.compare.length+' / 3</b> selected</span><span>Official award sources</span></div></div>'+
+ '<div class="mast-side compare-side"><span class="mast-side-kicker">BUILD YOUR SHORTLIST</span><strong>Put opportunities side by side.</strong><p>Select up to three awards. Your comparison updates immediately.</p><div class="compare-mast-actions"><button class="btn btn-primary" data-view="discover">＋ Explore awards</button><button class="mast-secondary" id="clear-comparison">Clear all</button></div></div></section>';
+ let picks='<div class="compare-builder"><div class="compare-builder-head"><div><span class="section-kicker">YOUR SELECTION</span><h2>Three places. One clear view.</h2><p>'+state.compare.length+' of 3 awards selected · choose or remove below</p></div><button class="btn btn-small" data-view="discover">Browse awards ↗</button></div><div class="compare-slots">'+slots+'</div></div>'+
+ '<div class="section-heading compare-pick-heading"><div><div class="eyebrow">SOURCE-LINKED AWARDS</div><h2>Choose your comparison set</h2><p>Tick an award to compare its published conditions.</p></div></div>'+
  '<div class="compare-choices">'+SCHOLARSHIPS.map(s=>'<label class="compare-choice '+(state.compare.includes(s.id)?'selected':'')+'"><input type="checkbox" data-compare="'+s.id+'" '+(state.compare.includes(s.id)?'checked':'')+' '+(state.compare.length>=3&&!state.compare.includes(s.id)?'disabled':'')+'><div><strong>'+esc(s.name)+'</strong><small>'+esc(s.uni)+' · '+esc(s.benefit)+'</small></div></label>').join('')+'</div>';
  let chosen=state.compare.map(byId).filter(Boolean);
  let rows=[['University',s=>s.uni],['Profile signal',s=>esc(statusFor(s).label)+' — '+esc(statusFor(s).reason)],['Tuition coverage',s=>esc(s.tuition)],['Living allowance',s=>esc(s.stipend)],['Scholarship route',s=>esc(s.route)],['Published language condition',s=>esc(s.language)],['Selection method',s=>esc(s.selection)],['Renewal / duration',s=>esc(s.renewal)],['Deadline',s=>esc(s.deadline)],['Important caution',s=>esc(s.notice)],['Official source',s=>sourceLink(s,'Open university source ↗')]];
