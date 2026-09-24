@@ -37,11 +37,17 @@ jobs:
               if(await p.locator('.hero-row').count()!==0)throw Error(label+' repeated legacy hero still visible');
               if(await p.locator('.page-mast-discover').count()!==1)throw Error(label+' discover masthead missing');
               if(await p.locator('.discovery-search-label').count()!==1)throw Error(label+' finder search missing');
-                            await p.screenshot({path:label+'.png',fullPage:true,animations:'disabled'});
+              await p.screenshot({path:label+'.png',fullPage:true,animations:'disabled'});
               const count=await p.locator('.scholarship-card').count();
               const overflow=await p.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth);
               console.log(JSON.stringify({label,count,overflow,errors}));
               if(count!==15 || overflow || errors.length)throw Error('Failed '+label);
+              const theme=await p.locator('body').evaluate(el=>getComputedStyle(el).getPropertyValue('--green').trim());
+              if(theme!=='#137b70')throw Error('Expected coastal theme on '+label+': '+theme);
+              await p.locator('.university-pill[data-uni-quick="KAIST"]').click();
+              if(await p.locator('.scholarship-card').count()!==1)throw Error('University quick filter failed');
+              await p.locator('.university-pill[data-uni-quick="all"]').click();
+              if(await p.locator('.scholarship-card').count()!==15)throw Error('All universities quick filter failed');
               if(label==='desktop'){
                 await p.locator('[data-view="eligibility"]').first().click();
                 if(await p.locator('.page-mast-eligibility').count()!==1)throw Error('eligibility header missing');
@@ -62,6 +68,8 @@ jobs:
                 if(await p.locator('.compare-slot').count()!==3)throw Error('comparison slots absent');
                 if(await p.locator('.hero-row').count()!==0)throw Error('comparison legacy hero visible');
                                 await p.screenshot({path:'compare.png',fullPage:true,animations:'disabled'});
+                await p.locator('.compare-slot-pick').first().click();
+                if(await p.locator('.page-mast-discover').count()!==1)throw Error('Empty compare slot action failed');
               }
               await p.close();
             }
