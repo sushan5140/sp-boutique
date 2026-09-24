@@ -1,0 +1,73 @@
+name: Visual QA Scholarship Studio V3
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/visual-qa-scholarship-studio-v3.yml'
+      - 'scholarship-studio-v3/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare browser
+        run: |
+          npm install --no-save --no-package-lock --no-audit playwright@1.56.1
+          npx playwright install chromium
+      - name: Render and exercise standalone preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/studio.log 2>&1 &
+          sleep 2
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          (async () => {
+            const b = await chromium.launch({headless: true});
+            const url = 'http://127.0.0.1:8765/scholarship-studio-v3/';
+            for(const [width,height,label] of [[1440,900,'desktop'],[390,844,'mobile'],[800,980,'tablet']]){
+              const p=await b.newPage({viewport:{width,height},deviceScaleFactor:1});
+              const errors=[];
+              p.on('pageerror',err=>errors.push(err.message));
+              await p.goto(url,{waitUntil:'networkidle'});
+              await p.screenshot({path:label+'.png',fullPage:true,animations:'disabled'});
+              const count=await p.locator('.scholarship-card').count();
+              const overflow=await p.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth);
+              console.log(JSON.stringify({label,count,overflow,errors}));
+              if(count!==15 || overflow || errors.length)throw Error('Failed '+label);
+              if(label==='desktop'){
+                await p.locator('[data-view="eligibility"]').first().click();
+                await p.screenshot({path:'eligibility.png',fullPage:true,animations:'disabled'});
+                await p.locator('#profile-form button[type=submit]').click();
+                await p.locator('[data-view="discover"]').first().click();
+                await p.locator('[data-track]').first().click();
+                await p.locator('[data-view="applications"]').first().click();
+                if(await p.locator('.app-card').count()!==1)throw Error('application tracking failed');
+                await p.screenshot({path:'applications.png',fullPage:true,animations:'disabled'});
+                await p.locator('[data-view="compare"]').first().click();
+                await p.locator('input[data-compare]').first().check();
+                if(await p.locator('.compare-table').count()!==1)throw Error('comparison failed');
+                await p.screenshot({path:'compare.png',fullPage:true,animations:'disabled'});
+              }
+              await p.close();
+            }
+            await b.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scholarship-studio-v3-visual-qa
+          path: |
+            desktop.png
+            mobile.png
+            tablet.png
+            eligibility.png
+            applications.png
+            compare.png
+          retention-days: 3
+          if-no-files-found: error
