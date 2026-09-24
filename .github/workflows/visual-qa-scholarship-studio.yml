@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/visual-qa-scholarship-studio.yml'
+      - 'scholarship-studio/**'
   workflow_dispatch:
 permissions:
   contents: read
