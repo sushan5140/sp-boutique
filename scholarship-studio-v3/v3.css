@@ -238,3 +238,10 @@ body{color:var(--ink);background:var(--canvas)}
  .two-col,.field-grid,.app-fields,.app-bottom{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){.scholarship-card,.btn,.action-rail button,.filter-chip{transition:none!important;transform:none!important}}
+
+/* Maintain semantic block flow on featured card after legacy grid reset. */
+.scholarship-card:first-child .card-main{display:block}
+.scholarship-card:first-child .card-head{display:flex}
+.scholarship-card:first-child .benefit{display:flex}
+.scholarship-card:first-child .criteria{display:flex}
+.scholarship-card:first-child .card-actions{display:flex}
