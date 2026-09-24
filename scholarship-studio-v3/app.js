@@ -131,7 +131,7 @@ function stats(){
 }
 function card(s){
  const tracked=state.apps.some(a=>a.id===s.id),compared=state.compare.includes(s.id),m=statusFor(s),u=UNIVERSITY[s.uni];
- return '<article class="scholarship-card"><div class="card-head"><div class="university"><div class="university-icon">'+u.mark+'</div><div><div class="university-name">'+esc(s.uni)+'</div><div class="university-meta">'+esc(u.place)+' · Undergraduate</div></div></div>'+badge(s)+'</div>'+
+ return '<article class="scholarship-card" data-university="'+esc(s.uni)+'"><div class="card-head"><div class="university"><div class="university-icon">'+u.mark+'</div><div><div class="university-name">'+esc(s.uni)+'</div><div class="university-meta">'+esc(u.place)+' · Undergraduate</div></div></div>'+badge(s)+'</div>'+
  '<div class="card-main"><div class="card-meta">'+esc(s.category)+'<span aria-hidden="true">·</span>'+esc(s.scope)+'</div><h3>'+esc(s.name)+'</h3><p class="description">'+esc(s.route)+'</p></div>'+
  '<div class="benefit"><span class="benefit-kicker">PUBLISHED FUNDING</span><strong>'+esc(s.benefit)+'</strong><span class="small-note">'+esc(s.detail)+'</span></div>'+
  '<div class="criteria"><span class="criteria-icon" aria-hidden="true">◎</span><div><strong>YOUR PROFILE SIGNAL</strong><p>'+esc(m.reason)+'</p></div></div>'+
