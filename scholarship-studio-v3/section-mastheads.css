@@ -1,0 +1,140 @@
+/* Scholarship Studio V3 — Purpose-built section mastheads.
+   Discover: explorer / Applications: command center / Compare: builder /
+   Eligibility: readiness overview. The approved standalone dashboard is unchanged.
+   Emil-design-eng: fast intentional affordances, no repeated decorative animation.
+*/
+:root{--work-ink:#1b2946;--work-cobalt:#3e63dd;--work-muted:#6a7893;--work-outline:#e4eaf6}
+.page-mast{
+ min-width:0;display:grid;grid-template-columns:minmax(0,1.32fr) minmax(270px,.68fr);
+ gap:clamp(16px,3vw,39px);padding:clamp(25px,3vw,39px);
+ border-radius:18px;position:relative;isolation:isolate;overflow:hidden;
+ border:1px solid #e2e8f6;background:#fff;
+ margin-bottom:21px;align-items:stretch;
+}
+.page-mast:before{
+ content:'';pointer-events:none;position:absolute;inset:0;z-index:-1;
+ background:radial-gradient(ellipse 65% 100% at 15% 0%,rgba(124,158,248,.11),transparent 75%);
+}
+.mast-copy{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-width:0}
+.mast-eyebrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:9px;letter-spacing:.13em;color:#5d76ad;font-weight:800;margin-bottom:16px}
+.mast-eyebrow-mark{display:grid;place-items:center;color:#3e63dd;background:#edf2ff;border:1px solid #dce5fa;border-radius:7px;width:26px;height:26px;font-size:14px;letter-spacing:0}
+.mast-eyebrow-line{height:1px;width:20px;background:#c1cceb}
+.mast-copy h1{font-size:clamp(31px,3.2vw,49px);font-weight:800;line-height:1.14;letter-spacing:-.065em;color:#1a2946;margin:0 0 13px}
+.mast-copy h1 em{font:italic 400 1.12em/1 "Instrument Serif",Georgia,serif;letter-spacing:-.033em;color:#3e63dd;white-space:normal}
+.mast-copy>p{font-size:12.5px;line-height:1.75;max-width:600px;color:#687791;margin:0}
+.mast-meta{display:flex;align-items:center;flex-wrap:wrap;gap:7px 22px;margin-top:22px;font-size:10px;font-weight:700;color:#71809c}
+.mast-meta span{display:flex;gap:4px;align-items:baseline}
+.mast-meta b{color:#284da5;font-size:12px;font-weight:800}
+.mast-side{align-self:stretch;min-height:175px;min-width:0;border-radius:14px;border:1px solid #dfe7f8;background:#f5f8ff;padding:21px 24px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.mast-side-kicker{font-size:9px;letter-spacing:.125em;font-weight:800;color:#647dad;margin-bottom:15px}
+.mast-side strong{font:800 19px/1.26 Manrope,system-ui,sans-serif;letter-spacing:-.045em;color:#1f3259;max-width:290px}
+.mast-side>p{font-size:11px;line-height:1.6;margin:8px 0 13px;color:#71819d;max-width:295px}
+.mast-link{display:inline-flex;gap:12px;align-items:center;border:0;background:none;padding:4px 0;font-size:11px;color:#3459c4;font-weight:800;text-align:left}
+.mast-link span{transition:transform .16s cubic-bezier(.23,1,.32,1)}
+.mast-link:hover span{transform:translate(2px,-2px)}
+.mast-search-mark{display:grid;place-items:center;width:40px;height:40px;background:white;border:1px solid #e0e7fa;border-radius:12px;font-size:27px;color:#3e63dd;margin-bottom:14px}
+.page-mast-discover{background:linear-gradient(105deg,#f4f7ff 0%,#fff 78%);min-height:251px;border-color:#e1e8f8}
+.page-mast-discover:after{content:'';width:260px;height:260px;border-radius:50%;position:absolute;right:27%;top:-72%;z-index:-1;border:48px solid #e9efff54}
+.mast-side-discover{background:#fff;border-color:#e7ebf6}
+.discovery-workbench{border:1px solid #e5eaf5;border-radius:16px;background:#fff;padding:20px 21px 9px;margin-bottom:14px}
+.discovery-workbench-head,.compare-builder-head{display:flex;gap:16px;justify-content:space-between;align-items:center;margin-bottom:15px}
+.discovery-workbench-head h2,.compare-builder-head h2{font-size:21px;letter-spacing:-.055em;color:#1d2e50;margin:3px 0}
+.discovery-workbench-head p,.compare-builder-head p{font-size:11px;margin:2px 0 0;color:#7d899f}
+.section-kicker{font-size:9px;letter-spacing:.12em;color:#5370ac;font-weight:800}
+.workbench-source-tag{display:inline-flex;align-items:center;white-space:nowrap;background:#f4f7fd;border:1px solid #e5ebf8;border-radius:99px;padding:7px 12px;font-size:10px;color:#687b99;font-weight:750}
+.discovery-filters{padding:0;border:0;box-shadow:none;border-radius:0;gap:10px;background:white;margin-bottom:10px}
+.discovery-search-label{flex:1 1 230px;display:flex;align-items:center;gap:9px;background:#f5f7fc;border:1px solid #e6eaf3;border-radius:10px;padding:0 12px;min-width:0;color:#6680b9}
+.discovery-search-label span{font-size:22px;font-weight:500;line-height:1}
+.discovery-filters .input{background:transparent;border:0;border-radius:0;padding:0;flex:1 1 auto;min-width:0;box-shadow:none!important}
+.discovery-search-label:focus-within{border-color:#8ca6ea;box-shadow:0 0 0 3px #3e63dd19}
+.discovery-filters .select{min-height:44px;border-color:#e2e8f4}
+.discovery-filters .filter-count{font-size:10px;font-weight:750}
+.discovery-workbench .filter-toolbar{margin-bottom:0;border-top:1px solid #f0f2f7;padding-top:11px}
+.page-source-note{font-size:11px;margin:0 0 19px;background:#f3f6fd}
+.page-mast-applications{min-height:225px;background:linear-gradient(112deg,#fff 0%,#f6f9ff 90%)}
+.page-mast-applications:before{background:radial-gradient(ellipse 60% 160% at 30% -95%,#cad8ff4f,transparent 74%)}
+.applications-side{background:#20345a;border-color:#20345a;min-height:186px;padding:23px 25px}
+.applications-side .mast-side-kicker{color:#b5c7ee}
+.applications-side .mast-side-symbol{display:none}
+.applications-side strong{color:#fff}
+.applications-side>p{color:#bfceea;margin-bottom:15px}
+.applications-side .btn{min-height:39px;padding:9px 14px;border-radius:9px;background:#fff;color:#284887;border-color:#fff;font-size:11px}
+.applications-side .btn:hover{background:#eaf0ff;border-color:#eaf0ff}
+.mast-secondary{font-size:10px;border:0;background:none;color:#a2b8e7;font-weight:750;padding:10px 0 0}
+.mast-secondary:hover{text-decoration:underline;text-underline-offset:4px}
+.page-mast-applications + .stats-strip{margin-bottom:27px}
+.page-mast-applications + .stats-strip .stat{min-height:95px}
+.page-mast-compare{min-height:234px;background:linear-gradient(112deg,#f9fbff,#edf3ff 94%);border-color:#dfe7fc}
+.compare-side{background:#fff;border-color:#dfe7fa;min-height:166px}
+.compare-side>p{max-width:280px}
+.compare-mast-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.compare-mast-actions .btn{min-height:38px;border-radius:9px;padding:8px 13px;font-size:11px}
+.compare-mast-actions .mast-secondary{padding:8px 4px;color:#5673b6}
+.compare-builder{background:#fff;border:1px solid #e5eaf5;border-radius:16px;padding:21px;margin:0 0 26px}
+.compare-builder-head{margin-bottom:15px}
+.compare-builder-head .btn{flex:none}
+.compare-slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.compare-slot{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-height:116px;padding:15px;background:#f8faff;border:1px dashed #c8d4ec;border-radius:12px}
+.compare-slot.filled{background:#f0f4ff;border-style:solid;border-color:#b6c8f1}
+.compare-slot>span:first-child{font-size:9px;letter-spacing:.12em;font-weight:800;color:#7690c2}
+.compare-slot>strong{font-size:12px;line-height:1.45;color:#23375f;letter-spacing:-.018em;padding-right:12px;overflow-wrap:anywhere}
+.compare-slot>small{font-size:10px;line-height:1.45;color:#788aa9}
+.compare-slot>button{position:absolute;top:12px;right:12px;border:0;border-radius:7px;width:25px;height:25px;background:#e0e9fc;color:#335bb8;font-size:16px}
+.compare-slot>button:hover{background:#cbdbfb}
+.compare-slot-plus{position:absolute;right:15px;bottom:12px;font-size:21px;color:#9cadd1}
+.compare-pick-heading{margin-bottom:15px}
+.page-mast-eligibility{min-height:241px;background:linear-gradient(110deg,#fff 0%,#f2f6ff 100%)}
+.eligibility-side{background:#fff;min-height:176px;padding:20px 23px}
+.eligibility-side .mast-side-kicker{margin-bottom:9px}
+.eligibility-progress-number{font:800 37px/1 Manrope,sans-serif;letter-spacing:-.06em;color:#3e63dd}
+.eligibility-progress-number>span{font-size:18px;color:#8396b8}
+.eligibility-side strong{font-size:13px;margin:7px 0 4px}
+.eligibility-side .progress-track{width:100%;margin:10px 0 2px;height:6px;background:#e7edfc}
+.eligibility-side .progress-track span{background:#3e63dd}
+.eligibility-side>p{font-size:10px;margin:5px 0 10px}
+.eligibility-side .mast-link{font-size:10px}
+.page-mast-eligibility + .two-col{align-items:start}
+.page-mast-eligibility + .two-col .panel{border-radius:15px}
+@media(max-width:1150px){
+ .page-mast{grid-template-columns:minmax(0,1fr) minmax(240px,.75fr);gap:19px;padding:24px}
+ .mast-side{padding:18px}
+ .mast-copy h1{font-size:clamp(31px,3.5vw,45px)}
+ .discovery-filters .filter-count{width:100%;margin-left:0}
+}
+@media(max-width:850px){
+ .page-mast{grid-template-columns:minmax(0,1fr);padding:22px;gap:18px}
+ .mast-copy h1{font-size:clamp(34px,5vw,45px)}
+ .mast-side{min-height:0;padding:17px}
+ .mast-side-discover .mast-search-mark{display:none}
+ .mast-side-discover,.applications-side,.eligibility-side,.compare-side{min-height:0}
+ .applications-side{flex-direction:row;flex-wrap:wrap;gap:9px 16px;align-items:center}
+ .applications-side .mast-side-kicker{flex-basis:100%;margin:0}
+ .applications-side strong{max-width:290px}
+ .applications-side>p{flex:1;min-width:200px;margin:0}
+ .applications-side .mast-secondary{padding:7px}
+ .compare-slots{gap:8px}
+ .compare-slot{padding:12px}
+}
+@media(max-width:590px){
+ .page-mast{border-radius:15px;padding:21px 17px;gap:15px;margin-bottom:15px}
+ .mast-copy h1{font-size:clamp(34px,9vw,44px)}
+ .mast-copy>p{font-size:12px}
+ .mast-eyebrow{font-size:9px}
+ .mast-meta{gap:7px 15px;margin-top:17px}
+ .mast-side{border-radius:11px;padding:16px}
+ .mast-side strong{font-size:18px}
+ .discovery-workbench{padding:18px 14px 10px}
+ .discovery-workbench-head,.compare-builder-head{align-items:flex-start;flex-wrap:wrap;gap:10px}
+ .workbench-source-tag{font-size:9px}
+ .discovery-search-label{flex-basis:100%}
+ .discovery-filters .select{flex:1;min-width:0}
+ .discovery-workbench-head h2,.compare-builder-head h2{font-size:20px}
+ .compare-builder{padding:16px 13px}
+ .compare-slots{grid-template-columns:1fr}
+ .compare-slot{min-height:87px}
+ .compare-slot>small{max-width:85%}
+ .page-mast-applications + .stats-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(prefers-reduced-motion:reduce){
+ .mast-link span,.aside-step,.compare-slot>button{transition:none!important;transform:none!important}
+}
