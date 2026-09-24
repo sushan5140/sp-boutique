@@ -1,0 +1,247 @@
+/* Scholarship Studio V3 — KMate cobalt identity, refined product-workbench interface.
+   Edition I & Edition II remain separate and unchanged. */
+:root{--canvas:#f6f8fc;--white:#fff;--ink:#141b30;--muted:#677286;--line:#e5eaf3;--green:#3e63dd;--deep:#3454c4;--mint:#eef2ff;--shadow:0 3px 18px -12px rgba(22,36,67,.22);--soft-shadow:0 14px 48px -35px rgba(30,49,94,.32);--page-spacing:clamp(23px,3.2vw,52px)}
+body{color:var(--ink);background:var(--canvas)}
+.app-shell{grid-template-columns:252px minmax(0,1fr)}
+.sidebar{padding:28px 16px 21px;background:#fff;border-right:1px solid #e5eaf3}
+.brand{padding:0 9px;gap:12px}
+.brand-symbol{width:43px;height:43px;background:#3e63dd;border-radius:13px;box-shadow:0 8px 20px -12px #3e63dd}
+.brand-symbol span{font-size:30px}
+.brand-name{letter-spacing:.14em;color:#697a99;font-size:10px}
+.brand-name.strong{font-size:21px;line-height:1.05;color:#17213a}
+.brand-dot{color:#3e63dd}
+.side-kicker{padding:44px 15px 13px;font-size:10px;letter-spacing:.14em;color:#99a4b6;text-transform:uppercase}
+.side-nav{gap:5px}
+.nav-item{height:48px;font-size:12.5px;padding:0 14px;font-weight:700;border-radius:12px;color:#60708b}
+.nav-item.active{background:#edf2ff;color:#3157c9;box-shadow:inset 3px 0 0 #3e63dd}
+.nav-item:not(.active):hover{background:#f6f8fd;color:#1c2d4c}
+.nav-icon{font-size:18px}
+.nav-tail{font-size:14px}
+.nav-count{background:#f1f4fa;color:#6a7894}
+.nav-item.active .nav-count{background:#dce7ff;color:#2e55c6}
+.profile-mini{padding:20px 7px}
+.profile-orb{background:#e6edff;color:#3e63dd}
+.local-note{background:#f7f9fe;border:1px solid #e7ecf7;color:#4a6199}
+.local-note p{color:#8794a7}
+.sidebar-utility{padding:15px 8px 0;font-size:11px}
+.topbar{height:69px;padding:0 var(--page-spacing);background:rgba(255,255,255,.73);backdrop-filter:blur(14px)}
+.breadcrumb{font-size:10px;letter-spacing:.09em}
+.breadcrumb b{color:#324b8b}
+.verified-pill{font-size:10px;background:#f3f7fd;border:1px solid #e7edf8;border-radius:99px;padding:7px 11px}
+.avatar{background:#e9eeff;color:#385bc3;border-color:#e0e8fc}
+.main-content{max-width:1670px;padding:31px var(--page-spacing) 64px}
+.footer{padding:22px var(--page-spacing);font-size:10px}
+.hero-row,.hero-compact{
+ position:relative;isolation:isolate;overflow:hidden;display:grid;
+ grid-template-columns:minmax(0,1fr) minmax(310px,.88fr);
+ gap:32px;align-items:stretch;align-content:stretch;
+ background:#121a32;border:1px solid #202d4b;
+ border-radius:20px;padding:24px;min-height:341px;margin-bottom:22px;
+ box-shadow:0 16px 42px -32px #111f46bd;
+}
+.hero-row::before{content:"";position:absolute;inset:0;background-image:linear-gradient(#8199cf15 1px,transparent 1px),linear-gradient(90deg,#8199cf15 1px,transparent 1px);background-size:49px 49px;mask-image:linear-gradient(90deg,black,transparent 75%);opacity:1;z-index:-1}
+.hero-row::after{content:"";position:absolute;top:-200px;left:0;width:430px;height:430px;border-radius:50%;background:#455fc2;filter:blur(155px);opacity:.22;z-index:-1}
+.hero-copy{grid-column:1;grid-row:1;align-self:center;padding:24px 0 24px clamp(8px,2vw,30px);max-width:750px}
+.hero-overline{margin-bottom:18px;letter-spacing:.14em;font-size:10px;color:#afc1ec;text-transform:uppercase;white-space:normal}
+.hero-overline-line{background:#9bb1ff}
+.hero-overline-tail{color:#7f91be}
+.hero-row h1,.hero-compact h1{font-size:clamp(42px,4.2vw,64px);line-height:1.075;letter-spacing:-.069em;color:white;margin:0 0 17px;font-weight:800;max-width:660px}
+.hero-row h1 em,.hero-compact h1 em{font:italic 400 1.085em/.9 "Instrument Serif",Georgia,serif;color:#bbcaff;letter-spacing:-.03em;white-space:normal}
+.hero-row p,.hero-compact p{max-width:510px;color:#c0c9df;font-size:13px;line-height:1.8;margin:0}
+.hero-actions{grid-column:auto;grid-row:auto;display:flex;justify-content:flex-start;margin-top:23px}
+.hero-actions .btn-primary{background:#f7f9ff;color:#2b448d;border-color:#f7f9ff;box-shadow:0 7px 22px #060c292e}
+.hero-actions .btn-primary:hover:not(:disabled){background:#e8edff;border-color:#e8edff}
+.hero-actions .btn:not(.btn-primary){background:#263351;color:#fff;border-color:#445478}
+.hero-aside{z-index:1;background:linear-gradient(142deg,#f8faff,#e8efff);border:1px solid #ffffff9c;color:#23365d;border-radius:15px;padding:24px 24px 17px;display:flex;flex-direction:column;min-height:290px;align-self:stretch;box-shadow:0 20px 32px -25px #010d3335}
+.aside-top,.aside-bottom{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.aside-eyebrow{font-size:10px;letter-spacing:.14em;font-weight:800;color:#6178aa}
+.aside-spark{font-size:26px;color:#3e63dd;line-height:1}
+.aside-main{margin:14px 0 17px}
+.aside-index{font-size:9px;font-weight:800;letter-spacing:.12em;color:#607db6}
+.hero-aside h2{font-size:clamp(22px,2vw,28px);line-height:1.16;color:#1b2e56;margin:7px 0 0;font-weight:800;letter-spacing:-.055em}
+.aside-steps{display:flex;flex-direction:column;gap:0;border-top:1px solid #cbd7f2}
+.aside-step{display:flex;align-items:center;gap:12px;border-bottom:1px solid #cbd7f2;padding:10px 0}
+.aside-step>span:first-child{font-size:10px;font-weight:800;color:#8196bd}
+.aside-step>div{min-width:0;display:flex;flex-direction:column;gap:0}
+.aside-step strong{font-size:11px;color:#243a65;white-space:normal}
+.aside-step small{font-size:10px;color:#7a90b0}
+.aside-step .step-arrow{margin-left:auto;color:#4f6fb4;font-size:14px}
+.aside-bottom{font-size:9px;color:#6f83aa;font-weight:800;letter-spacing:.07em;margin-top:auto;padding-top:14px}
+.aside-live-dot{width:7px;height:7px;border-radius:50%;background:#2fa36b;box-shadow:0 0 0 3px #2fa36b21}
+.aside-bottom-right{font-size:8px;color:#9aaaca;margin-left:auto}
+.hero-compact{min-height:290px}
+.hero-compact .hero-copy{padding-top:15px;padding-bottom:15px}
+.hero-compact h1{font-size:clamp(38px,3.5vw,54px)}
+.hero-compact .hero-aside{min-height:245px}
+.hero-compact .aside-main{margin:8px 0 11px}
+.hero-compact .hero-aside h2{font-size:23px}
+.hero-compact .aside-step{padding:7px 0}
+.stats-strip{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;background:none;border:0;border-radius:0;box-shadow:none;overflow:visible;margin-bottom:18px}
+.stat{border:1px solid #e4eaf5;border-radius:14px;min-height:111px;padding:19px 20px;box-shadow:var(--shadow)}
+.stat:first-child,.stat.highlight{background:#fff;border-color:#cddbf8;color:var(--ink)}
+.stat.highlight .stat-value{color:#3e63dd}
+.stat.highlight .stat-label,.stat.highlight .stat-meta{color:#74829e}
+.stat .stat-label{color:#77869d}
+.stat .stat-value{font-size:28px}
+.stat .stat-meta{color:#8997aa}
+.stat-symbol{color:#3e63dd1f;top:17px}
+.action-rail{display:flex;gap:10px;align-items:stretch;padding:13px;background:#fff;border:1px solid #e3eaf6;border-radius:15px;margin-bottom:15px;box-shadow:var(--shadow)}
+.action-rail>div:first-child{display:flex;flex-direction:column;justify-content:center;min-width:170px;margin:0 auto 0 5px}
+.rail-kicker{font-size:9px;font-weight:800;letter-spacing:.13em;color:#8191ae}
+.action-rail>div:first-child strong{font-size:14px;letter-spacing:-.04em;color:#273753}
+.action-rail button{border:1px solid #e5eaf4;background:#f8faff;padding:13px 12px;border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#3555b0;font-size:13px;min-width:125px;flex:1;max-width:220px;text-align:left;transition:background .16s ease,border-color .16s ease,transform .16s ease}
+.action-rail button span{font-size:11px;font-weight:800;color:#303e61;white-space:normal}
+.action-rail button b{font-size:13px;font-weight:600}
+.action-rail button:hover{background:#edf2ff;border-color:#b9c9ef;transform:translateY(-1px)}
+.banner{border-radius:12px;background:#f1f5fe;border-color:#e3ebfb;margin-bottom:36px;font-size:11px;padding:13px 16px}
+.banner strong{color:#3456a2}
+.section-heading{margin-bottom:18px}
+.section-heading h2{font-size:clamp(24px,2.4vw,32px)}
+.section-heading .eyebrow{color:#4463a6;letter-spacing:.12em;text-transform:uppercase;font-size:9px}
+.section-heading p{font-size:12px}
+.no-gks{color:#5e6f92;background:#fff;border-color:#e5eaf4;font-size:10px}
+.filters{background:#fff;border:1px solid #e5eaf3;border-radius:13px;padding:11px;gap:9px;margin-bottom:12px}
+.filters .input{border:0;background:#f5f7fc;min-width:185px;min-height:41px}
+.filters .select{min-height:41px;border-color:#e3e9f4;min-width:142px}
+.filter-count{font-size:11px}
+.filter-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:17px}
+.filter-tabs{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.filter-tabs-label{font-size:10px;font-weight:800;letter-spacing:.11em;color:#909eb4;margin-right:5px}
+.filter-chip,.filter-clear{border:1px solid #e5eaf3;border-radius:9px;background:#fff;padding:8px 11px;font-size:11px;color:#61718d;font-weight:700}
+.filter-chip:hover,.filter-clear:hover{border-color:#b5c5ed;color:#3659be}
+.filter-chip.is-selected{border-color:#c7d6fa;color:#3659be;background:#edf2ff}
+.filter-chip span{border-radius:50px;background:#e8ecf7;padding:2px 6px;margin-left:5px}
+.filter-clear{border:0;background:transparent;color:#7183a5}
+.card-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.scholarship-card,.scholarship-card:first-child{display:flex;flex-direction:column;grid-column:auto;grid-row:auto;min-height:0;padding:23px;border-radius:15px;border:1px solid #e4e9f3;background:#fff;box-shadow:var(--shadow);gap:0;transform:none;transition:border-color .17s ease,box-shadow .17s ease,transform .17s ease}
+.scholarship-card::before,.scholarship-card:first-child::before{display:block;background:#3e63dd;transform:scaleY(0);transform-origin:top;transition:transform .18s ease;height:100%;width:3px}
+.scholarship-card:hover,.scholarship-card:first-child:hover{transform:translateY(-2px);border-color:#cbd7f4;box-shadow:0 9px 31px -21px #14274d73}
+.scholarship-card:hover::before,.scholarship-card:first-child:hover::before{transform:scaleY(1)}
+.scholarship-card:first-child:after{display:none}
+.scholarship-card:first-child .card-head,.scholarship-card:first-child .card-main,.scholarship-card:first-child .benefit,.scholarship-card:first-child .criteria,.scholarship-card:first-child .card-actions{display:initial;grid-column:auto;grid-row:auto;align-self:auto}
+.card-head{display:flex!important;align-items:center;gap:10px;justify-content:space-between}
+.university-icon,.scholarship-card:first-child .university-icon{background:#eaf0ff;color:#385bc1;border-radius:10px}
+.university-name{font-size:12px;color:#1a2948}
+.university-meta{font-size:10px}
+.tag{border-radius:8px;font-size:9.5px;padding:6px 8px;max-width:58%;white-space:normal;text-align:center;line-height:1.25}
+.tag.subtle{background:#edf2ff;color:#3c5dab}
+.card-main{margin-top:16px;min-height:106px}
+.card-meta{font-size:9px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;display:flex;align-items:center;gap:8px;color:#8b9ab2}
+.scholarship-card h3,.scholarship-card:first-child h3{font-size:clamp(18px,1.8vw,21px);margin:9px 0 5px;line-height:1.36;color:#1a2641}
+.description{font-size:11px;line-height:1.65;min-height:0;margin-bottom:0;color:#8290a3}
+.benefit,.scholarship-card:first-child .benefit{background:#f5f7fe;border:1px solid #edf1fc;border-radius:11px;padding:13px 15px;display:flex!important;flex-direction:column;gap:3px;margin-top:17px;min-height:0}
+.benefit-kicker{font-size:9px;font-weight:800;letter-spacing:.13em;color:#8193b4}
+.benefit strong,.scholarship-card:first-child .benefit strong{font-size:14px;color:#2d4a9d;max-width:none}
+.benefit .small-note,.scholarship-card:first-child .benefit .small-note{font-size:11px;color:#7888a4;text-align:left;max-width:none;margin:0}
+.criteria,.scholarship-card:first-child .criteria{margin-top:13px;padding:12px 0 0;min-height:0;display:flex!important;gap:9px;border-top:1px solid #eef1f8;border-radius:0;background:none;border-left:0;border-right:0;border-bottom:0}
+.criteria-icon{width:24px;height:24px;flex:none;display:grid;place-items:center;border-radius:7px;background:#eaf0ff;color:#3e63dd}
+.criteria>div{min-width:0}
+.criteria strong{display:block;font-size:9px;letter-spacing:.12em;font-weight:800;color:#6980b2;margin-bottom:3px}
+.criteria p{font-size:11px;line-height:1.65;color:#65748e;margin:0}
+.card-actions,.scholarship-card:first-child .card-actions{display:flex!important;margin-top:auto;padding-top:17px;border-top:0;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.card-actions .left{display:flex;gap:7px;flex-wrap:wrap}
+.btn{border-radius:10px}
+.btn-small{min-height:35px;border-radius:9px}
+.card-actions .btn-small{padding:8px 10px;font-size:10.5px}
+.source-link{font-size:10px;color:#3558bd}
+.panel,.app-card{border-color:#e5eaf4}
+.panel-title h3{color:#1f2e4d}
+.app-top{border-color:#3e63dd}
+.compare-choice{border-color:#e6eaf3}
+.compare-table-wrap{border-color:#e6eaf3}
+.compare-table thead th{background:#edf2ff}
+.empty-state{border-color:#d9e3fa}
+@media(max-width:1260px){
+ .hero-row{grid-template-columns:minmax(0,1fr) minmax(265px,.81fr);gap:18px}
+ .hero-aside{padding:20px}
+ .hero-row h1{font-size:clamp(36px,3.9vw,52px)}
+ .hero-compact h1{font-size:clamp(34px,3.6vw,48px)}
+ .action-rail>div:first-child{min-width:125px}
+ .action-rail button{min-width:0}
+ .card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .tag{max-width:55%}
+}
+@media(max-width:990px){
+ .app-shell{display:block}
+ .sidebar{position:relative;height:auto;min-height:0;border-right:0;border-bottom:1px solid #e5eaf3;padding:15px 21px;display:flex;flex-direction:column;align-items:stretch}
+ .brand{padding:0}
+ .side-kicker,.sidebar-bottom{display:none}
+ .side-nav{display:flex;flex-direction:row;margin-top:14px;gap:6px;overflow:auto}
+ .nav-item{height:42px;flex:none}
+ .nav-item.active{box-shadow:inset 0 -2px 0 #3e63dd}
+ .nav-tail{display:none}
+ .topbar{height:59px}
+ .main-content{padding:25px 22px 50px}
+ .hero-row{grid-template-columns:minmax(0,1.1fr) minmax(240px,.9fr);gap:18px;min-height:0}
+ .hero-copy{padding:16px 0 16px 10px}
+ .hero-aside{min-height:0}
+ .hero-row h1{font-size:clamp(36px,5vw,51px)}
+ .action-rail{flex-wrap:wrap}
+ .action-rail>div:first-child{min-width:100%;margin:0}
+ .action-rail button{max-width:none;min-width:125px}
+}
+@media(max-width:700px){
+ .hero-row,.hero-compact{grid-template-columns:1fr;gap:17px;padding:19px}
+ .hero-copy{padding:10px 5px 6px}
+ .hero-aside{padding:19px;min-height:0}
+ .aside-main{margin:11px 0}
+ .aside-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;border-top:1px solid #cbd7f2;padding-top:10px}
+ .aside-step{border-bottom:0;align-items:start;gap:5px}
+ .aside-step>span:first-child{font-size:9px}
+ .aside-step strong{font-size:10px}
+ .aside-step small{font-size:9px}
+ .aside-step .step-arrow{display:none}
+ .aside-bottom{border-top:1px solid #cbd7f2;padding-top:10px}
+ .hero-row h1{font-size:clamp(35px,7vw,53px)}
+ .card-grid{grid-template-columns:1fr}
+ .card-main{min-height:0}
+ .scholarship-card{padding:21px}
+ .stats-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .stat{min-height:100px}
+ .action-rail button{min-width:125px;flex:1}
+ .filter-toolbar{flex-wrap:wrap}
+}
+@media(max-width:520px){
+ .main-content{padding:17px 14px 44px}
+ .sidebar{padding:13px 14px}
+ .brand-symbol{width:37px;height:37px}
+ .brand-name.strong{font-size:17px}
+ .side-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;overflow:visible}
+ .nav-item{flex:1 1 0;min-width:0;padding:0 4px;justify-content:center;font-size:10px;gap:0;height:39px}
+ .nav-item .nav-icon,.nav-item .nav-count{display:none}
+ .topbar{padding:0 15px}
+ .verified-pill{display:none}
+ .hero-row{padding:14px;border-radius:16px}
+ .hero-copy{padding:15px 9px 7px}
+ .hero-row h1,.hero-compact h1{font-size:clamp(36px,10vw,48px)}
+ .hero-overline-tail{display:none}
+ .hero-aside{padding:16px}
+ .aside-main h2{font-size:22px}
+ .aside-step{flex-direction:column}
+ .aside-bottom-right{display:none}
+ .stat{padding:15px}
+ .stat .stat-value{font-size:25px}
+ .action-rail{padding:10px;gap:7px}
+ .action-rail button{min-width:0;flex:1 1 100%;padding:11px}
+ .banner{margin-bottom:25px}
+ .section-heading h2{font-size:25px}
+ .filters .input{flex:1 1 100%;min-width:0}
+ .filters .select{flex:1;min-width:0}
+ .filter-count{width:100%;margin-left:0;padding-left:5px}
+ .filter-tabs-label{width:100%}
+ .filter-toolbar .filter-clear{margin-left:auto}
+ .scholarship-card,.scholarship-card:first-child{padding:19px}
+ .card-head{gap:7px}
+ .tag{font-size:9px;max-width:49%}
+ .card-actions .left{width:100%}
+ .card-actions .source-link{margin-left:0}
+ .two-col,.field-grid,.app-fields,.app-bottom{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){.scholarship-card,.btn,.action-rail button,.filter-chip{transition:none!important;transform:none!important}}
+
+/* Maintain semantic block flow on featured card after legacy grid reset. */
+.scholarship-card:first-child .card-main{display:block}
+.scholarship-card:first-child .card-head{display:flex}
+.scholarship-card:first-child .benefit{display:flex}
+.scholarship-card:first-child .criteria{display:flex}
+.scholarship-card:first-child .card-actions{display:flex}
