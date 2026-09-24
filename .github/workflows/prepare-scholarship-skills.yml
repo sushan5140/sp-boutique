@@ -1,0 +1,51 @@
+name: Prepare Scholarship Studio skill references
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/prepare-scholarship-skills.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  clone-references:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout preview repository
+        uses: actions/checkout@v4
+      - name: Clone the eight requested upstream skill repositories
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p skills
+          repos=(
+            "emilkowalski/skills"
+            "anthropics/skills"
+            "nextlevelbuilder/ui-ux-pro-max-skill"
+            "hamen/material-3-skill"
+            "multica-ai/andrej-karpathy-skills"
+            "delphi-ai/animate-skill"
+            "kylezantos/design-motion-principles"
+            "AgentsORG/design-engineering"
+          )
+          for repo in "${repos[@]}"; do
+            folder="${repo//\//--}"
+            echo "::group::Cloning $repo"
+            git clone --depth=1 --single-branch "https://github.com/$repo.git" "skills/$folder"
+            (cd "skills/$folder" && printf '%s\t%s\t%s\n' "$repo" "$(git rev-parse HEAD)" "$(git log -1 --format=%cI)") >> skills/CLONE-MANIFEST.tsv
+            echo "::endgroup::"
+          done
+          test "$(find skills -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 8
+          cat skills/CLONE-MANIFEST.tsv
+      - name: Archive cloned skills including shallow Git metadata
+        run: tar -czf scholarship-studio-skills.tar.gz -C skills .
+      - name: Upload full skill clone bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: scholarship-studio-skills-full-clones
+          path: scholarship-studio-skills.tar.gz
+          retention-days: 30
+          if-no-files-found: error
