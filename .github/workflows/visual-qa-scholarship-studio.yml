@@ -44,6 +44,7 @@ jobs:
                 await p.locator('#profile-form button[type=submit]').click();
                 await p.locator('[data-view="discover"]').first().click();
                 await p.locator('[data-track]').first().click();
+                await p.locator('[data-view="applications"]').first().click();
                 if(await p.locator('.app-card').count()!==1)throw Error('application tracking failed');
                 await p.screenshot({path:'applications.png',fullPage:true,animations:'disabled'});
                 await p.locator('[data-view="compare"]').first().click();
@@ -57,6 +58,7 @@ jobs:
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: scholarship-studio-visual-qa
           path: |
