@@ -57,7 +57,7 @@ function byId(id){return SCHOLARSHIPS.find(s=>s.id===id);}
 function readState(){try{const old=JSON.parse(localStorage.getItem(STORAGE_KEY));if(old&&typeof old==='object')return {profile:Object.assign({},DEFAULT_PROFILE,old.profile||{}),apps:Array.isArray(old.apps)?old.apps.filter(a=>byId(a.id)):[],compare:Array.isArray(old.compare)?old.compare.filter(id=>byId(id)).slice(0,3):[]};}catch(e){}return {profile:{...DEFAULT_PROFILE},apps:[],compare:[]};}
 let state=readState();
 let view=['discover','eligibility','applications','compare'].includes(location.hash.slice(1))?location.hash.slice(1):'discover';
-let filters={search:'',uni:'all',match:'all'};
+let filters={search:'',uni:'all',match:'all',tracked:false};
 let timer=0;
 function store(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){toast('Browser storage is unavailable. Use Export to keep a copy.');}syncShell();}
 function toast(msg){const node=$('#toast');node.textContent=msg;node.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>node.classList.remove('show'),3400);}
@@ -96,28 +96,46 @@ function navigate(next){if(!['discover','eligibility','applications','compare'].
 function shell(body){return '<div class="main-content">'+body+'</div>';}
 function sectionEyebrow(text){return '<div class="eyebrow">'+esc(text)+'</div>';}
 function stat(label,value,meta,highlight){return '<div class="stat'+(highlight?' highlight':'')+'"><div class="stat-label">'+label+'</div><div class="stat-value">'+value+'</div><div class="stat-meta">'+meta+'</div>'+(highlight?'<span class="stat-symbol">✳</span>':'')+'</div>';}
-function header(title,subtitle,action){return '<section class="hero-row'+(view==='discover'?' hero-discover':' hero-compact')+'"><div class="hero-copy"><div class="hero-overline"><span class="hero-overline-line"></span>University funding, made navigable <span class="hero-overline-tail">/ South Korea</span></div><h1>'+title+'</h1><p>'+subtitle+'</p></div><div class="hero-actions">'+(action||'')+'</div><div class="hero-graphic" aria-hidden="true"><span class="graphic-index">SCHOLARSHIP STUDIO <b>2027</b></span><div class="graphic-orbit orbit-outer"></div><div class="graphic-orbit orbit-inner"></div><div class="graphic-center">KR<span>✳</span></div><span class="graphic-star">✳</span><span class="graphic-foot">EXPLORE THE POSSIBILITIES</span></div></section>';}
-function stats(){const meets=SCHOLARSHIPS.filter(s=>statusFor(s).key==='good').length;return '<div class="stats-strip">'+stat('Curated awards',SCHOLARSHIPS.length,'4 university sources',true)+stat('Published criteria met',meets,'Not an award prediction')+stat('Applications tracked',state.apps.length,'Stored on this device')+stat('Ready to compare',state.compare.length+'/3','Select up to three awards')+'</div>';}
+function heroAside(){
+ const hasProfile=completeness()>=4;
+ const items=view==='discover'
+   ? [['01','Build your profile',completeness()+'/5 essentials'],['02','Shortlist scholarships',state.compare.length+' in comparison'],['03','Organise applications',state.apps.length+' in progress']]
+   : view==='eligibility'
+   ? [['01','Study direction',state.profile.major||'Choose a major'],['02','Language route',state.profile.language||'Not decided'],['03','Target intake',state.profile.intake||'Not decided']]
+   : view==='applications'
+   ? [['01','Saved opportunities',state.apps.length+' application'+(state.apps.length===1?'':'s')],['02','Preparing',state.apps.filter(a=>a.stage==='Preparing documents').length+' in preparation'],['03','Submitted',state.apps.filter(a=>a.stage==='Submitted').length+' recorded']]
+   : [['01','Side-by-side detail',state.compare.length+'/3 selected'],['02','Source-linked rules','No guesses or scores'],['03','Make your shortlist','Compare up to three']];
+ return '<aside class="hero-aside"><div class="aside-top"><span class="aside-eyebrow">YOUR FUNDING DESK</span><span class="aside-spark" aria-hidden="true">✳</span></div><div class="aside-main"><span class="aside-index">'+(view==='discover'?'START HERE':view==='eligibility'?'YOUR DETAILS':view==='applications'?'YOUR PROGRESS':'YOUR SHORTLIST')+'</span><h2>'+(view==='discover'?'One clear place to<br>start your search.':view==='eligibility'?'The details that<br>make a difference.':view==='applications'?'Your progress,<br>at a glance.':'The complete<br>picture.')+'</h2></div><div class="aside-steps">'+items.map(x=>'<div class="aside-step"><span>'+x[0]+'</span><div><strong>'+esc(x[1])+'</strong><small>'+esc(x[2])+'</small></div><span class="step-arrow">↗</span></div>').join('')+'</div><div class="aside-bottom"><span class="aside-live-dot"></span> '+(hasProfile?'PROFILE IN PROGRESS':'YOUR WORKSPACE IS READY')+' <span class="aside-bottom-right">SOUTH KOREA · 2027</span></div></aside>';
+}
+function header(title,subtitle,action){
+ return '<section class="hero-row'+(view==='discover'?' hero-discover':' hero-compact')+'"><div class="hero-copy"><div class="hero-overline"><span class="hero-overline-line"></span>UNIVERSITY SCHOLARSHIPS <span class="hero-overline-tail">/ A WORKSPACE FOR KOREA</span></div><h1>'+title+'</h1><p>'+subtitle+'</p><div class="hero-actions">'+(action||'')+'</div></div>'+heroAside()+'</section>';
+}
+function stats(){
+ const meets=SCHOLARSHIPS.filter(s=>statusFor(s).key==='good').length;
+ return '<div class="stats-strip">'+stat('Curated awards',SCHOLARSHIPS.length,'4 official university sources',true)+stat('Published criteria met',meets,'Not an award prediction')+stat('Applications tracked',state.apps.length,'Saved on this device')+stat('Your comparison',state.compare.length+'/3','Up to three awards')+'</div>';
+}
 function card(s){
  const tracked=state.apps.some(a=>a.id===s.id),compared=state.compare.includes(s.id),m=statusFor(s),u=UNIVERSITY[s.uni];
- return '<article class="scholarship-card"><div class="card-head"><div class="university"><div class="university-icon">'+u.mark+'</div><div><div class="university-name">'+esc(s.uni)+'</div><div class="university-meta">'+u.place+' · Undergraduate</div></div></div>'+badge(s)+'</div>'+
- '<h3>'+esc(s.name)+'</h3><p class="description">'+esc(s.category)+' · '+esc(s.route)+'</p>'+
- '<div class="benefit"><strong>'+esc(s.benefit)+'</strong><span class="small-note">'+esc(s.detail)+'</span></div>'+
- '<div class="criteria"><strong>Profile insight · </strong>'+esc(m.reason)+'</div>'+
- '<div class="card-actions"><div class="left"><button class="btn btn-small '+(tracked?'btn-light':'btn-primary')+'" data-track="'+s.id+'">'+(tracked?'✓ Tracking':'＋ Track application')+'</button><button class="btn btn-small '+(compared?'btn-light':'')+'" data-compare="'+s.id+'">'+(compared?'✓ Selected':'⊞ Compare')+'</button></div>'+sourceLink(s)+'</div></article>';
+ return '<article class="scholarship-card"><div class="card-head"><div class="university"><div class="university-icon">'+u.mark+'</div><div><div class="university-name">'+esc(s.uni)+'</div><div class="university-meta">'+esc(u.place)+' · Undergraduate</div></div></div>'+badge(s)+'</div>'+
+ '<div class="card-main"><div class="card-meta">'+esc(s.category)+'<span aria-hidden="true">·</span>'+esc(s.scope)+'</div><h3>'+esc(s.name)+'</h3><p class="description">'+esc(s.route)+'</p></div>'+
+ '<div class="benefit"><span class="benefit-kicker">PUBLISHED FUNDING</span><strong>'+esc(s.benefit)+'</strong><span class="small-note">'+esc(s.detail)+'</span></div>'+
+ '<div class="criteria"><span class="criteria-icon" aria-hidden="true">◎</span><div><strong>YOUR PROFILE SIGNAL</strong><p>'+esc(m.reason)+'</p></div></div>'+
+ '<div class="card-actions"><div class="left"><button class="btn btn-small '+(tracked?'btn-light':'btn-primary')+'" data-track="'+s.id+'">'+(tracked?'✓ View application':'＋ Track application')+'</button><button class="btn btn-small '+(compared?'btn-light':'')+'" data-compare="'+s.id+'">'+(compared?'✓ In comparison':'⊞ Compare')+'</button></div>'+sourceLink(s,'Official source ↗')+'</div></article>';
 }
 function filteredAwards(){return SCHOLARSHIPS.filter(s=>{
  const text=(s.uni+' '+s.name+' '+s.benefit+' '+s.category).toLowerCase();
- return text.includes(filters.search.toLowerCase())&&(filters.uni==='all'||s.uni===filters.uni)&&(filters.match==='all'||statusFor(s).key===filters.match);
+ return text.includes(filters.search.toLowerCase())&&(filters.uni==='all'||s.uni===filters.uni)&&(filters.match==='all'||statusFor(s).key===filters.match)&&(!filters.tracked||state.apps.some(a=>a.id===s.id));
 });}
 function renderCards(){const awards=filteredAwards();$('#catalog-count').textContent=awards.length+' of '+SCHOLARSHIPS.length+' shown';$('#catalog-grid').innerHTML=awards.length?awards.map(card).join(''):'<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⌕</div><h3>No awards in this view</h3><p>Try another university or remove the profile-criterion filter.</p><button class="btn btn-primary" id="clear-filters">Clear filters</button></div>';}
 function discover(){
- const profileButton='<button class="btn btn-primary" data-view="eligibility">✦ Set up my profile →</button>';
- let html=header('Your next chapter,<br><em>funded with clarity.</em>','A focused workspace for university-funded opportunities in South Korea. Explore official awards, check published criteria, and organize applications — separate from GKS.',profileButton)+stats()+
+ const profileButton='<button class="btn btn-primary" data-view="eligibility">Set up my profile <span aria-hidden="true">↗</span></button>'; 
+ let html=header('Make room for<br><em>what’s next.</em>','A focused workspace for university-funded opportunities in South Korea. Explore official awards, check published criteria, and organize applications — separate from GKS.',profileButton)+stats()+
+ '<div class="action-rail"><div><span class="rail-kicker">PICK UP WHERE YOU LEFT OFF</span><strong>Make your next move.</strong></div><button data-view="eligibility">◎ <span>My eligibility</span> <b>↗</b></button><button data-view="applications">▤ <span>My applications</span> <b>↗</b></button><button data-view="compare">⊞ <span>Compare awards</span> <b>↗</b></button></div>'+
  '<div class="banner"><span>ⓘ</span><div><strong>Curated preview, not a live admissions feed.</strong> Award details were checked against official university pages on '+SOURCE_DATE+'. Deadlines follow individual admissions rounds. Always verify current intake requirements at the source.</div></div>'+
  '<div class="section-heading"><div><div class="eyebrow">Discover opportunities</div><h2>Explore scholarships</h2><p>Source-linked university awards. Your criteria insights appear on every card.</p></div><div class="no-gks"><span class="pulse"></span> Non-GKS awards only</div></div>'+
  '<div class="filters"><input id="search" class="input" type="search" placeholder="Search university, award or benefit…" value="'+esc(filters.search)+'" aria-label="Search scholarships"><select id="uni-filter" class="select" aria-label="Filter university"><option value="all">All universities</option>'+Object.keys(UNIVERSITY).map(u=>'<option value="'+esc(u)+'" '+(filters.uni===u?'selected':'')+'>'+esc(u)+'</option>').join('')+'</select><select id="match-filter" class="select" aria-label="Filter profile signals"><option value="all">All profile signals</option><option value="good" '+(filters.match==='good'?'selected':'')+'>Criterion met</option><option value="gap" '+(filters.match==='gap'?'selected':'')+'>Needs attention</option><option value="check" '+(filters.match==='check'?'selected':'')+'>Review required</option></select><div id="catalog-count" class="filter-count"></div></div>'+
- '<div id="catalog-grid" class="card-grid"></div>';
+ '<div class="filter-toolbar"><div class="filter-tabs"><span class="filter-tabs-label">QUICK VIEW</span><button class="filter-chip '+(!filters.tracked?'is-selected':'')+'" id="all-awards">All awards</button><button class="filter-chip '+(filters.tracked?'is-selected':'')+'" id="tracked-only">My tracked awards <span>'+state.apps.length+'</span></button></div><button class="filter-clear" id="clear-filters">Reset filters ↺</button></div>'+
+ '<div id="catalog-grid" class="card-grid"></div>'; 
  $('#view-root').innerHTML=shell(html);renderCards();
 }
 function field(label,name,type,opts,extra){
@@ -176,8 +194,10 @@ document.addEventListener('click',e=>{
  const track=e.target.closest('button[data-track]');if(track){const id=track.dataset.track;if(state.apps.some(a=>a.id===id)){navigate('applications');toast('Opened your application tracker.');return;}state.apps.push({id,stage:'Researching',intake:state.profile.intake||'',date:'',tasks:[],notes:''});store();render();toast('Added to your applications.');return;}
  const comp=e.target.closest('button[data-compare]');if(comp){toggleCompare(comp.dataset.compare);return;}
  const remove=e.target.closest('button[data-remove]');if(remove){if(confirm('Remove this application and its locally saved notes?')){state.apps=state.apps.filter(a=>a.id!==remove.dataset.remove);store();render();toast('Application removed.');}return;}
+ if(e.target.id==='tracked-only'){filters.tracked=true;render();return;}
+ if(e.target.id==='all-awards'){filters.tracked=false;render();return;}
  if(e.target.id==='clear-comparison'){state.compare=[];store();render();toast('Comparison cleared.');return;}
- if(e.target.id==='clear-filters'){filters={search:'',uni:'all',match:'all'};render();return;}
+ if(e.target.id==='clear-filters'){filters={search:'',uni:'all',match:'all',tracked:false};render();return;}
  if(e.target.id==='top-profile'){navigate('eligibility');return;}
  if(e.target.id==='sample-profile'){state.profile={name:'Example applicant',nationality:'Example country',degree:'Undergraduate',major:'AI / Computer Science',gpa:'',scale:'',topik:'4',ielts:'7.0',language:'Korean track',intake:'Fall 2027',stemEvidence:false};store();render();toast('Example loaded. Replace with your own details.');return;}
  if(e.target.id==='export-data'){const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),sourceDate:SOURCE_DATE,...state},null,2)],{type:'application/json'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='scholarship-studio-workspace.json';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),1000);toast('Workspace exported.');}
