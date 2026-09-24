@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f7f4">
+  <meta name="theme-color" content="#f7f9fb">
   <meta name="description" content="Standalone Korean university scholarship eligibility, comparison and application tracker preview.">
   <title>Scholarship Studio — Your Korea funding workspace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./kmate-theme.css">
   <script src="./app.js" defer></script>
 </head>
 <body>
 <div class="app-shell">
   <aside class="sidebar" aria-label="Main navigation">
-    <div class="brand"><div class="brand-symbol" aria-hidden="true">✳</div><div><span class="brand-name">SCHOLARSHIP</span><span class="brand-name strong">STUDIO<span class="brand-dot">.</span></span></div></div>
-    <div class="side-kicker">YOUR WORKSPACE</div>
+    <div class="brand"><div class="brand-symbol" aria-hidden="true"><span>k</span><i>✳</i></div><div><span class="brand-name">SCHOLARSHIP</span><span class="brand-name strong">studio<span class="brand-dot">.</span></span></div></div>
+    <div class="side-kicker">Scholarship workspace</div>
     <nav class="side-nav">
       <button class="nav-item active" data-view="discover"><span class="nav-icon">◈</span><span>Discover</span><span class="nav-tail">↗</span></button>
       <button class="nav-item" data-view="eligibility"><span class="nav-icon">◎</span><span>My eligibility</span></button>
@@ -25,12 +26,12 @@
     </nav>
     <div class="sidebar-bottom">
       <div class="profile-mini"><div class="profile-orb">✦</div><div><div class="mini-top">YOUR SCHOLARSHIP PROFILE</div><div id="mini-profile" class="mini-name">Not completed yet</div><button class="mini-link" data-view="eligibility">Edit my details →</button></div></div>
-      <div class="local-note"><span class="pulse"></span> PRIVATE PREVIEW <p>Saved only in this browser. No login, submission or data sync.</p></div>
+      <div class="local-note"><span class="pulse"></span> Independent preview <p>Saved only in this browser. No login, submission or data sync.</p></div>
       <button class="sidebar-utility" id="export-data">↧ &nbsp; Export my workspace</button>
     </div>
   </aside>
   <div class="workspace">
-    <header class="topbar"><div class="breadcrumb">WORKSPACE <span>/</span> <b id="crumb-current">DISCOVER</b></div><div class="top-actions"><span class="verified-pill"><span class="pulse"></span> SOURCE-LINKED CATALOGUE</span><button id="top-profile" class="avatar" title="Open profile" aria-label="Open profile">✦</button></div></header>
+    <header class="topbar"><div class="breadcrumb"><span class="crumb-root">Scholarship Studio</span> <span>/</span> <b id="crumb-current">DISCOVER</b></div><div class="top-actions"><span class="verified-pill"><span class="pulse"></span> Curated source-linked catalogue</span><button id="top-profile" class="avatar" title="Open profile" aria-label="Open profile">✦</button></div></header>
     <main id="view-root" tabindex="-1"></main>
     <footer class="footer"><span>Scholarship Studio · Standalone prototype</span><span>University awards only · No GKS listings · Snapshot checked 24 Sep 2026</span></footer>
   </div>
