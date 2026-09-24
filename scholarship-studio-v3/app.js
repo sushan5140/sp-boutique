@@ -98,25 +98,32 @@ function shell(body){return '<div class="main-content">'+body+'</div>';}
 function sectionEyebrow(text){return '<div class="eyebrow">'+esc(text)+'</div>';}
 function stat(label,value,meta,highlight){return '<div class="stat'+(highlight?' highlight':'')+'"><div class="stat-label">'+label+'</div><div class="stat-value">'+value+'</div><div class="stat-meta">'+meta+'</div>'+(highlight?'<span class="stat-symbol">✳</span>':'')+'</div>';}
 function heroAside(){
- const completed=completeness(), p=state.profile, selected=state.compare.length, tracked=state.apps.length;
+ const completed=completeness(),p=state.profile,selected=state.compare.length,tracked=state.apps.length;
  const steps=[
-  {number:'01',view:'eligibility',title:completed>=5?'Review your profile':'Make it yours',detail:completed+'/5 profile essentials',done:completed>=5},
-  {number:'02',view:'applications',title:'Keep applications moving',detail:tracked+' application'+(tracked===1?'':'s')+' tracked',done:tracked>0},
-  {number:'03',view:'compare',title:'See the complete picture',detail:selected+'/3 awards shortlisted',done:selected>0}
+  {number:'01',view:'eligibility',title:completed>=5?'Review your profile':'Build your profile',detail:completed+'/5 essentials completed',done:completed>=5},
+  {number:'02',view:'applications',title:'Track your applications',detail:tracked+' saved application'+(tracked===1?'':'s'),done:tracked>0},
+  {number:'03',view:'compare',title:'Compare scholarships',detail:selected+'/3 selected for comparison',done:selected>0}
  ];
  return '<aside class="hero-aside" aria-label="Your scholarship plan">'+
-   '<div class="aside-top"><span class="aside-eyebrow">YOUR SCHOLARSHIP PLAN</span><span class="aside-spark" aria-hidden="true">✳</span></div>'+
-   '<div class="aside-main"><span class="aside-index">'+(p.name?'WELCOME, '+esc(p.name.toUpperCase()):'PERSONAL WORKSPACE')+'</span><h2>Small steps.<br>Big possibilities.</h2>'+
-   '<p class="aside-intro">Everything you need to organize your university funding search.</p></div>'+
-   '<div class="aside-progress-head"><span>Profile essentials</span><strong>'+completed+' of 5</strong></div>'+
-   '<div class="aside-progress" role="progressbar" aria-label="Profile essentials completed" aria-valuemin="0" aria-valuemax="5" aria-valuenow="'+completed+'"><span style="width:'+(completed*20)+'%"></span></div>'+
-   '<div class="aside-steps">'+steps.map(x=>'<button type="button" class="aside-step" data-view="'+x.view+'">'+
-   '<span class="step-index">'+x.number+'</span><span class="step-copy"><strong>'+x.title+'</strong><small>'+x.detail+'</small></span>'+
-   '<span class="step-arrow" aria-hidden="true">'+(x.done?'✓':'↗')+'</span></button>').join('')+'</div>'+
-   '<div class="aside-bottom"><span class="aside-live-dot"></span> LOCAL, PRIVATE PREVIEW <span class="aside-bottom-right">NON-GKS · KOREA</span></div></aside>';
+ '<div class="aside-top"><span class="aside-eyebrow"><span class="aside-label-dot"></span>YOUR SCHOLARSHIP PLAN</span><span class="aside-spark" aria-hidden="true">✳</span></div>'+
+ '<div class="aside-main"><span class="aside-index">'+(p.name?'HELLO, '+esc(p.name.toUpperCase()):'YOUR NEXT STEPS')+'</span>'+
+ '<h2>One plan.<br><em>Many possibilities.</em></h2>'+
+ '<p class="aside-intro">Your university funding journey, in one place.</p></div>'+
+ '<div class="aside-progress-row"><div class="aside-progress-head"><span>PROFILE COMPLETENESS</span><strong>'+completed+'<span class="progress-total"> / 5</span></strong></div>'+
+ '<div class="aside-progress" role="progressbar" aria-label="Profile essentials completed" aria-valuemin="0" aria-valuemax="5" aria-valuenow="'+completed+'"><span style="width:'+(completed*20)+'%"></span></div></div>'+
+ '<div class="aside-steps">'+steps.map(x=>'<button type="button" class="aside-step" data-view="'+x.view+'">'+
+ '<span class="step-index">'+x.number+'</span><span class="step-copy"><strong>'+x.title+'</strong><small>'+x.detail+'</small></span>'+
+ '<span class="step-arrow" aria-hidden="true">'+(x.done?'✓':'↗')+'</span></button>').join('')+'</div>'+
+ '<div class="aside-bottom"><span><span class="aside-live-dot"></span> Saved privately in your browser</span><span class="aside-bottom-right">NON-GKS · KOREA</span></div></aside>';
 }
 function header(title,subtitle,action){
- return '<section class="hero-row'+(view==='discover'?' hero-discover':' hero-compact')+'"><div class="hero-copy"><div class="hero-overline"><span class="hero-overline-line"></span>UNIVERSITY SCHOLARSHIPS <span class="hero-overline-tail">/ A WORKSPACE FOR KOREA</span></div><h1>'+title+'</h1><p>'+subtitle+'</p><div class="hero-actions">'+(action||'')+'</div></div>'+heroAside()+'</section>';
+ return '<section class="hero-row'+(view==='discover'?' hero-discover':' hero-compact')+'">'+
+ '<div class="hero-copy"><div class="hero-overline"><span class="hero-overline-line"></span>YOUR KOREA FUNDING WORKSPACE'+
+ '<span class="hero-overline-tail">/ UNIVERSITY SCHOLARSHIPS</span></div>'+
+ '<h1>'+title+'</h1><p>'+subtitle+'</p><div class="hero-actions">'+(action||'')+
+ (view==='discover'?'<button type="button" id="jump-awards" class="hero-text-link">Explore scholarships <span aria-hidden="true">↓</span></button>':'')+
+ '</div><div class="hero-proof"><span class="proof-mark">✳</span><span><strong>'+SCHOLARSHIPS.length+' university awards</strong><small>Curated from 4 official university sources</small></span></div></div>'+
+ heroAside()+'</section>';
 }
 function stats(){
  const meets=SCHOLARSHIPS.filter(s=>statusFor(s).key==='good').length;
@@ -136,8 +143,8 @@ function filteredAwards(){return SCHOLARSHIPS.filter(s=>{
 });}
 function renderCards(){const awards=filteredAwards();$('#catalog-count').textContent=awards.length+' of '+SCHOLARSHIPS.length+' shown';$('#catalog-grid').innerHTML=awards.length?awards.map(card).join(''):'<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⌕</div><h3>No awards in this view</h3><p>Try another university or remove the profile-criterion filter.</p><button class="btn btn-primary" id="clear-filters">Clear filters</button></div>';}
 function discover(){
- const profileButton='<button class="btn btn-primary" data-view="eligibility">Set up my profile <span aria-hidden="true">↗</span></button>'; 
- let html=header('Your next chapter,<br><em>starts here.</em>','Discover source-linked Korean university awards, understand published criteria, and keep every application moving — in one focused workspace.',profileButton)+stats()+
+ const profileButton='<button class="btn btn-primary" data-view="eligibility">'+(completeness()>=5?'Review my profile':'Build my profile')+' <span aria-hidden="true">↗</span></button>'; 
+ let html=header('Your next chapter,<br><em>made possible.</em>','Discover Korean university scholarships, understand published criteria, and give every application a clear place to grow.',profileButton)+stats()+
  '<div class="banner"><span>ⓘ</span><div><strong>Curated preview, not a live admissions feed.</strong> Award details were checked against official university pages on '+SOURCE_DATE+'. Deadlines follow individual admissions rounds. Always verify current intake requirements at the source.</div></div>'+
  '<div class="section-heading"><div><div class="eyebrow">Discover opportunities</div><h2>Explore scholarships</h2><p>Source-linked university awards. Your criteria insights appear on every card.</p></div><div class="no-gks"><span class="pulse"></span> Non-GKS awards only</div></div>'+
  '<div class="filters"><input id="search" class="input" type="search" placeholder="Search university, award or benefit…" value="'+esc(filters.search)+'" aria-label="Search scholarships"><select id="uni-filter" class="select" aria-label="Filter university"><option value="all">All universities</option>'+Object.keys(UNIVERSITY).map(u=>'<option value="'+esc(u)+'" '+(filters.uni===u?'selected':'')+'>'+esc(u)+'</option>').join('')+'</select><select id="match-filter" class="select" aria-label="Filter profile signals"><option value="all">All profile signals</option><option value="good" '+(filters.match==='good'?'selected':'')+'>Criterion met</option><option value="gap" '+(filters.match==='gap'?'selected':'')+'>Needs attention</option><option value="check" '+(filters.match==='check'?'selected':'')+'>Review required</option></select><div id="catalog-count" class="filter-count"></div></div>'+
@@ -197,6 +204,7 @@ function compare(){
 }
 function render(){syncShell();({discover,eligibility,applications:apps,compare})[view]();}
 document.addEventListener('click',e=>{
+ if(e.target.closest('#jump-awards')){document.querySelector('.section-heading')?.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});return;}
  const nav=e.target.closest('[data-view]');if(nav){navigate(nav.dataset.view);return;}
  const track=e.target.closest('button[data-track]');if(track){const id=track.dataset.track;if(state.apps.some(a=>a.id===id)){navigate('applications');toast('Opened your application tracker.');return;}state.apps.push({id,stage:'Researching',intake:state.profile.intake||'',date:'',tasks:[],notes:''});store();render();toast('Added to your applications.');return;}
  const comp=e.target.closest('button[data-compare]');if(comp){toggleCompare(comp.dataset.compare);return;}
