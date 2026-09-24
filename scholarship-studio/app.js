@@ -23,6 +23,31 @@ const SCHOLARSHIPS = [
  {id:'ajou-global-3',uni:'Ajou University',name:'Ajou Global Scholarship 3 · Korean track',scope:'Undergraduate',category:'Language-based',benefit:'50% tuition · 1 semester',detail:'Published TOPIK criterion: Level 4',tuition:'50% tuition waiver for one semester',stipend:'Not stated for this award',route:'New student · Korean-language track',language:'TOPIK 4 published for Korean track',selection:'Scholarship criteria for new students; university confirms selection.',renewal:'Award listed for first semester only.',deadline:'Follows university admission calendar',source:'https://ajou.ac.kr/iadmissions_en/undergraduate/scholarship.do',notice:'Confirm actual programme language and admission rules.',type:'topik',minTopik:4},
  {id:'ajou-global-4',uni:'Ajou University',name:'Ajou Global Scholarship 4 · Korean track',scope:'Undergraduate',category:'Language-based',benefit:'30% tuition · 1 semester',detail:'Published TOPIK criterion: Level 3',tuition:'30% tuition waiver for one semester',stipend:'Not stated for this award',route:'New student · Korean-language track',language:'TOPIK 3 published for Korean track',selection:'Scholarship criteria for new students; university confirms selection.',renewal:'Award listed for first semester only.',deadline:'Follows university admission calendar',source:'https://ajou.ac.kr/iadmissions_en/undergraduate/scholarship.do',notice:'University may adjust scholarship rules; consult current notice.',type:'topik',minTopik:3}
 ];
+/* English-track awards are displayed separately: Ajou's official undergraduate table
+   identifies the English track as Business Administration. Do not assume AI/CS applicability. */
+[
+  [1,8.0,100],
+  [2,7.0,70],
+  [3,6.5,50],
+  [4,5.5,30]
+].forEach(function(t){
+  SCHOLARSHIPS.push({
+    id:'ajou-english-'+t[0],uni:'Ajou University',name:'Ajou Global Scholarship '+t[0]+' · English track',
+    scope:'Undergraduate',category:'Language-based · Business Administration',
+    benefit:t[2]+'% tuition · 1 semester',
+    detail:'Published IELTS criterion: '+t[1].toFixed(1),
+    tuition:t[2]+'% tuition waiver for one semester',
+    stipend:'Not stated for this award',
+    route:'New student · English-track Business Administration',
+    language:'IELTS '+t[1].toFixed(1)+' published for English track; TOEFL alternative exists',
+    selection:'Scholarship criteria for new students; university confirms selection.',
+    renewal:'Award listed for first semester only.',
+    deadline:'Follows university admission calendar',
+    source:'https://ajou.ac.kr/iadmissions_en/undergraduate/scholarship.do',
+    notice:'English track on the official table is Business Administration. Do not assume this pathway applies to AI/CS.',
+    type:'ielts',minIelts:t[1]
+  });
+});
 const DEFAULT_PROFILE = {name:'',nationality:'',degree:'',major:'',gpa:'',scale:'',topik:'',ielts:'',language:'',intake:'',stemEvidence:false};
 const STAGES = ['Researching','Preparing documents','Ready to submit','Submitted','Interview','Offer received','Not proceeding'];
 const TASKS = ['Check admission guide','Prepare transcript','Complete statement','Arrange recommendation','Submit application'];
@@ -46,6 +71,13 @@ function statusFor(s){
    if(p.topik==='')return {key:'check',label:'TOPIK not provided',reason:'Add a TOPIK level to check the published level '+s.minTopik+' threshold.'};
    if(Number(p.topik)<s.minTopik)return {key:'gap',label:'Language criterion gap',reason:'This Korean-track award lists TOPIK '+s.minTopik+'. Your entered level is '+p.topik+'.'};
    return {key:'good',label:'TOPIK criterion met',reason:'Your entered TOPIK level meets the published level '+s.minTopik+' threshold. Admission and award selection still require verification.'};
+ }
+ if(s.type==='ielts'){
+   if(p.major!=='Business / Management')return {key:'check',label:'Programme to verify',reason:'This award is listed for the English-track Business Administration programme, not an assumed AI/CS route. Check your intended programme.'};
+   if(p.language==='Korean track')return {key:'check',label:'English-track award',reason:'This is an English-track Business Administration award; check if it fits your intended admissions route.'};
+   if(p.ielts==='')return {key:'check',label:'IELTS not provided',reason:'Add IELTS overall to check the published '+s.minIelts.toFixed(1)+' criterion. TOEFL is another published route.'};
+   if(Number(p.ielts)<s.minIelts)return {key:'gap',label:'Language criterion gap',reason:'This English-track award lists IELTS '+s.minIelts.toFixed(1)+'. Your entered score is '+p.ielts+'.'};
+   return {key:'good',label:'IELTS criterion met',reason:'Your entered IELTS meets the published '+s.minIelts.toFixed(1)+' threshold for this English-track award. Selection is not guaranteed.'};
  }
  if(s.type==='stem'&&!p.stemEvidence)return {key:'gap',label:'STEM evidence to check',reason:'KU asks for a certificate of outstanding STEM outputs. Add it to your profile only if you have qualifying evidence.'};
  if(s.type==='stem')return {key:'check',label:'Evidence declared · verify',reason:'You indicated STEM evidence; check whether the university accepts your actual certificate and evaluates you for this award.'};
