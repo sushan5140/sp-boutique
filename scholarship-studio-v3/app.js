@@ -156,6 +156,7 @@ function discover(){
  '<p>Refine your results below, then track or compare awards in one click.</p>'+
  '<button class="mast-link" data-view="eligibility">Set my criteria <span>↗</span></button></div></section>'+
  '<div class="discovery-workbench"><div class="discovery-workbench-head"><div><span class="section-kicker">YOUR OPPORTUNITY LIBRARY</span><h2>Explore university awards</h2><p>Source-linked opportunities, with your criteria insight on every card.</p></div><span class="workbench-source-tag"><span class="pulse"></span> 4 official sources</span></div>'+
+ '<div class="university-quickbar" aria-label="Browse scholarships by university"><span class="quickbar-label">EXPLORE BY UNIVERSITY</span>'+[['all','All',SCHOLARSHIPS.length],...Object.keys(UNIVERSITY).map(u=>[u,u,SCHOLARSHIPS.filter(s=>s.uni===u).length])].map(([id,label,count])=>'<button type="button" class="university-pill '+(filters.uni===id?'active':'')+'" data-uni-quick="'+esc(id)+'" aria-pressed="'+(filters.uni===id?'true':'false')+'"><span class="university-pill-dot" aria-hidden="true"></span>'+esc(label)+' <span class="university-pill-count">'+count+'</span></button>').join('')+'</div>'+
  '<div class="filters discovery-filters"><label class="discovery-search-label"><span aria-hidden="true">⌕</span><input id="search" class="input" type="search" placeholder="Search universities, awards, funding…" value="'+searchText+'" aria-label="Search scholarships"></label>'+
  '<select id="uni-filter" class="select" aria-label="Filter university"><option value="all">All universities</option>'+uniOpts+'</select>'+
  '<select id="match-filter" class="select" aria-label="Filter profile signals"><option value="all">All profile signals</option><option value="good" '+(filters.match==='good'?'selected':'')+'>Criterion met</option><option value="gap" '+(filters.match==='gap'?'selected':'')+'>Needs attention</option><option value="check" '+(filters.match==='check'?'selected':'')+'>Review required</option></select>'+
@@ -178,7 +179,7 @@ function eligibility(){
  '<div class="mast-side eligibility-side"><span class="mast-side-kicker">YOUR PROFILE READINESS</span><div class="eligibility-progress-number">'+completeness()+'<span> / 5</span></div><strong>Essentials completed</strong>'+
  '<div class="progress-track" role="progressbar" aria-label="Profile essentials completed" aria-valuemin="0" aria-valuemax="5" aria-valuenow="'+completeness()+'"><span style="width:'+(completeness()*20)+'%"></span></div>'+
  '<p>'+ (completeness()===5?'Your essentials are recorded. Check individual university rules.':'Finish your essentials to make scholarship criteria checks more useful.')+'</p>'+
- '<button class="mast-link" data-view="discover">Browse source-linked awards <span>↗</span></button></div></section>'+
+ '<button class="mast-link" id="jump-profile-form" type="button">Complete your details <span>↓</span></button></div></section>'+
  '<div class="two-col"><section class="panel"><div class="panel-title"><h3>My scholarship profile</h3><span class="tag">'+completeness()+'/5 essentials</span></div><p class="panel-subtitle">Your information is stored locally in this browser, not sent to KMate or any university.</p><form id="profile-form"><div class="field-grid">'+
  field('Display name','name','text',null,'maxlength="80" placeholder="How should we address you?"')+
  field('Nationality / citizenship','nationality','text',null,'maxlength="80" placeholder="e.g. India"')+
@@ -221,7 +222,7 @@ function compare(){
  const s=byId(state.compare[i]);
  return '<div class="compare-slot '+(s?'filled':'')+'"><span>SLOT 0'+(i+1)+'</span>'+
  (s?'<strong>'+esc(s.name)+'</strong><small>'+esc(s.uni)+' · '+esc(s.benefit)+'</small><button data-compare="'+s.id+'" aria-label="Remove '+esc(s.name)+' from comparison">×</button>':
- '<strong>Choose an award</strong><small>Select below or from Discover</small><span class="compare-slot-plus" aria-hidden="true">+</span>')+'</div>';
+ '<strong>Choose an award</strong><small>Select below or from Discover</small><button type="button" class="compare-slot-pick" data-view="discover" aria-label="Browse awards for slot '+(i+1)+'">+ Browse awards</button>')+'</div>';
  }).join('');
  const title='<section class="page-mast page-mast-compare" aria-label="Scholarship comparison builder"><div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">⊞</span> COMPARISON DESK</div>'+
  '<h1>See the <em>whole picture.</em></h1><p>Compare documented funding, selection routes and continuation rules without invented rankings or acceptance scores.</p>'+
@@ -237,11 +238,13 @@ function compare(){
 }
 function render(){syncShell();({discover,eligibility,applications:apps,compare})[view]();}
 document.addEventListener('click',e=>{
+ if(e.target.closest('#jump-profile-form')){document.querySelector('#profile-form')?.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});return;}
  if(e.target.closest('#jump-awards')){document.querySelector('.section-heading')?.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});return;}
  const nav=e.target.closest('[data-view]');if(nav){navigate(nav.dataset.view);return;}
  const track=e.target.closest('button[data-track]');if(track){const id=track.dataset.track;if(state.apps.some(a=>a.id===id)){navigate('applications');toast('Opened your application tracker.');return;}state.apps.push({id,stage:'Researching',intake:state.profile.intake||'',date:'',tasks:[],notes:''});store();render();toast('Added to your applications.');return;}
  const comp=e.target.closest('button[data-compare]');if(comp){toggleCompare(comp.dataset.compare);return;}
  const remove=e.target.closest('button[data-remove]');if(remove){if(confirm('Remove this application and its locally saved notes?')){state.apps=state.apps.filter(a=>a.id!==remove.dataset.remove);store();render();toast('Application removed.');}return;}
+ const quick=e.target.closest('[data-uni-quick]');if(quick){filters.uni=quick.dataset.uniQuick;render();return;}
  if(e.target.id==='tracked-only'){filters.tracked=true;render();return;}
  if(e.target.id==='all-awards'){filters.tracked=false;render();return;}
  if(e.target.id==='clear-comparison'){state.compare=[];store();render();toast('Comparison cleared.');return;}
