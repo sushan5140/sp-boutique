@@ -399,3 +399,9 @@ p{color:var(--muted)}
  .btn,.nav-item,.scholarship-card,.compare-choice{transition:none!important;transform:none!important}
  .hero-row,.card-grid{animation:none!important}
 }
+
+/* Visual-QA refinements: keep the single mobile grid track shrinkable,
+   and keep the featured card's ornamental ring behind all readable text. */
+.scholarship-card:first-child::after{display:none}
+@media(max-width:980px){.app-shell{grid-template-columns:minmax(0,1fr)}.sidebar,.workspace{min-width:0;max-width:100%}.side-nav{min-width:0;max-width:100%}}
+@media(max-width:520px){.hero-graphic{display:none}}
