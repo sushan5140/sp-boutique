@@ -405,3 +405,18 @@ p{color:var(--muted)}
 .scholarship-card:first-child::after{display:none}
 @media(max-width:980px){.app-shell{grid-template-columns:minmax(0,1fr)}.sidebar,.workspace{min-width:0;max-width:100%}.side-nav{min-width:0;max-width:100%}}
 @media(max-width:520px){.hero-graphic{display:none}}
+
+/* 390px visual QA: show all four destinations without requiring discovery
+   of a sideways-scroll navigation rail. */
+.banner>span:first-child{font-size:0;flex:none}
+.banner>span:first-child::before{
+  content:"i";display:grid;place-items:center;
+  width:17px;height:17px;border-radius:50%;
+  border:1.5px solid #3e63dd;color:#3e63dd;
+  font:800 11px/1 Manrope,sans-serif;
+}
+@media(max-width:520px){
+  .side-nav{overflow:visible;justify-content:space-between}
+  .nav-item{flex:1 1 auto;justify-content:center;min-width:0;gap:0;padding:0 4px;font-size:10px}
+  .nav-item .nav-icon,.nav-item .nav-count{display:none}
+}
