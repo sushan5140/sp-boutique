@@ -1,0 +1,33 @@
+name: Package Scholarship Studio preview
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/package-scholarship-studio.yml'
+      - 'scholarship-studio/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate preview asset references
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s scholarship-studio/index.html
+          test -s scholarship-studio/styles.css
+          test -s scholarship-studio/kmate-theme.css
+          test -s scholarship-studio/app.js
+          grep -q 'kmate-theme.css' scholarship-studio/index.html
+          node --check scholarship-studio/app.js
+      - name: Archive standalone preview
+        run: tar -czf scholarship-studio-preview.tar.gz scholarship-studio
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scholarship-studio-preview-snapshot
+          path: scholarship-studio-preview.tar.gz
+          retention-days: 3
