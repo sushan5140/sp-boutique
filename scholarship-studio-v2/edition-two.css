@@ -937,3 +937,438 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .scholarship-card .card-actions .btn{width:100%}
   .scholarship-card .source-link{min-height:36px}
 }
+
+
+/* ==========================================================================
+   NURI EDITION — refinement pass
+   Color: deeper ultramarine/iris, less "UI purple", quieter supporting accents.
+   Type: hierarchy by scale/space first; fewer brute-force 800+ weights.
+   ========================================================================== */
+:root{
+  --n-paper:#f6f6f2;
+  --n-surface:#fff;
+  --n-surface-2:#eef0eb;
+  --n-ink:#181920;
+  --n-muted:#686b75;
+  --n-line:#e1e3de;
+
+  --n-indigo:#5b55e7;
+  --n-indigo-bright:#6a63f4;
+  --n-indigo-deep:#373197;
+  --n-indigo-ink:#292663;
+  --n-indigo-soft:#eeedff;
+  --n-indigo-whisper:#f7f6ff;
+
+  --n-jade:#16816e;
+  --n-jade-soft:#e5f4ef;
+  --n-papaya:#e77b5e;
+  --n-papaya-soft:#fcebe5;
+  --n-sun:#e2bd43;
+  --n-sun-soft:#fff6d6;
+  --n-cyan:#70cfe8;
+  --n-cyan-soft:#edfaff;
+  --n-pink:#f4dbe7;
+
+  --n-navy:#191b2b;
+  --n-navy-2:#22263a;
+
+  --oct-forest:var(--n-indigo);
+  --oct-forest-2:var(--n-indigo-deep);
+  --oct-forest-3:var(--n-navy);
+  --oct-lime:var(--n-indigo);
+  --oct-lime-soft:var(--n-indigo-soft);
+  --oct-coral:var(--n-papaya);
+  --oct-sky:var(--n-cyan);
+
+  --type-display:"Bricolage Grotesque",Manrope,system-ui,sans-serif;
+  --type-body:Manrope,"Noto Sans KR",system-ui,sans-serif;
+  --type-accent:"Instrument Serif",Georgia,serif;
+  --oct-display:var(--type-display);
+  --oct-body:var(--type-body);
+  --oct-serif:var(--type-accent);
+}
+
+/* quieter atmosphere */
+body{
+  background:
+    radial-gradient(circle at 89% 5%,rgba(91,85,231,.055),transparent 25rem),
+    radial-gradient(circle at 72% 15%,rgba(112,207,232,.055),transparent 18rem),
+    var(--n-paper);
+  letter-spacing:0;
+}
+
+/* The spectrum becomes a signature detail, not the palette itself. */
+.sidebar::before,
+.nuri-spectrum,
+.nuri-desk-card::before,
+.nuri-workbench::before{
+  background:linear-gradient(
+    90deg,
+    var(--n-indigo) 0 52%,
+    var(--n-cyan) 52% 69%,
+    var(--n-jade) 69% 81%,
+    var(--n-sun) 81% 91%,
+    var(--n-papaya) 91% 100%
+  );
+}
+.nuri-spectrum{grid-template-columns:1fr;gap:0}
+.nuri-spectrum i{display:none}
+.nuri-spectrum::before{
+  content:"";
+  display:block;
+  width:100%;
+  height:100%;
+  background:inherit;
+}
+
+/* Sidebar: richer ink, calmer active state. */
+.sidebar{
+  background:
+    radial-gradient(circle at 10% 0%,rgba(91,85,231,.13),transparent 19rem),
+    linear-gradient(180deg,#17192a 0%,#1c2033 100%);
+}
+.brand-symbol{
+  color:var(--n-indigo-deep);
+  box-shadow:0 8px 22px rgba(30,31,56,.20);
+}
+.brand-name{
+  font-size:8px;
+  font-weight:750;
+  letter-spacing:.15em;
+}
+.brand-name.strong{
+  font-size:17px;
+  font-weight:700;
+  letter-spacing:-.035em;
+}
+.side-kicker{
+  font-size:7px;
+  letter-spacing:.15em;
+}
+.nav-item{
+  font-size:11px;
+  font-weight:650;
+}
+.nav-item.active{
+  background:rgba(91,85,231,.18);
+  box-shadow:
+    inset 3px 0 0 var(--n-indigo-bright),
+    inset 0 0 0 1px rgba(128,121,255,.09);
+}
+.nav-item.active .nav-count{
+  background:var(--n-indigo-soft);
+  color:var(--n-indigo-deep);
+}
+
+/* top chrome */
+.edition-badge{
+  background:var(--n-indigo-soft);
+  color:var(--n-indigo-deep);
+  font-weight:800;
+}
+.avatar:hover{background:var(--n-indigo-deep)}
+
+/* Main hero type — calmer, more editorial. */
+.nuri-eyebrow{
+  color:var(--n-indigo-deep);
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.13em;
+}
+.nuri-eyebrow span{
+  background:var(--n-indigo-soft);
+  color:var(--n-indigo-deep);
+}
+.nuri-eyebrow b{
+  background:var(--n-sun-soft);
+  color:#765f10;
+  font-weight:800;
+}
+.nuri-hero-main h1{
+  max-width:760px;
+  font-family:var(--type-display);
+  font-size:clamp(46px,5.2vw,72px);
+  font-weight:650;
+  line-height:.97;
+  letter-spacing:-.055em;
+  text-wrap:balance;
+}
+.nuri-hero-main h1 em{
+  color:var(--n-indigo);
+  font-family:var(--type-accent);
+  font-size:1.035em;
+  font-weight:400;
+  letter-spacing:-.025em;
+}
+.nuri-hero-main>p{
+  max-width:610px;
+  font-size:12.5px;
+  line-height:1.68;
+  color:#70737d;
+}
+.nuri-primary{
+  min-height:45px;
+  padding-inline:18px;
+  background:var(--n-indigo-deep);
+  font-size:11px;
+  font-weight:750;
+}
+.nuri-primary:hover{background:var(--n-indigo-ink)}
+.nuri-hero-note{font-size:8.5px}
+
+/* the Korean watermark should be barely there */
+.nuri-hero-main::after{
+  color:rgba(91,85,231,.035);
+  font-weight:800;
+}
+
+/* Metrics: more editorial and less dashboard-widget. */
+.nuri-metrics{gap:9px}
+.nuri-metrics>div{
+  min-height:72px;
+  padding:13px 14px;
+  border-radius:13px;
+  background:#fbfbf8;
+}
+.nuri-metrics>div::before{
+  left:14px;
+  right:auto;
+  width:25px;
+  height:2px;
+}
+.nuri-metrics strong{
+  font-family:var(--type-display);
+  font-size:22px;
+  font-weight:650;
+  letter-spacing:-.045em;
+}
+.nuri-metrics span{
+  margin-top:7px;
+  font-size:8px;
+  font-weight:650;
+  letter-spacing:.01em;
+}
+
+/* Scholarship desk: quieter indigo with more breathing room. */
+.nuri-mini-label{
+  color:var(--n-indigo-deep);
+  font-size:7.5px;
+  font-weight:800;
+}
+.nuri-desk-head h2{
+  font-size:22px;
+  font-weight:650;
+  line-height:1.08;
+  letter-spacing:-.04em;
+}
+.nuri-desk-orb{
+  background:var(--n-indigo-deep);
+  color:var(--n-sun);
+}
+.nuri-readiness{
+  background:linear-gradient(135deg,var(--n-indigo-soft),#f7f6ff);
+  border:1px solid #dfddff;
+}
+.nuri-readiness-copy span{
+  color:#6d68a2;
+  font-weight:650;
+}
+.nuri-readiness-copy strong{
+  color:var(--n-indigo-deep);
+  font-family:var(--type-display);
+  font-size:22px;
+  font-weight:650;
+}
+.nuri-readiness-track{background:#dcd9ff}
+.nuri-readiness-track i{
+  background:linear-gradient(90deg,var(--n-indigo-deep),var(--n-indigo-bright));
+}
+.nuri-desk-tile{
+  border-color:#e5e5ee;
+  font-weight:500;
+}
+.nuri-desk-tile b{
+  font-size:11px;
+  font-weight:750;
+}
+.nuri-desk-tile small{
+  font-size:9px;
+  color:#8b8e98;
+}
+.nuri-desk-tile.indigo>span{
+  background:var(--n-indigo-soft);
+  color:var(--n-indigo-deep);
+}
+.nuri-desk-tile:hover{
+  border-color:#d2cfff;
+  background:var(--n-indigo-whisper);
+}
+
+/* Role cards: less candy; more refined semantic tints. */
+.nuri-role-card{padding:18px 19px}
+.nuri-role-card span{
+  font-size:7.5px;
+  font-weight:800;
+}
+.nuri-role-card b{
+  margin-top:17px;
+  font-size:18px;
+  font-weight:650;
+  letter-spacing:-.025em;
+}
+.nuri-role-card p{
+  font-size:9px;
+  line-height:1.5;
+}
+.nuri-role-card.indigo{background:#eeedff;color:#4842a9}
+.nuri-role-card.jade{background:#e9f5f0;color:#246556}
+.nuri-role-card.papaya{background:#fbebe6;color:#945141}
+.nuri-role-card.sun{background:#fff6d9;color:#756119}
+
+/* Workbench + filters */
+.section-kicker{
+  color:var(--n-indigo-deep);
+  font-size:7.5px;
+  letter-spacing:.14em;
+}
+.discovery-workbench-head h2,
+.section-heading h2{
+  font-size:clamp(26px,2.35vw,36px);
+  font-weight:650;
+  letter-spacing:-.045em;
+}
+.discovery-workbench-head p,
+.section-heading p{
+  font-size:10px;
+  line-height:1.55;
+}
+.university-pill{
+  font-size:8.5px;
+  font-weight:700;
+}
+.university-pill.active{
+  background:var(--n-indigo-deep);
+  border-color:var(--n-indigo-deep);
+}
+.university-pill.active .university-pill-dot{background:var(--n-cyan)}
+.filter-chip.is-selected{
+  border-color:#d9d6ff;
+  background:var(--n-indigo-soft);
+  color:var(--n-indigo-deep);
+}
+
+/* Scholarship cards: refined typography and quieter blue. */
+.scholarship-card::before{
+  background:linear-gradient(90deg,var(--n-indigo-deep),var(--n-indigo-bright))!important;
+}
+.university-icon{
+  background:var(--n-indigo-whisper);
+  color:var(--n-indigo-deep);
+}
+.university-name{font-weight:750}
+.scholarship-card h3{
+  font-family:var(--type-display);
+  font-size:clamp(21px,1.8vw,25px);
+  font-weight:650;
+  line-height:1.08;
+  letter-spacing:-.045em;
+}
+.description{
+  font-size:10px;
+  line-height:1.55;
+}
+.benefit{
+  background:linear-gradient(135deg,#f6f5ff,#f5fbff);
+  border-color:#e0ddff;
+}
+.benefit-kicker{
+  color:#716bbe;
+  font-size:7px;
+  font-weight:800;
+}
+.benefit strong{
+  color:var(--n-indigo-ink);
+  font-family:var(--type-display);
+  font-size:16px;
+  font-weight:650;
+  line-height:1.18;
+  letter-spacing:-.025em;
+}
+.criteria strong{
+  font-size:7px;
+  font-weight:800;
+}
+.criteria p{font-size:9px}
+.btn,.btn-small{
+  font-weight:750;
+}
+.btn-primary,.btn.btn-primary{
+  background:var(--n-indigo-deep);
+  border-color:var(--n-indigo-deep);
+}
+.btn-primary:hover:not(:disabled){
+  background:var(--n-indigo-ink);
+  border-color:var(--n-indigo-ink);
+}
+.source-link,.inline-link{color:var(--n-indigo-deep)}
+
+/* secondary pages */
+.mast-copy h1{
+  font-weight:650;
+  letter-spacing:-.055em;
+}
+.mast-copy h1 em{
+  color:var(--n-indigo);
+  font-family:var(--type-accent);
+  font-weight:400;
+}
+.mast-eyebrow{
+  color:var(--n-indigo-deep);
+  font-size:7.5px;
+  font-weight:800;
+}
+.mast-eyebrow-mark{
+  background:var(--n-indigo-soft);
+  color:var(--n-indigo-deep);
+}
+.page-mast-eligibility .mast-side{background:var(--n-indigo-deep)}
+.summary-side{
+  background:linear-gradient(135deg,var(--n-indigo-soft),#f8f7ff);
+}
+.eligibility-progress-number{
+  color:var(--n-indigo-deep)!important;
+  font-weight:650!important;
+}
+.progress-track span{
+  background:linear-gradient(90deg,var(--n-indigo-deep),var(--n-indigo-bright))!important;
+}
+.compare-choice.selected{
+  border-color:#bdb8ff;
+  box-shadow:inset 4px 0 0 var(--n-indigo);
+}
+.compare-table th{
+  background:#f4f3ff;
+  color:#6159b7;
+}
+
+/* strip back the visual noise on gradients */
+.page-source-note,
+.nuri-source-note{
+  background:#fbfbfe;
+}
+.profile-mini .mini-progress span{
+  background:var(--n-indigo-bright);
+}
+
+/* mobile type tuning */
+@media(max-width:640px){
+  .nuri-hero-main h1{
+    font-size:clamp(39px,11.5vw,50px);
+    line-height:.96;
+    letter-spacing:-.05em;
+  }
+  .nuri-hero-main>p{font-size:11.5px}
+  .nuri-desk-head h2{font-size:20px}
+  .nuri-role-card b{font-size:16px}
+  .scholarship-card h3{font-size:21px}
+}
