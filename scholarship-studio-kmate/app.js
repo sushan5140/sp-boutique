@@ -343,41 +343,63 @@ function renderStream(){
     return;
   }
   $('#award-stream').innerHTML=rows.map((a,index)=>{
-    const open=state.expanded===a.id,tr=state.tracked.includes(a.id),cmp=state.compare.includes(a.id);
-    return `<article class="award ${open?'open':''} ${tr?'tracked':''} ${cmp?'compared':''}" data-award="${a.id}">
-      <div class="award-row" data-open-award="${a.id}" role="button" tabindex="0" aria-expanded="${open}" aria-controls="details-${a.id}">
+    const tr=state.tracked.includes(a.id),cmp=state.compare.includes(a.id);
+    return `<article class="award ${tr?'tracked':''} ${cmp?'compared':''}" data-award="${a.id}">
+      <div class="award-row" data-open-award="${a.id}" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Open ${esc(a.name)} details">
         <div><div class="uni-index">${String(index+1).padStart(2,'0')}</div><div class="uni-name">${esc(a.uni)}</div><div class="degree">${esc(a.degree)}</div><span class="status">Active</span></div>
         <div class="award-main"><div class="type">${esc(a.type)}</div><h3>${esc(a.name)}</h3><p>Deadline · <b style="color:var(--ink)">${esc(a.deadline)}</b></p></div>
         <div class="funding"><div class="col-label">Published funding</div><strong>${esc(a.benefit)}</strong><p>${esc(a.detail)}</p></div>
         <div class="criteria"><div><div class="col-label">Published criteria</div><strong>${esc(a.topik)}</strong><p>${esc(a.gpa)}</p></div></div>
-        <button class="expand" data-expand="${a.id}" aria-expanded="${open}" aria-label="Toggle details">${open?'⌃':'⌄'}</button>
+        <button class="expand" data-award-open="${a.id}" aria-label="Open scholarship details">⌄</button>
       </div>
-      <div class="details" id="details-${a.id}"><div class="details-inner"><div class="detail-box">
-        <div class="detail-grid">
-          <div><span>Deadline</span><p>${esc(a.deadline)}</p></div>
-          <div><span>Funding</span><p>${esc(a.benefit)}</p></div>
-          <div><span>Language</span><p>${esc(a.topik)}</p></div>
-          <div><span>Renewal</span><p>${esc(a.renewal)}</p></div>
-        </div>
-        <div class="detail-note"><span>Selection</span><p>${esc(a.selection)}</p></div>
-        <div class="detail-note caution"><span>Caution</span><p>${esc(a.notice)}</p></div>
-        <div class="detail-actions">
-          <button class="track ${tr?'active':''}" data-track="${a.id}">${tr?'✓ Tracked':'＋ Track'}</button>
-          <button class="compare ${cmp?'active':''}" data-compare="${a.id}">${cmp?'✓ In comparison':'⇄ Compare'}</button>
-          <button data-check-award="${a.id}">Check eligibility</button>
-          <button data-assistant-for="${a.id}">Ask scholarship</button>
-          <a target="_blank" rel="noopener" href="${esc(a.source)}">Official source ↗</a>
-        </div>
-      </div></div></div>
     </article>`;
   }).join('');
+}
+
+function syncAwardModal(id){
+  const dialog=$('#award-dialog');
+  if(!dialog||dialog.dataset.awardId!==id)return;
+  const a=award(id);if(!a)return;
+  const tracked=state.tracked.includes(id),compared=state.compare.includes(id);
+  const track=$('#award-modal-track'),compare=$('#award-modal-compare');
+  track.textContent=tracked?'✓ Tracked':'＋ Track';
+  track.classList.toggle('active',tracked);
+  compare.textContent=compared?'✓ In comparison':'⇄ Compare';
+  compare.classList.toggle('active',compared);
+}
+
+function openAwardPanel(id){
+  const a=award(id),dialog=$('#award-dialog');if(!a||!dialog)return;
+  const health=sourceHealth();
+  dialog.dataset.awardId=id;
+  $('#award-modal-uni').textContent=a.uni;
+  $('#award-modal-type').textContent=a.type+' · '+a.degree;
+  $('#award-modal-title').textContent=a.name;
+  $('#award-modal-deadline').textContent='Deadline · '+a.deadline;
+  $('#award-modal-funding').textContent=a.benefit;
+  $('#award-modal-funding-detail').textContent=a.detail;
+  $('#award-modal-language').textContent=a.topik;
+  $('#award-modal-academic').textContent=a.gpa;
+  $('#award-modal-renewal').textContent=a.renewal;
+  $('#award-modal-health').textContent=health.label+' · source checked '+SOURCE_CHECKED;
+  $('#award-modal-selection').textContent=a.selection;
+  $('#award-modal-notice').textContent=a.notice;
+  $('#award-modal-source').href=a.source;
+  syncAwardModal(id);
+  if(!dialog.open)dialog.showModal();
+  requestAnimationFrame(()=>$('#award-modal-close')?.focus({preventScroll:true}));
+}
+
+function closeAwardPanel(){
+  const dialog=$('#award-dialog');
+  if(dialog?.open)dialog.close();
 }
 
 function trackAward(id){
   const adding=!state.tracked.includes(id);
   state.tracked=adding?[...state.tracked,id]:state.tracked.filter(x=>x!==id);
   if(adding)appState(id);
-  renderStream();renderCompareTray();renderNavCounts();save();
+  renderStream();renderCompareTray();renderNavCounts();save();syncAwardModal(id);
   toast(adding?'Saved to Applications':'Removed from active Applications');
 }
 
@@ -385,7 +407,7 @@ function toggleCompare(id){
   if(state.compare.includes(id))state.compare=state.compare.filter(x=>x!==id);
   else if(state.compare.length<3)state.compare=[...state.compare,id];
   else return toast('Comparison is limited to 3 awards');
-  renderStream();renderCompareTray();renderNavCounts();save();
+  renderStream();renderCompareTray();renderNavCounts();save();syncAwardModal(id);
   if(state.view==='compare'){renderCompare();renderHistory()}
 }
 
@@ -858,6 +880,13 @@ $('#signal-filter').addEventListener('click',()=>{state.uni=previewUni;renderFil
 $('#explore-btn').addEventListener('click',()=>$('#stream').scrollIntoView({behavior:'smooth'}));
 $('#profile-btn').addEventListener('click',()=>switchView('eligibility'));
 
+$('#award-modal-close').addEventListener('click',closeAwardPanel);
+$('#award-dialog').addEventListener('click',e=>{if(e.target===$('#award-dialog'))closeAwardPanel()});
+$('#award-modal-track').addEventListener('click',()=>{const id=$('#award-dialog').dataset.awardId;if(id)trackAward(id)});
+$('#award-modal-compare').addEventListener('click',()=>{const id=$('#award-dialog').dataset.awardId;if(id)toggleCompare(id)});
+$('#award-modal-eligibility').addEventListener('click',()=>{const id=$('#award-dialog').dataset.awardId;closeAwardPanel();state.matchRun=true;switchView('eligibility');requestAnimationFrame(()=>document.querySelector('.match-card[data-award="'+id+'"]')?.scrollIntoView({behavior:'smooth',block:'center'}))});
+$('#award-modal-assistant').addEventListener('click',()=>{const id=$('#award-dialog').dataset.awardId;closeAwardPanel();if(id)openAssistant(id)});
+
 $('#profile-form').addEventListener('submit',e=>{
   e.preventDefault();
   const data=new FormData(e.currentTarget);
@@ -955,12 +984,10 @@ function openReminder(awardId){
 
 document.addEventListener('keydown',e=>{
   const row=e.target.closest?.('[data-open-award]');
-  if(!row||e.target.closest('[data-expand]'))return;
+  if(!row)return;
   if(e.key==='Enter'||e.key===' '){
     e.preventDefault();
-    state.expanded=state.expanded===row.dataset.openAward?null:row.dataset.openAward;
-    renderStream();
-    requestAnimationFrame(()=>document.querySelector('[data-open-award="'+row.dataset.openAward+'"]')?.focus());
+    openAwardPanel(row.dataset.openAward);
   }
 });
 
@@ -989,8 +1016,8 @@ document.addEventListener('click',e=>{
   const act=e.target.closest('[data-action-view]');if(act){switchView(act.dataset.actionView);return}
   const h=e.target.closest('[data-hero-uni]');if(h){state.uni=h.dataset.heroUni;previewUni=h.dataset.heroUni;renderFilters();renderStream();$('#stream').scrollIntoView({behavior:'smooth'});return}
   const f=e.target.closest('[data-filter-uni]');if(f){state.uni=f.dataset.filterUni;renderFilters();renderStream();save();return}
-  const ex=e.target.closest('[data-expand]');if(ex){state.expanded=state.expanded===ex.dataset.expand?null:ex.dataset.expand;renderStream();return}
-  const row=e.target.closest('[data-open-award]');if(row){state.expanded=state.expanded===row.dataset.openAward?null:row.dataset.openAward;renderStream();return}
+  const openButton=e.target.closest('[data-award-open]');if(openButton){openAwardPanel(openButton.dataset.awardOpen);return}
+  const row=e.target.closest('[data-open-award]');if(row){openAwardPanel(row.dataset.openAward);return}
   const tr=e.target.closest('[data-track]');if(tr){trackAward(tr.dataset.track);if(state.view==='eligibility')renderMatches();if(state.view==='applications'){renderApplications();renderTimeline()}return}
   const cp=e.target.closest('[data-compare]');if(cp){toggleCompare(cp.dataset.compare);return}
   const rm=e.target.closest('[data-remove-compare]');if(rm){state.compare=state.compare.filter(x=>x!==rm.dataset.removeCompare);renderStream();renderCompare();renderCompareTray();renderHistory();renderNavCounts();save();return}
@@ -998,11 +1025,11 @@ document.addEventListener('click',e=>{
   const rem=e.target.closest('[data-reminder-for]');if(rem){openReminder(rem.dataset.reminderFor);return}
   const del=e.target.closest('[data-delete-reminder]');if(del){state.reminders=state.reminders.filter(r=>r.id!==del.dataset.deleteReminder);renderTimeline();save();return}
 
-  const radar=e.target.closest('[data-radar-award]');if(radar){state.expanded=radar.dataset.radarAward;switchView('discover');requestAnimationFrame(()=>document.querySelector('[data-award="'+radar.dataset.radarAward+'"]')?.scrollIntoView({behavior:'smooth',block:'center'}));return}
+  const radar=e.target.closest('[data-radar-award]');if(radar){switchView('discover');requestAnimationFrame(()=>openAwardPanel(radar.dataset.radarAward));return}
   const dw=e.target.closest('[data-delete-watch]');if(dw){state.watches=state.watches.filter(w=>w.id!==dw.dataset.deleteWatch);renderSavedWatches();save();return}
   const cw=e.target.closest('[data-cycle-watch]');if(cw){const id=cw.dataset.cycleWatch,adding=!state.cycleWatches.includes(id);state.cycleWatches=adding?[...state.cycleWatches,id]:state.cycleWatches.filter(x=>x!==id);renderArchive();save();if(adding)addNotification('Cycle Watch enabled',(ARCHIVE.find(a=>a.id===id)?.name||'Archived scholarship')+' is now on your future-cycle watchlist.','cycle');return}
   const dc=e.target.closest('[data-delete-community]');if(dc){state.communityNotes=state.communityNotes.filter(n=>n.id!==dc.dataset.deleteCommunity);renderCommunity();save();return}
-  const gap=e.target.closest('[data-gap-award]');if(gap){state.expanded=gap.dataset.gapAward;switchView('discover');requestAnimationFrame(()=>document.querySelector('[data-award="'+gap.dataset.gapAward+'"]')?.scrollIntoView({behavior:'smooth',block:'center'}));return}
+  const gap=e.target.closest('[data-gap-award]');if(gap){switchView('discover');requestAnimationFrame(()=>openAwardPanel(gap.dataset.gapAward));return}
   const assist=e.target.closest('[data-assistant-for]');if(assist){openAssistant(assist.dataset.assistantFor);return}
   const review=e.target.closest('[data-review-for]');if(review){$('#review-award-id').value=review.dataset.reviewFor;$('#review-dialog').showModal();return}
   const delReview=e.target.closest('[data-delete-review]');if(delReview){state.reviews=state.reviews.filter(r=>r.id!==delReview.dataset.deleteReview);renderApplications();save();return}
