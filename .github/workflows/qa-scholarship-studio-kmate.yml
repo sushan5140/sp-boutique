@@ -137,11 +137,13 @@ jobs:
                 await p.locator('#reminder-form [name="label"]').fill('Request transcript');
                 await p.locator('#reminder-form [name="date"]').fill('2026-10-10');
                 await p.locator('#save-reminder').click();
-                if(await p.locator('.timeline-item').count()!==1)throw Error('reminder timeline failed');
+                if(await p.locator('[data-delete-reminder]').count()!==1)throw Error('manual reminder timeline failed');
+                if(await p.locator('.timeline-item.auto').count()<5)throw Error('automatic timeline tasks disappeared');
                 await p.locator('#add-reminder').click();
                 await p.locator('#reminder-form [name="label"]').fill('Review application');
                 await p.locator('#reminder-form [name="date"]').fill('2026-10-12');
                 await p.locator('#save-reminder').click();
+                if(await p.locator('[data-delete-reminder]').count()!==2)throw Error('second manual reminder missing');
                 if(await p.locator('.timeline-item.collision').count()<2)throw Error('deadline collision detection failed');
                 await p.screenshot({path:'applications.png',fullPage:true,animations:'disabled'});
 
