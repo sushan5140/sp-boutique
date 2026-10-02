@@ -145,33 +145,48 @@ function renderCards(){const awards=filteredAwards();$('#catalog-count').textCon
 function discover(){
  const searchText=esc(filters.search);
  const uniOpts=Object.keys(UNIVERSITY).map(u=>'<option value="'+esc(u)+'" '+(filters.uni===u?'selected':'')+'>'+esc(u)+'</option>').join('');
- const atlasAwards=['kaist-ug','ku-anam','ajou-frontier','unist-ug'].map(byId).filter(Boolean);
- const atlasHtml=atlasAwards.map((s,i)=>{
-   const u=UNIVERSITY[s.uni];
-   return '<article class="atlas-ticket atlas-ticket-'+(i+1)+'" aria-label="'+esc(s.uni)+' '+esc(s.name)+'">'+
-     '<div class="atlas-ticket-top"><span>0'+(i+1)+'</span><span>'+esc(u.place)+'</span></div>'+
-     '<div class="atlas-ticket-uni">'+esc(s.uni)+'</div>'+
-     '<strong>'+esc(s.benefit)+'</strong>'+
-     '<small>'+esc(s.category)+'</small>'+
-   '</article>';
- }).join('');
+ const readiness=completeness();
  let html=
- '<section class="page-mast page-mast-discover atlas-hero" aria-label="Scholarship discovery">'+
- '<div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">✳</span> FUNDING ATLAS <span class="mast-eyebrow-line"></span> KOREA · 2027</div>'+
- '<h1>Build a shortlist<br>that <em>survives scrutiny.</em></h1>'+
- '<p>Source-linked university funding, criteria checks, tracking and comparison — arranged as one working field instead of fifteen browser tabs.</p>'+
- '<div class="mast-meta"><span><b>'+SCHOLARSHIPS.length+'</b> awards</span><span><b>4</b> universities</span><span>Checked · '+SOURCE_DATE+'</span></div>'+
- '<div class="atlas-actions"><button class="mast-link atlas-primary" data-view="eligibility">Set my criteria <span>↗</span></button><span class="atlas-note">Scroll to inspect the dossiers ↓</span></div></div>'+
- '<div class="atlas-stage" aria-label="Featured scholarship dossiers"><div class="atlas-year" aria-hidden="true">2027</div><div class="atlas-axis" aria-hidden="true"></div>'+atlasHtml+'<div class="atlas-caption"><span>LIVE FIELD</span><b>04 / '+SCHOLARSHIPS.length+'</b></div></div></section>'+
- '<div class="discovery-workbench"><div class="discovery-workbench-head"><div><span class="section-kicker">SOURCE-LINKED OPPORTUNITIES</span><h2>Your funding field</h2><p>Scan the terms, inspect the criteria, then keep only what deserves attention.</p></div><span class="workbench-source-tag"><span class="pulse"></span> 4 official sources</span></div>'+
+ '<section class="nuri-hero" aria-label="Scholarship discovery">'+
+   '<div class="nuri-hero-main">'+
+     '<div class="nuri-spectrum" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>'+
+     '<div class="nuri-eyebrow"><span>✦</span> SCHOLARSHIP STUDIO <b>2027 INTAKE</b></div>'+
+     '<h1>Find funding that <em>fits your route.</em></h1>'+
+     '<p>Source-linked university scholarships, criteria checks and application tracking — organised like a workspace, not a pile of tabs.</p>'+
+     '<div class="nuri-hero-actions"><button class="nuri-primary" data-view="eligibility">Set my profile <span>→</span></button><span class="nuri-hero-note">No login · saved in this browser</span></div>'+
+     '<div class="nuri-metrics">'+
+       '<div><strong>'+SCHOLARSHIPS.length+'</strong><span>curated awards</span></div>'+
+       '<div><strong>4</strong><span>universities</span></div>'+
+       '<div><strong>'+state.apps.length+'</strong><span>tracked</span></div>'+
+       '<div><strong>'+state.compare.length+'/3</strong><span>comparing</span></div>'+
+     '</div>'+
+   '</div>'+
+   '<aside class="nuri-desk-card">'+
+     '<div class="nuri-desk-head"><div><span class="nuri-mini-label">YOUR SCHOLARSHIP DESK</span><h2>'+ (state.profile.name?esc(state.profile.name)+'’s workspace':'Start with your profile') +'</h2></div><span class="nuri-desk-orb">✦</span></div>'+
+     '<div class="nuri-readiness"><div class="nuri-readiness-copy"><span>Profile readiness</span><strong>'+readiness+' <small>/ 5 essentials</small></strong></div><div class="nuri-readiness-track"><i style="width:'+(readiness*20)+'%"></i></div></div>'+
+     '<div class="nuri-desk-grid">'+
+       '<button data-view="eligibility" class="nuri-desk-tile indigo"><span>◎</span><div><b>Eligibility</b><small>Check published criteria</small></div><i>→</i></button>'+
+       '<button data-view="applications" class="nuri-desk-tile papaya"><span>▤</span><div><b>Applications</b><small>'+state.apps.length+' tracked right now</small></div><i>→</i></button>'+
+       '<button data-view="compare" class="nuri-desk-tile jade"><span>⊞</span><div><b>Compare</b><small>'+state.compare.length+' of 3 selected</small></div><i>→</i></button>'+
+     '</div>'+
+     '<div class="nuri-next"><span class="nuri-next-icon">↗</span><div><small>NEXT MOVE</small><strong>'+(readiness<5?'Finish the five essentials before narrowing awards.':'Your profile is ready — start narrowing the catalogue.')+'</strong></div></div>'+
+   '</aside>'+
+ '</section>'+
+ '<section class="nuri-role-row" aria-label="Scholarship Studio tools">'+
+   '<div class="nuri-role-card indigo"><span>01</span><b>Discover</b><p>Search source-linked university funding.</p></div>'+
+   '<div class="nuri-role-card jade"><span>02</span><b>Check</b><p>Read criteria against your own profile.</p></div>'+
+   '<div class="nuri-role-card papaya"><span>03</span><b>Track</b><p>Keep documents and next actions together.</p></div>'+
+   '<div class="nuri-role-card sun"><span>04</span><b>Compare</b><p>Put funding terms side by side.</p></div>'+
+ '</section>'+
+ '<div class="discovery-workbench nuri-workbench"><div class="discovery-workbench-head"><div><span class="section-kicker">SOURCE-LINKED OPPORTUNITIES</span><h2>Explore the scholarship library</h2><p>Filter the catalogue, inspect the published terms and keep only what deserves a place in your plan.</p></div><span class="workbench-source-tag"><span class="pulse"></span> 4 official sources</span></div>'+
  '<div class="university-quickbar" aria-label="Browse scholarships by university"><span class="quickbar-label">EXPLORE BY UNIVERSITY</span>'+[['all','All',SCHOLARSHIPS.length],...Object.keys(UNIVERSITY).map(u=>[u,u,SCHOLARSHIPS.filter(s=>s.uni===u).length])].map(([id,label,count])=>'<button type="button" class="university-pill '+(filters.uni===id?'active':'')+'" data-uni-quick="'+esc(id)+'" aria-pressed="'+(filters.uni===id?'true':'false')+'"><span class="university-pill-dot" aria-hidden="true"></span>'+esc(label)+' <span class="university-pill-count">'+count+'</span></button>').join('')+'</div>'+
  '<div class="filters discovery-filters"><label class="discovery-search-label"><span aria-hidden="true">⌕</span><input id="search" class="input" type="search" placeholder="Search universities, awards, funding…" value="'+searchText+'" aria-label="Search scholarships"></label>'+
  '<select id="uni-filter" class="select" aria-label="Filter university"><option value="all">All universities</option>'+uniOpts+'</select>'+
  '<select id="match-filter" class="select" aria-label="Filter profile signals"><option value="all">All profile signals</option><option value="good" '+(filters.match==='good'?'selected':'')+'>Criterion met</option><option value="gap" '+(filters.match==='gap'?'selected':'')+'>Needs attention</option><option value="check" '+(filters.match==='check'?'selected':'')+'>Review required</option></select>'+
  '<div id="catalog-count" class="filter-count"></div></div>'+
  '<div class="filter-toolbar"><div class="filter-tabs"><span class="filter-tabs-label">QUICK VIEW</span><button class="filter-chip '+(!filters.tracked?'is-selected':'')+'" id="all-awards">All awards</button><button class="filter-chip '+(filters.tracked?'is-selected':'')+'" id="tracked-only">My tracked awards <span>'+state.apps.length+'</span></button></div><button class="filter-clear" id="clear-filters">Reset filters ↺</button></div></div>'+
- '<div class="banner page-source-note"><span>ⓘ</span><div><strong>Curated preview, not a live admissions feed.</strong> Award information checked '+SOURCE_DATE+'. Confirm intake-specific eligibility and exact dates on the university’s current official page.</div></div>'+
- '<div id="catalog-grid" class="card-grid"></div>';
+ '<div class="banner page-source-note nuri-source-note"><span>ⓘ</span><div><strong>Curated preview, not a live admissions feed.</strong> Award information checked '+SOURCE_DATE+'. Confirm intake-specific eligibility and dates on the university’s current official page.</div></div>'+
+ '<div id="catalog-grid" class="card-grid nuri-card-grid"></div>';
  $('#view-root').innerHTML=shell(html);renderCards();
 }
 function field(label,name,type,opts,extra){
