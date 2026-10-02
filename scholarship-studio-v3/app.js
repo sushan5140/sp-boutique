@@ -148,14 +148,14 @@ function discover(){
  let html=
  '<section class="page-mast page-mast-discover" aria-label="Scholarship discovery">'+
  '<div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">✳</span> SCHOLARSHIP EXPLORER <span class="mast-eyebrow-line"></span> NON-GKS ONLY</div>'+
- '<h1>Find your <em>next opportunity.</em></h1>'+
- '<p>Search university-funded scholarships, check published criteria and save what matters to you.</p>'+
+ '<h1>Build your <em>funding shortlist.</em></h1>'+
+ '<p>One workspace for university funding: source-linked awards, published criteria, tracking and comparison without the tab chaos.</p>'+
  '<div class="mast-meta"><span><b>'+SCHOLARSHIPS.length+'</b> curated awards</span><span><b>4</b> university sources</span><span>Snapshot · '+SOURCE_DATE+'</span></div></div>'+
- '<div class="mast-side mast-side-discover"><span class="mast-side-kicker">YOUR SEARCH, YOUR WAY</span>'+
- '<div class="mast-search-mark">⌕</div><strong>Start with a university, award or benefit.</strong>'+
- '<p>Refine your results below, then track or compare awards in one click.</p>'+
+ '<div class="mast-side mast-side-discover"><span class="mast-side-kicker">START WITH SIGNAL</span>'+
+ '<div class="mast-search-mark">⌕</div><strong>Search the terms that actually change your decision.</strong>'+
+ '<p>Filter by institution, published criteria and funding coverage — then track or compare what survives.</p>'+
  '<button class="mast-link" data-view="eligibility">Set my criteria <span>↗</span></button></div></section>'+
- '<div class="discovery-workbench"><div class="discovery-workbench-head"><div><span class="section-kicker">YOUR OPPORTUNITY LIBRARY</span><h2>Explore university awards</h2><p>Source-linked opportunities, with your criteria insight on every card.</p></div><span class="workbench-source-tag"><span class="pulse"></span> 4 official sources</span></div>'+
+ '<div class="discovery-workbench"><div class="discovery-workbench-head"><div><span class="section-kicker">SOURCE-LINKED OPPORTUNITIES</span><h2>Your funding field</h2><p>Scan the terms, inspect the criteria, then keep only what deserves attention.</p></div><span class="workbench-source-tag"><span class="pulse"></span> 4 official sources</span></div>'+
  '<div class="university-quickbar" aria-label="Browse scholarships by university"><span class="quickbar-label">EXPLORE BY UNIVERSITY</span>'+[['all','All',SCHOLARSHIPS.length],...Object.keys(UNIVERSITY).map(u=>[u,u,SCHOLARSHIPS.filter(s=>s.uni===u).length])].map(([id,label,count])=>'<button type="button" class="university-pill '+(filters.uni===id?'active':'')+'" data-uni-quick="'+esc(id)+'" aria-pressed="'+(filters.uni===id?'true':'false')+'"><span class="university-pill-dot" aria-hidden="true"></span>'+esc(label)+' <span class="university-pill-count">'+count+'</span></button>').join('')+'</div>'+
  '<div class="filters discovery-filters"><label class="discovery-search-label"><span aria-hidden="true">⌕</span><input id="search" class="input" type="search" placeholder="Search universities, awards, funding…" value="'+searchText+'" aria-label="Search scholarships"></label>'+
  '<select id="uni-filter" class="select" aria-label="Filter university"><option value="all">All universities</option>'+uniOpts+'</select>'+
@@ -174,9 +174,9 @@ function eligibility(){
  const p=state.profile;
  const assessment=SCHOLARSHIPS.map(s=>({s,m:statusFor(s)}));
  let html='<section class="page-mast page-mast-eligibility" aria-label="My eligibility overview"><div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">◎</span> PERSONAL CRITERIA CHECK</div>'+
- '<h1>My <em>eligibility.</em></h1><p>Organize your academic and language profile, then check it against published scholarship criteria. Not an admissions prediction.</p>'+
+ '<h1>Your profile, <em>against the rules.</em></h1><p>Record your academic and language profile, then check it against published scholarship criteria. This is a criteria workspace, not an admissions prediction.</p>'+
  '<div class="mast-meta"><span>'+esc(p.degree||'Degree not set')+'</span><span>'+esc(p.major||'Major not set')+'</span><span>'+esc(p.intake||'Intake not set')+'</span></div></div>'+
- '<div class="mast-side eligibility-side"><span class="mast-side-kicker">YOUR PROFILE READINESS</span><div class="eligibility-progress-number">'+completeness()+'<span> / 5</span></div><strong>Essentials completed</strong>'+
+ '<div class="mast-side eligibility-side"><span class="mast-side-kicker">PROFILE READINESS</span><div class="eligibility-progress-number">'+completeness()+'<span> / 5</span></div><strong>Essentials completed</strong>'+
  '<div class="progress-track" role="progressbar" aria-label="Profile essentials completed" aria-valuemin="0" aria-valuemax="5" aria-valuenow="'+completeness()+'"><span style="width:'+(completeness()*20)+'%"></span></div>'+
  '<p>'+ (completeness()===5?'Your essentials are recorded. Check individual university rules.':'Finish your essentials to make scholarship criteria checks more useful.')+'</p>'+
  '<button class="mast-link" id="jump-profile-form" type="button">Complete your details <span>↓</span></button></div></section>'+
@@ -200,13 +200,13 @@ function eligibility(){
 }
 function apps(){
  let intro='<section class="page-mast page-mast-applications" aria-label="Application control center"><div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">▤</span> APPLICATION CONTROL CENTER</div>'+
- '<h1>Your applications, <em>under control.</em></h1><p>Manage university opportunities from first research to final decision, with checklists, notes and your next-action dates.</p>'+
+ '<h1>Move every application <em>forward.</em></h1><p>Turn research into next actions with stages, checklists, notes and dates — without mixing one university into another.</p>'+
  '<div class="mast-meta"><span><b>'+state.apps.length+'</b> tracked</span><span><b>'+state.apps.filter(a=>a.stage==="Submitted").length+'</b> submitted</span><span>Saved locally on this device</span></div></div>'+
- '<div class="mast-side applications-side"><span class="mast-side-kicker">NEXT MOVE</span><div class="mast-side-symbol">↗</div><strong>Keep every application moving.</strong><p>Add an opportunity, update its stage, and give it a next action.</p>'+
+ '<div class="mast-side applications-side"><span class="mast-side-kicker">NEXT MOVE</span><div class="mast-side-symbol">↗</div><strong>Give every application a next move.</strong><p>Add an opportunity, update its stage, and give it a next action.</p>'+
  '<button class="btn btn-primary" data-view="discover">+ Add an application</button><button class="mast-secondary" id="export-data">↧ Export records</button></div></section>';
  let overview= '<div class="stats-strip">'+stat('In your workspace',state.apps.length,'Independent award records',true)+stat('Preparing',state.apps.filter(a=>a.stage==='Preparing documents').length,'Document stage')+stat('Submitted',state.apps.filter(a=>a.stage==='Submitted').length,'Recorded by you')+stat('Offers recorded',state.apps.filter(a=>a.stage==='Offer received').length,'Entered by you')+'</div>';
  let content=state.apps.length?'<div class="app-list">'+state.apps.map(appCard).join('')+'</div>':'<div class="empty-state"><div class="empty-icon">▤</div><h3>No applications tracked yet</h3><p>Pick an award from Discover and choose “Track application”. You’ll get an independent checklist, status, notes and deadline field.</p><button class="btn btn-primary" data-view="discover">Explore scholarships →</button></div>';
- $('#view-root').innerHTML=shell(intro+overview+'<div class="section-heading"><div><div class="eyebrow">Your application desk</div><h2>My applications</h2><p>Manual tracking — this demo does not submit university applications.</p></div></div>'+content);
+ $('#view-root').innerHTML=shell(intro+overview+'<div class="section-heading"><div><div class="eyebrow">YOUR APPLICATION DESK</div><h2>Active work, in one place</h2><p>Manual tracking only — nothing is submitted to a university from this workspace.</p></div></div>'+content);
 }
 function appCard(a){
  const s=byId(a.id),tasks=Array.isArray(a.tasks)?a.tasks:[],done=TASKS.filter(t=>tasks.includes(t)).length;
@@ -225,11 +225,11 @@ function compare(){
  '<strong>Choose an award</strong><small>Select below or from Discover</small><button type="button" class="compare-slot-pick" data-view="discover" aria-label="Browse awards for slot '+(i+1)+'">+ Browse awards</button>')+'</div>';
  }).join('');
  const title='<section class="page-mast page-mast-compare" aria-label="Scholarship comparison builder"><div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">⊞</span> COMPARISON DESK</div>'+
- '<h1>See the <em>whole picture.</em></h1><p>Compare documented funding, selection routes and continuation rules without invented rankings or acceptance scores.</p>'+
+ '<h1>Compare the terms, <em>not the hype.</em></h1><p>Put documented funding, selection routes and continuation rules side by side — without invented rankings or acceptance scores.</p>'+
  '<div class="mast-meta"><span><b>'+state.compare.length+' / 3</b> selected</span><span>Official award sources</span></div></div>'+
- '<div class="mast-side compare-side"><span class="mast-side-kicker">BUILD YOUR SHORTLIST</span><strong>Put opportunities side by side.</strong><p>Select up to three awards. Your comparison updates immediately.</p><div class="compare-mast-actions"><button class="btn btn-primary" data-view="discover">+ Explore awards</button><button class="mast-secondary" id="clear-comparison">Clear all</button></div></div></section>';
- let picks='<div class="compare-builder"><div class="compare-builder-head"><div><span class="section-kicker">YOUR SELECTION</span><h2>Three places. One clear view.</h2><p>'+state.compare.length+' of 3 awards selected · choose or remove below</p></div><button class="btn btn-small" data-view="discover">Browse awards ↗</button></div><div class="compare-slots">'+slots+'</div></div>'+
- '<div class="section-heading compare-pick-heading"><div><div class="eyebrow">SOURCE-LINKED AWARDS</div><h2>Choose your comparison set</h2><p>Tick an award to compare its published conditions.</p></div></div>'+
+ '<div class="mast-side compare-side"><span class="mast-side-kicker">BUILD THE SHORTLIST</span><strong>Make the differences impossible to miss.</strong><p>Select up to three awards. Your comparison updates immediately.</p><div class="compare-mast-actions"><button class="btn btn-primary" data-view="discover">+ Explore awards</button><button class="mast-secondary" id="clear-comparison">Clear all</button></div></div></section>';
+ let picks='<div class="compare-builder"><div class="compare-builder-head"><div><span class="section-kicker">YOUR SELECTION</span><h2>Three awards. One decision surface.</h2><p>'+state.compare.length+' of 3 awards selected · choose or remove below</p></div><button class="btn btn-small" data-view="discover">Browse awards ↗</button></div><div class="compare-slots">'+slots+'</div></div>'+
+ '<div class="section-heading compare-pick-heading"><div><div class="eyebrow">SOURCE-LINKED AWARDS</div><h2>Build the comparison</h2><p>Select an award to put its published conditions into the same view.</p></div></div>'+
  '<div class="compare-choices">'+SCHOLARSHIPS.map(s=>'<label class="compare-choice '+(state.compare.includes(s.id)?'selected':'')+'"><input type="checkbox" data-compare="'+s.id+'" '+(state.compare.includes(s.id)?'checked':'')+' '+(state.compare.length>=3&&!state.compare.includes(s.id)?'disabled':'')+'><div><strong>'+esc(s.name)+'</strong><small>'+esc(s.uni)+' · '+esc(s.benefit)+'</small></div></label>').join('')+'</div>';
  let chosen=state.compare.map(byId).filter(Boolean);
  let rows=[['University',s=>s.uni],['Profile signal',s=>esc(statusFor(s).label)+' — '+esc(statusFor(s).reason)],['Tuition coverage',s=>esc(s.tuition)],['Living allowance',s=>esc(s.stipend)],['Scholarship route',s=>esc(s.route)],['Published language condition',s=>esc(s.language)],['Selection method',s=>esc(s.selection)],['Renewal / duration',s=>esc(s.renewal)],['Deadline',s=>esc(s.deadline)],['Important caution',s=>esc(s.notice)],['Official source',s=>sourceLink(s,'Open university source ↗')]];
