@@ -68,7 +68,15 @@ jobs:
                 await p.locator('#vault-form input[type="file"]').setInputFiles({name:'transcript.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4 preview transcript')});
                 await p.locator('#vault-form [name="type"]').selectOption('transcript');
                 await p.locator('#vault-form button[type="submit"]').click();
-                await p.waitForFunction(()=>document.querySelectorAll('#vault-files article').length===1);
+                await p.waitForTimeout(1200);
+                const vaultDiag=await p.evaluate(()=>new Promise(resolve=>{
+                  const req=indexedDB.open('kmate-scholarship-vault-preview',1);
+                  req.onsuccess=()=>{const db=req.result;const tx=db.transaction('files','readonly');const countReq=tx.objectStore('files').count();countReq.onsuccess=()=>resolve({count:countReq.result,html:document.querySelector('#vault-files')?.innerHTML||''});countReq.onerror=()=>resolve({count:-1,error:String(countReq.error),html:document.querySelector('#vault-files')?.innerHTML||''})};
+                  req.onerror=()=>resolve({count:-1,error:String(req.error),html:document.querySelector('#vault-files')?.innerHTML||''});
+                }));
+                console.log('VAULT_DIAG '+JSON.stringify({vaultDiag,errors}));
+                if(errors.length)throw Error('vault page errors: '+errors.join(' | '));
+                if(vaultDiag.count!==1||await p.locator('#vault-files article').count()!==1)throw Error('vault persistence/render failed: '+JSON.stringify(vaultDiag));
                 if((await p.locator('#vault-count').innerText()).trim()!=='1')throw Error('vault file count failed');
                 if(await p.locator('.compat-table .ready').count()<1)throw Error('document compatibility did not react to vault file');
                 await p.screenshot({path:'eligibility.png',fullPage:true,animations:'disabled'});
