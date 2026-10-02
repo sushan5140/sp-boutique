@@ -35,10 +35,13 @@ jobs:
               await p.goto(url,{waitUntil:'networkidle'});
               if(await p.locator('.hero').count()!==1)throw Error(label+' hero missing');
               if(await p.locator('.subnav [data-view]').count()!==4)throw Error(label+' Studio nav missing');
-              if(await p.locator('.award').count()!==15)throw Error(label+' expected 15 awards');
+              const awardCount=await p.locator('.award').count();
               const overflow=await p.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth);
-              if(overflow)throw Error(label+' horizontal overflow');
+              const stored=await p.evaluate(()=>localStorage.getItem('kmate-scholarship-studio-preview-v3'));
+              console.log(JSON.stringify({label,awardCount,overflow,errors,stored}));
               if(errors.length)throw Error(label+' page errors: '+errors.join(' | '));
+              if(awardCount!==15)throw Error(label+' expected 15 awards, got '+awardCount);
+              if(overflow)throw Error(label+' horizontal overflow');
               const heroBg=await p.locator('.hero').evaluate(el=>getComputedStyle(el).backgroundColor);
               if(heroBg==='rgb(10, 10, 10)'||heroBg==='rgb(18, 20, 28)')throw Error('dark hero regression');
               const second=p.locator('[data-hero-uni]').nth(1);
