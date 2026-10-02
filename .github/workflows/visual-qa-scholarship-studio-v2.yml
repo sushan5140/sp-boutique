@@ -19,7 +19,7 @@ jobs:
         run: |
           npm install --no-save --no-package-lock --no-audit playwright@1.56.1
           npx playwright install chromium
-      - name: Render and exercise Blue Hour
+      - name: Render and exercise Nuri Edition
         shell: bash
         run: |
           set -euo pipefail
@@ -37,13 +37,13 @@ jobs:
               await p.goto(url,{waitUntil:'networkidle'});
               if(await p.locator('.page-mast-discover').count()!==1)throw Error(label+' discover masthead missing');
               if(await p.locator('.discovery-search-label').count()!==1)throw Error(label+' finder search missing');
-              if((await p.locator('.edition-badge').innerText()).trim()!=='BLUE HOUR')throw Error(label+' Blue Hour badge missing');
+              if((await p.locator('.edition-badge').innerText()).trim()!=='NURI EDITION')throw Error(label+' Nuri Edition badge missing');
               const count=await p.locator('.scholarship-card').count();
               const overflow=await p.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth);
-              const blue=await p.locator('body').evaluate(el=>getComputedStyle(el).getPropertyValue('--bh-blue-500').trim());
-              console.log(JSON.stringify({label,count,overflow,errors,blue}));
+              const indigo=await p.locator('body').evaluate(el=>getComputedStyle(el).getPropertyValue('--n-indigo').trim());
+              console.log(JSON.stringify({label,count,overflow,errors,indigo}));
               if(count!==15 || overflow || errors.length)throw Error('Failed '+label);
-              if(!blue.startsWith('oklch('))throw Error('Blue Hour palette token missing');
+              if(indigo!=='#5147e8')throw Error('Nuri indigo token missing: '+indigo);
               if(label==='mobile-v2'){
                 const nav=await p.locator('.nav-item').first().evaluate(el=>el.getBoundingClientRect().height);
                 const inputSize=await p.locator('.input').first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
@@ -83,7 +83,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: scholarship-studio-v2-blue-hour-visual-qa
+          name: scholarship-studio-v2-nuri-visual-qa
           path: |
             desktop-v2.png
             mobile-v2.png
