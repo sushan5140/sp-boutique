@@ -40,6 +40,7 @@ jobs:
               if(await p.locator('.nuri-role-row').count()!==1)throw Error(label+' role row missing');
               if(await p.locator('.nuri-role-card').count()!==4)throw Error(label+' interactive role cards missing');
               if(await p.locator('.nuri-metrics>button').count()!==4)throw Error(label+' interactive hero metrics missing');
+              if(await p.locator('.desk-universities-grid button').count()!==4)throw Error(label+' live university desk missing');
               if(await p.locator('.discovery-search-label').count()!==1)throw Error(label+' finder search missing');
               if((await p.locator('.edition-badge').innerText()).trim()!=='V2 · SIGNAL')throw Error(label+' Signal Edition badge missing');
               const count=await p.locator('.scholarship-card').count();
@@ -75,6 +76,10 @@ jobs:
                 await p.screenshot({path:'eligibility-v2.png',fullPage:true,animations:'disabled'});
                 await p.locator('#profile-form button[type=submit]').click();
                 await p.locator('[data-view="discover"]').first().click();
+                await p.locator('[data-compare]').first().click();
+                if(await p.locator('.selection-tray').count()!==1)throw Error('comparison tray did not appear');
+                await p.locator('.selection-tray [data-compare]').first().click();
+                if(await p.locator('.selection-tray').count()!==0)throw Error('comparison tray did not clear');
                 await p.locator('[data-track]').first().click();
                 await p.locator('[data-view="applications"]').first().click();
                 if(await p.locator('.app-card').count()!==1)throw Error('application tracking failed');
