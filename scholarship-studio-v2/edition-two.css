@@ -1288,3 +1288,146 @@ svg{display:block}
     scroll-behavior:auto!important;
   }
 }
+
+
+/* ---- visual review refinement: readability + contemporary motion ------- */
+body{font-size:15px}
+.breadcrumb,.verified-pill{font-size:9px}
+.scene-chrome{font-size:9px}
+.scene-copy>p{font-size:14px}
+.scene-primary,.scene-secondary{font-size:10px}
+.scene-live-label{font-size:9px}
+.scene-live-meta{font-size:9px}
+.scene-live>p{font-size:11px}
+.scene-live button{font-size:9px}
+.scene-university>span{font-size:8px}
+.scene-university strong{font-size:20px}
+.scene-university small{font-size:8px}
+.flow-rail span{font-size:8px}
+.flow-rail strong{font-size:18px}
+.flow-rail small{font-size:9px}
+
+.section-kicker,.quickbar-label,.filter-tabs-label{font-size:8px}
+.discovery-workbench-head p,.section-heading p,.compare-builder-head p{font-size:10.5px}
+.workbench-source-tag{font-size:8px}
+.university-pill{font-size:9px}
+.university-pill-count{font-size:8px}
+.filter-chip,.filter-clear,.filter-count{font-size:8.5px}
+.page-source-note,.banner{font-size:9px}
+
+.university-name{font-size:10px}
+.university-meta{font-size:8px}
+.tag{font-size:7.5px}
+.card-meta{font-size:7.5px}
+.scholarship-card h3{font-size:clamp(22px,1.85vw,29px)}
+.description{font-size:10px;line-height:1.55}
+.benefit-kicker,.criteria strong{font-size:7.5px}
+.benefit strong{font-size:15px}
+.small-note{font-size:8.5px}
+.criteria p{font-size:9px}
+.card-detail-grid span,.card-detail-note>span{font-size:7.5px}
+.card-detail-grid strong{font-size:9.5px}
+.card-detail-note p,.card-caution p{font-size:9px}
+.btn,.btn-small{font-size:9px}
+.source-link,.inline-link{font-size:8.5px}
+
+.mast-eyebrow{font-size:9px}
+.mast-copy>p{font-size:11px}
+.mast-meta span{font-size:8px}
+.mast-side-kicker{font-size:8px}
+.mast-side>p{font-size:10px}
+.mast-link,.mast-secondary{font-size:9px}
+.stat-label{font-size:8px}
+.stat-meta{font-size:8px}
+.eyebrow{font-size:8px}
+.panel-subtitle{font-size:9.5px}
+.field label{font-size:9px}
+.field-hint,.check-item{font-size:8.5px}
+.diagnosis-row p,.explain{font-size:8.5px}
+.app-top small{font-size:9px}
+.app-status,.small-sup{font-size:8px}
+.compare-choice strong{font-size:9px}
+.compare-choice small{font-size:8px}
+.compare-table th,.compare-table td{font-size:9px}
+
+/* one orchestrated load moment, then interaction-driven motion only */
+@media(prefers-reduced-motion:no-preference){
+  .scene-copy h1{
+    animation:scene-title-in 620ms var(--ease) both;
+  }
+  .scene-copy>p,.scene-actions{
+    animation:scene-copy-in 520ms 100ms var(--ease) both;
+  }
+  .scene-live{
+    animation:scene-live-in 560ms 140ms var(--ease) both;
+  }
+  .scene-university-grid{
+    animation:scene-grid-in 560ms 180ms var(--ease) both;
+  }
+  @keyframes scene-title-in{
+    from{opacity:0;transform:translateY(22px);clip-path:inset(0 0 28% 0)}
+    to{opacity:1;transform:none;clip-path:inset(0)}
+  }
+  @keyframes scene-copy-in{
+    from{opacity:0;transform:translateY(10px)}
+    to{opacity:1;transform:none}
+  }
+  @keyframes scene-live-in{
+    from{opacity:0;transform:translateX(16px)}
+    to{opacity:1;transform:none}
+  }
+  @keyframes scene-grid-in{
+    from{opacity:0}
+    to{opacity:1}
+  }
+
+  @supports(animation-timeline:scroll()){
+    .workspace::before{
+      content:"";
+      position:fixed;
+      left:0;right:0;top:0;
+      z-index:100;
+      height:2px;
+      background:var(--hot);
+      transform:scaleX(0);
+      transform-origin:left center;
+      animation:page-progress linear both;
+      animation-timeline:scroll(root block);
+      pointer-events:none;
+    }
+    @keyframes page-progress{to{transform:scaleX(1)}}
+  }
+
+  @supports(animation-timeline:view()){
+    .award-stream .scholarship-card::before{
+      animation:row-signal linear both;
+      animation-timeline:view();
+      animation-range:entry 5% cover 22%;
+    }
+    @keyframes row-signal{
+      from{opacity:.1}
+      to{opacity:1}
+    }
+  }
+}
+
+/* mobile keeps the university scene compact instead of turning into a long stack */
+@media(max-width:430px){
+  .scene-university-grid{grid-template-columns:1fr 1fr}
+  .scene-university{border-right:1px solid #292927;border-bottom:1px solid #292927}
+  .scene-university:nth-child(2n){border-right:0}
+  .scene-university:nth-child(n+3){border-bottom:0}
+  .scene-university strong{font-size:15px}
+  .flow-rail{grid-template-columns:1fr 1fr}
+  .flow-rail button{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .flow-rail button:nth-child(2n){border-right:0}
+  .flow-rail button:nth-child(n+3){border-bottom:0}
+}
+
+@media(max-width:700px){
+  .scene-copy>p{font-size:12px}
+  .description{font-size:10.5px}
+  .criteria p{font-size:9.5px}
+  .small-note{font-size:9px}
+  .card-peek span{font-size:9px}
+}
