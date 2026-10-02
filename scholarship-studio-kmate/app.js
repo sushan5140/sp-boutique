@@ -257,6 +257,7 @@ function filtered(){
     if(state.uni!=='all'&&a.uni!==state.uni)return false;
     if(state.funding==='full'&&a.funding!=='full'&&a.funding!=='living')return false;
     if(state.funding==='partial'&&a.funding!=='partial')return false;
+    if(state.deadline!=='all'&&a.deadlineKind!==state.deadline)return false;
     if(q&&!Object.values(a).some(v=>String(v).toLowerCase().includes(q)))return false;
     return true;
   });
@@ -283,6 +284,7 @@ function renderFilters(){
   $('#uni-select').innerHTML='<option value="all">All universities</option>'+uniNames.map(u=>`<option value="${esc(u)}">${esc(u)}</option>`).join('');
   $('#uni-select').value=state.uni;
   $('#funding-filter').value=state.funding;
+  $('#deadline-filter').value=state.deadline;
   $('#search').value=state.query;
 }
 
@@ -430,7 +432,7 @@ function renderMatches(){
   const results=AWARDS.map(a=>({a,e:evaluateAward(a)}));
   const rank={ok:0,warn:1,bad:2};
   results.sort((x,y)=>rank[x.e.status]-rank[y.e.status]);
-  root.innerHTML=results.map(({a,e})=>`<article class="match-card ${e.status}">
+  root.innerHTML=results.map(({a,e})=>`<article class="match-card ${e.status}" data-award="${a.id}">
     <div class="match-top"><div><small>${esc(a.uni)}</small><h3>${esc(a.name)}</h3></div><span>${esc(e.label)}</span></div>
     <div class="match-checks">${e.checks.map(c=>`<div><i class="${c.result}"></i><p><b>${esc(c.label)}</b><span>${esc(c.detail)}</span></p></div>`).join('')}</div>
     <div class="match-actions"><button data-track="${a.id}">${state.tracked.includes(a.id)?'✓ Tracked':'＋ Track'}</button><button data-compare="${a.id}">Compare</button><a href="${esc(a.source)}" target="_blank" rel="noopener">Official source ↗</a></div>
@@ -543,7 +545,8 @@ renderAll();
 $('#search').addEventListener('input',e=>{state.query=e.target.value;renderStream();save()});
 $('#uni-select').addEventListener('change',e=>{state.uni=e.target.value;renderFilters();renderStream();save()});
 $('#funding-filter').addEventListener('change',e=>{state.funding=e.target.value;renderFilters();renderStream();save()});
-$('#reset').addEventListener('click',()=>{state.uni='all';state.query='';state.funding='all';renderFilters();renderStream();save()});
+$('#deadline-filter').addEventListener('change',e=>{state.deadline=e.target.value;renderFilters();renderStream();save()});
+$('#reset').addEventListener('click',()=>{state.uni='all';state.query='';state.funding='all';state.deadline='all';renderFilters();renderStream();save()});
 $('#signal-filter').addEventListener('click',()=>{state.uni=previewUni;renderFilters();renderStream();$('#stream').scrollIntoView({behavior:'smooth'})});
 $('#explore-btn').addEventListener('click',()=>$('#stream').scrollIntoView({behavior:'smooth'}));
 $('#profile-btn').addEventListener('click',()=>switchView('eligibility'));
