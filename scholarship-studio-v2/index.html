@@ -3,38 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f8f7f4">
-  <meta name="description" content="Standalone Korean university scholarship eligibility, comparison and application tracker preview.">
-  <title>Scholarship Studio / Edition Two — Korea funding workspace</title>
+  <meta name="theme-color" content="#201622">
+  <meta name="description" content="Scholarship Studio V2 — an alternate October 2026 palette for the Korea university funding workspace.">
+  <title>Scholarship Studio V2 — Afterglow</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./kmate-theme.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700;800&family=Figtree:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../scholarship-studio-v3/styles.css">
+  <link rel="stylesheet" href="../scholarship-studio-v3/kmate-theme.css">
+  <link rel="stylesheet" href="../scholarship-studio-v3/v3.css">
+  <link rel="stylesheet" href="../scholarship-studio-v3/v3-refinement.css">
+  <link rel="stylesheet" href="../scholarship-studio-v3/v3-hero-refresh.css">
+  <link rel="stylesheet" href="../scholarship-studio-v3/section-mastheads.css">
+  <link rel="stylesheet" href="../scholarship-studio-v3/coastal-palette.css">
+  <link rel="stylesheet" href="../scholarship-studio-v3/yards-pass.css">
+  <link rel="stylesheet" href="../scholarship-studio-v3/interaction-polish.css">
+  <link rel="stylesheet" href="../scholarship-studio-v3/october-2026.css">
   <link rel="stylesheet" href="./edition-two.css">
   <script src="./app.js" defer></script>
 </head>
 <body>
 <div class="app-shell">
   <aside class="sidebar" aria-label="Main navigation">
-    <div class="brand"><div class="brand-symbol" aria-hidden="true"><span>k</span><i>✳</i></div><div><span class="brand-name">THE SCHOLARSHIP</span><span class="brand-name strong">studio<span class="brand-dot">.</span></span></div></div>
-    <div class="side-kicker">Scholarship workspace</div>
+    <div class="brand">
+      <div class="brand-symbol" aria-hidden="true"><span>S</span><i>✳</i></div>
+      <div><span class="brand-name">KOREA FUNDING</span><span class="brand-name strong">Scholarship Studio<span class="brand-dot">.</span></span></div>
+    </div>
+    <div class="side-kicker">YOUR WORKSPACE <span class="side-kicker-rule"></span></div>
     <nav class="side-nav">
-      <button class="nav-item active" data-view="discover"><span class="nav-icon">◈</span><span>Discover</span><span class="nav-tail">↗</span></button>
-      <button class="nav-item" data-view="eligibility"><span class="nav-icon">◎</span><span>My eligibility</span></button>
-      <button class="nav-item" data-view="applications"><span class="nav-icon">▤</span><span>Applications</span><span id="nav-app-count" class="nav-count">0</span></button>
-      <button class="nav-item" data-view="compare"><span class="nav-icon">⊞</span><span>Compare</span><span id="nav-compare-count" class="nav-count">0</span></button>
+      <button class="nav-item active" data-view="discover">
+        <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="6"></circle><path d="m16 16 4 4"></path></svg></span>
+        <span>Discover</span><span class="nav-tail">↗</span>
+      </button>
+      <button class="nav-item" data-view="eligibility">
+        <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3 4 7v5c0 5 3.4 8 8 9 4.6-1 8-4 8-9V7l-8-4Z"></path><path d="m9 12 2 2 4-4"></path></svg></span>
+        <span>Eligibility</span>
+      </button>
+      <button class="nav-item" data-view="applications">
+        <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 3h10v4H7z"></path><path d="M5 5h14v16H5z"></path><path d="M8 11h8M8 15h6"></path></svg></span>
+        <span>Applications</span><span id="nav-app-count" class="nav-count">0</span>
+      </button>
+      <button class="nav-item" data-view="compare">
+        <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 4H4v16h4M16 4h4v16h-4M12 6v12"></path></svg></span>
+        <span>Compare</span><span id="nav-compare-count" class="nav-count">0</span>
+      </button>
     </nav>
     <div class="sidebar-bottom">
-      <div class="profile-mini"><div class="profile-orb">✦</div><div><div class="mini-top">YOUR SCHOLARSHIP PROFILE</div><div id="mini-profile" class="mini-name">Not completed yet</div><button class="mini-link" data-view="eligibility">Edit my details →</button></div></div>
-      <div class="local-note"><span class="pulse"></span> Independent preview <p>Saved only in this browser. No login, submission or data sync.</p></div>
-      <span class="sidebar-utility">Export available in the top bar</span>
+      <div class="profile-mini">
+        <div class="profile-orb">✦</div>
+        <div>
+          <div class="mini-top">YOUR SCHOLARSHIP PROFILE</div>
+          <div id="mini-profile" class="mini-name">Not completed yet</div>
+          <button class="mini-link" data-view="eligibility">Edit my details →</button>
+          <div class="mini-progress" role="progressbar" aria-label="Profile essentials completed" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><span id="mini-progress-fill"></span></div>
+        </div>
+      </div>
+      <div class="local-note"><span class="pulse"></span><strong>Palette experiment</strong><p>V2 keeps its own browser workspace.</p></div>
+      <button class="sidebar-utility" id="export-data">↧ &nbsp; Export my workspace</button>
     </div>
   </aside>
+
   <div class="workspace">
-    <header class="topbar"><div class="breadcrumb"><span class="crumb-root">EDITION II · YOUR KOREA WORKSPACE</span> <span>/</span> <b id="crumb-current">DISCOVER</b></div><div class="top-actions"><button id="export-data" class="header-export">↧ Export workspace</button><span class="verified-pill"><span class="pulse"></span> Curated source-linked catalogue</span><button id="top-profile" class="avatar" title="Open profile" aria-label="Open profile">✦</button></div></header>
+    <header class="topbar">
+      <div class="breadcrumb"><span class="crumb-root">Scholarship Studio V2</span><span>/</span><b id="crumb-current">DISCOVER</b><span class="edition-badge">AFTERGLOW</span></div>
+      <div class="top-actions"><span class="verified-pill"><span class="pulse"></span>15 source-linked awards</span><button id="top-profile" class="avatar" title="Open profile" aria-label="Open profile">✦</button></div>
+    </header>
     <main id="view-root" tabindex="-1"></main>
-    <footer class="footer"><span>Scholarship Studio · Edition II · Standalone prototype</span><span>University awards only · No GKS listings · Snapshot checked 24 Sep 2026</span></footer>
+    <footer class="footer"><span>Scholarship Studio V2 · Afterglow palette experiment</span><span>University awards only · No GKS listings · Sources checked 24 Sep 2026</span></footer>
   </div>
 </div>
 <div role="status" aria-live="polite" id="toast" class="toast"></div>
