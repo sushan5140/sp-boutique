@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#12141c">
+  <title>KMate · Scholarship Studio Preview</title>
+  <meta name="description" content="Public GitHub Pages preview of KMate Scholarship Studio.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <aside class="km-sidebar">
+    <div class="km-brand"><span class="menu-icon">☰</span><strong>KMate</strong></div>
+    <nav>
+      <div class="group">
+        <a href="#"><span>⌂</span>Home</a>
+        <a href="#"><span>◎</span>Timeline</a>
+      </div>
+      <div class="label">Resources</div>
+      <div class="group">
+        <a href="#"><span>▤</span>Official Guidelines</a>
+        <a href="#"><span>◫</span>Apostille Guide</a>
+        <a href="#"><span>◉</span>Official Notices</a>
+        <a class="active" href="#discover"><span>🎓</span>Scholarship Studio</a>
+      </div>
+      <div class="label">Preparation</div>
+      <div class="group">
+        <a href="#"><span>◌</span>Interview DB</a>
+        <a href="#"><span>△</span>Mistakes</a>
+      </div>
+    </nav>
+    <div class="profile-mini"><span>A</span><div><b>Preview user</b><small>KMate workspace</small></div></div>
+  </aside>
+
+  <div class="km-app">
+    <header class="mobile-topbar"><strong>KMate</strong><span>Scholarship Studio</span></header>
+
+    <main class="page">
+      <nav class="subnav">
+        <a class="active" href="#discover">Discover</a>
+        <a href="#stream">Eligibility</a>
+        <a href="#stream">Applications</a>
+        <a href="#compare">Compare</a>
+        <span>Scholarship Studio · KMate</span>
+      </nav>
+
+      <section id="discover" class="hero">
+        <div class="hero-grid" aria-hidden="true"></div>
+        <div class="hero-top"><span>KMATE / SCHOLARSHIP STUDIO</span><span>UNIVERSITY FUNDING · KOREA</span><span id="hero-total">15 LIVE INDEXED AWARDS</span></div>
+        <div class="hero-main">
+          <div class="hero-copy">
+            <div class="eyebrow"><i></i> Source-linked university scholarships</div>
+            <h1>Scholarships<br><em>worth your time.</em></h1>
+            <p>Find university funding, inspect the published rules, save the awards that matter, and compare the terms without leaving KMate.</p>
+            <div class="hero-actions"><button id="explore-btn">Explore scholarships <span>→</span></button><button class="ghost" id="profile-btn">Check my profile</button></div>
+          </div>
+          <div class="hero-signal">
+            <span class="signal-label">LIVE FUNDING SIGNAL</span>
+            <small id="signal-place">Daejeon</small>
+            <strong id="signal-name">KAIST</strong>
+            <div class="signal-meta"><b id="signal-count">1</b> indexed awards · official sources</div>
+            <p id="signal-benefit">Full tuition · 8 semesters</p>
+            <button id="signal-filter">Show these awards ↗</button>
+          </div>
+        </div>
+        <div class="hero-unis" id="hero-unis"></div>
+      </section>
+
+      <section class="journey">
+        <button data-jump="stream"><span>01</span><div><b>Discover</b><small>Find university funding</small></div><i>↗</i></button>
+        <button data-jump="stream"><span>02</span><div><b>Check</b><small>Read the published rules</small></div><i>↗</i></button>
+        <button data-jump="stream"><span>03</span><div><b>Track</b><small>Keep your next move visible</small></div><i>↗</i></button>
+        <button data-jump="compare"><span>04</span><div><b>Compare</b><small>Put the terms side by side</small></div><i>↗</i></button>
+      </section>
+
+      <section id="stream" class="stream-wrap">
+        <div class="stream-tools">
+          <div class="stream-head">
+            <div><span>Scholarship stream</span><h2><b id="stream-total">15</b> awards. One working view.</h2><p>Search, inspect, save and compare without leaving the page.</p></div>
+            <div class="live-dot"><i></i> Public preview data</div>
+          </div>
+          <div class="uni-filters" id="uni-filters"></div>
+          <div class="controls">
+            <label class="search"><span>⌕</span><input id="search" placeholder="Search awards, funding, TOPIK…"></label>
+            <select id="uni-select"></select>
+            <select id="deadline-filter"><option value="all">All deadlines</option><option value="soon">Closing soon</option></select>
+            <div class="count"><span id="shown-count">15 shown</span><button id="reset">Reset</button></div>
+          </div>
+        </div>
+
+        <div class="source-note">ⓘ <span><b>Public design preview.</b> The production KMate route uses the live Supabase scholarship index and authentication.</span></div>
+        <div id="award-stream" class="award-stream"></div>
+      </section>
+
+      <section id="compare" class="compare-section">
+        <div class="compare-head"><div><span>Comparison field</span><h2>Compare the terms, not the hype.</h2><p>Choose up to three awards from the stream above.</p></div><button id="clear-compare">Clear</button></div>
+        <div id="compare-body"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="compare-tray" class="compare-tray" hidden></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
