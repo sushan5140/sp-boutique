@@ -8,6 +8,7 @@ const UNIVERSITY = {
 };
 
 const SOURCE_CHECKED = '24 Sep 2026';
+const SOURCE_CHECKED_ISO = '2026-09-24';
 const NOT_STATED = 'Not stated in the preview source snapshot';
 
 const AWARDS = [
@@ -165,6 +166,45 @@ const AWARDS = [
   }
 ];
 
+
+const FINANCE_META = {
+  'kaist-ug':{tuitionPct:100,stipendMonthly:350000},
+  'unist-ug':{tuitionPct:100,stipendMonthly:0},
+  'ku-anam':{tuitionPct:100,stipendMonthly:0},
+  'ku-leader-a':{tuitionPct:100,stipendMonthly:0},
+  'ku-leader-b':{tuitionPct:50,stipendMonthly:0},
+  'ku-stem':{tuitionPct:100,stipendMonthly:0},
+  'ajou-frontier':{tuitionPct:100,stipendMonthly:0},
+  'ajou-k6':{tuitionPct:100,stipendMonthly:0},
+  'ajou-k5':{tuitionPct:70,stipendMonthly:0},
+  'ajou-k4':{tuitionPct:50,stipendMonthly:0},
+  'ajou-k3':{tuitionPct:30,stipendMonthly:0},
+  'ajou-e1':{tuitionPct:100,stipendMonthly:0},
+  'ajou-e2':{tuitionPct:70,stipendMonthly:0},
+  'ajou-e3':{tuitionPct:50,stipendMonthly:0},
+  'ajou-e4':{tuitionPct:30,stipendMonthly:0}
+};
+
+const ARCHIVE = [
+  {id:'archive-kaist',uni:'KAIST',name:'KAIST scholarship · previous-cycle reference',cycle:'Previous-cycle reference',source:AWARDS[0].source},
+  {id:'archive-unist',uni:'UNIST',name:'UNIST tuition scholarship · previous-cycle reference',cycle:'Previous-cycle reference',source:AWARDS[1].source},
+  {id:'archive-ku',uni:'Korea University',name:'Korea University scholarship · previous-cycle reference',cycle:'Previous-cycle reference',source:AWARDS[2].source},
+  {id:'archive-ajou',uni:'Ajou University',name:'Ajou scholarship · previous-cycle reference',cycle:'Previous-cycle reference',source:AWARDS[6].source}
+];
+
+const DOC_LABELS = {
+  transcript:'Transcript',
+  graduation:'Graduation certificate',
+  language:'Language score',
+  identity:'Identity / passport',
+  recommendation:'Recommendation',
+  essay:'Essay / statement',
+  specific:'Scholarship-specific evidence'
+};
+
+const COMMON_DOC_PLAN = ['transcript','graduation','language','identity'];
+const KMATE_BASE = 'https://kmate.vercel.app';
+
 const STARTER_DOCS = [
   ['transcript','Academic transcript'],
   ['graduation','Graduation / expected-graduation evidence'],
@@ -191,7 +231,8 @@ const emptyProfile = {
 
 let state = {
   view:'discover',uni:'all',query:'',funding:'all',deadline:'all',expanded:null,
-  tracked:[],compare:[],profile:{...emptyProfile},applications:{},reminders:[],matchRun:false
+  tracked:[],compare:[],profile:{...emptyProfile},applications:{},reminders:[],matchRun:false,
+  watches:[],cycleWatches:[],notifications:[],communityNotes:[],reviews:[],sourceSnapshots:{}
 };
 
 try {
@@ -201,7 +242,13 @@ try {
     ...saved,
     profile:{...emptyProfile,...(saved.profile||{})},
     applications:saved.applications||{},
-    reminders:Array.isArray(saved.reminders)?saved.reminders:[]
+    reminders:Array.isArray(saved.reminders)?saved.reminders:[],
+    watches:Array.isArray(saved.watches)?saved.watches:[],
+    cycleWatches:Array.isArray(saved.cycleWatches)?saved.cycleWatches:[],
+    notifications:Array.isArray(saved.notifications)?saved.notifications:[],
+    communityNotes:Array.isArray(saved.communityNotes)?saved.communityNotes:[],
+    reviews:Array.isArray(saved.reviews)?saved.reviews:[],
+    sourceSnapshots:saved.sourceSnapshots||{}
   };
 } catch {}
 
@@ -228,7 +275,7 @@ function appState(id){
       stage:'Researching',
       docs:Object.fromEntries(STARTER_DOCS.map(([key])=>[key,false])),
       requirements:Object.fromEntries(STARTER_REQUIREMENTS.map(([key])=>[key,false])),
-      submission:'Not started',interview:'Not started',result:'Pending',notes:''
+      submission:'Not started',interview:'Not started',result:'Pending',notes:'',targetDate:'',generatedPlan:[]
     };
   }
   return state.applications[id];
