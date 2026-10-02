@@ -47,7 +47,7 @@
         <button data-view="eligibility">Eligibility</button>
         <button data-view="applications">Applications <span id="app-nav-count">0</span></button>
         <button data-view="compare">Compare <span id="compare-nav-count">0</span></button>
-        <span>Scholarship Studio · KMate</span>
+        <span>Scholarship Studio · KMate</span><button class="subnav-utility" id="notification-button" aria-label="Notifications">◌ <b id="notification-count">0</b></button><button class="subnav-utility" id="assistant-button">Ask scholarship</button>
       </nav>
 
       <section class="studio-view active" data-view-panel="discover">
@@ -80,6 +80,18 @@
           <button data-action-view="compare"><span>04</span><div><b>Compare</b><small>Put funding and rules side by side</small></div><i>↗</i></button>
         </section>
 
+        <section class="radar-board">
+          <div class="radar-main">
+            <div class="section-title compact"><div><span>Personalized radar</span><h2>Your scholarship signal</h2><p>Uses your saved profile and preferences to surface relevant scholarships. It does not estimate selection chances.</p></div><button id="radar-profile">Edit profile</button></div>
+            <div id="radar-content" class="radar-content"></div>
+          </div>
+          <aside class="watch-card">
+            <div><span>Saved search watch</span><h3>Watch this search</h3><p>Save the current university, funding and search filters. The preview will surface matching additions in the notification center.</p></div>
+            <button id="save-search-watch">＋ Save current search</button>
+            <div id="saved-watches" class="saved-watches"></div>
+          </aside>
+        </section>
+
         <section id="stream" class="stream-wrap">
           <div class="stream-tools">
             <div class="stream-head">
@@ -102,6 +114,16 @@
 
           <div class="source-note">ⓘ <span><b>Public design preview.</b> Production KMate uses the live Supabase scholarship index and current official sources. Matching below only evaluates criteria explicitly represented in the preview data.</span></div>
           <div id="award-stream" class="award-stream"></div>
+        </section>
+
+        <section class="archive-panel">
+          <div class="section-title compact"><div><span>Previous cycles</span><h2>Archive & Cycle Watch</h2><p>Closed preview entries stay visible for reference. Watch one to keep it on your radar when a future cycle is verified.</p></div></div>
+          <div id="archive-list" class="archive-list"></div>
+        </section>
+
+        <section class="community-panel">
+          <div class="section-title compact"><div><span>Community context</span><h2>Applicant notes, separated from official facts.</h2><p>Community observations never overwrite official scholarship data. They are labeled, dated, and kept in their own layer.</p></div><button id="add-community-note">＋ Add note</button></div>
+          <div id="community-list" class="community-list"></div>
         </section>
       </section>
 
@@ -141,6 +163,28 @@
           <div class="section-title"><div><span>Explainable matching</span><h2>Published-criteria signals</h2><p>No admission prediction. Each result shows exactly which structured criterion was checked.</p></div><div class="legend"><i class="ok"></i> met <i class="warn"></i> missing/review <i class="bad"></i> not met</div></div>
           <div id="match-results" class="match-results"></div>
         </section>
+
+        <section class="gap-panel">
+          <div class="section-title compact"><div><span>Gap Analyzer</span><h2>What should you fix or verify next?</h2><p>Turns missing/review signals into concrete actions without inventing selection probabilities.</p></div></div>
+          <div id="gap-results" class="gap-results"></div>
+        </section>
+
+        <section class="vault-panel">
+          <div class="section-title"><div><span>Document Vault</span><h2>Store once. Reuse across applications.</h2><p>Files stay inside this browser preview using IndexedDB. Production KMate will move this to account-backed storage.</p></div><div class="vault-count"><b id="vault-count">0</b><span>saved files</span></div></div>
+          <div class="vault-grid">
+            <form id="vault-form" class="workspace-card vault-form">
+              <div class="form-grid">
+                <label><span>Document type</span><select name="type" required><option value="transcript">Transcript</option><option value="graduation">Graduation certificate</option><option value="language">Language score</option><option value="identity">Identity / passport</option><option value="recommendation">Recommendation</option><option value="essay">Essay / statement</option><option value="specific">Scholarship-specific evidence</option></select></label>
+                <label><span>File</span><input name="file" type="file" required></label>
+                <label><span>Valid / issued date</span><input name="date" type="date"></label>
+                <label><span>Notes</span><input name="notes" placeholder="e.g. apostilled, English original"></label>
+              </div>
+              <div class="form-footer"><p>Browser-local preview vault. Nothing is uploaded to a server.</p><button type="submit">Save document</button></div>
+            </form>
+            <div class="workspace-card"><div class="card-title"><div><span>Saved evidence</span><h2>Your files</h2></div></div><div id="vault-files" class="vault-files"></div></div>
+          </div>
+          <div class="compatibility-wrap"><div class="section-title compact"><div><span>Compatibility matrix</span><h2>Where can your saved evidence be reused?</h2><p>Planning matrix only — official document requirements still come from the university source.</p></div></div><div id="compatibility-matrix"></div></div>
+        </section>
       </section>
 
       <section class="studio-view" data-view-panel="applications">
@@ -148,6 +192,11 @@
           <div><span>Application workspace</span><h1>Every saved scholarship gets its own control room.</h1><p>Track documents, requirements, submission, interview, results, notes and reminders without mixing one university with another.</p></div>
           <div class="heading-stat"><small>ACTIVE WORKSPACES</small><strong id="application-count">0</strong><p id="application-meta">Track an award to begin.</p></div>
         </header>
+
+        <section class="pathway-board">
+          <div class="section-title"><div><span>Application Pathway</span><h2>One plan across every tracked scholarship.</h2><p>Generate a combined preparation route from target submission dates, reusable documents and unresolved checks.</p></div><div class="pathway-actions"><button id="generate-pathway">Generate pathway</button><button id="export-calendar">Export calendar</button><button id="export-workspace">Export workspace</button><label class="import-button">Import workspace<input id="import-workspace" type="file" accept="application/json"></label></div></div>
+          <div id="pathway-content" class="pathway-content"></div>
+        </section>
 
         <section class="deadline-board">
           <div class="section-title compact"><div><span>Deadline intelligence</span><h2>Timeline & collision watch</h2><p>Custom reminders and known fixed dates are shown together. Nearby deadlines are flagged rather than silently competing for attention.</p></div><button id="add-reminder">＋ Add reminder</button></div>
@@ -162,10 +211,20 @@
           <div><span>Comparison field</span><h1>Compare the terms, not the hype.</h1><p>Place up to three awards side by side across funding, published criteria, deadline behavior, renewal notes and official sources.</p></div>
           <div class="heading-stat"><small>SELECTED</small><strong id="compare-heading-count">0/3</strong><button id="clear-compare">Clear comparison</button></div>
         </header>
+        <section class="funding-calculator">
+          <div class="section-title"><div><span>Funding calculator</span><h2>Estimate the gap after published scholarship support.</h2><p>Enter your own tuition/living assumptions. This is a planning calculator, not an official cost-of-attendance estimate.</p></div></div>
+          <div class="calculator-inputs">
+            <label><span>Annual tuition assumption (₩)</span><input id="calc-tuition" type="number" min="0" step="100000" value="8000000"></label>
+            <label><span>Monthly living budget (₩)</span><input id="calc-living" type="number" min="0" step="50000" value="1000000"></label>
+            <label><span>Study months</span><input id="calc-months" type="number" min="1" max="12" value="12"></label>
+            <label><span>One-time costs (₩)</span><input id="calc-onetime" type="number" min="0" step="50000" value="1500000"></label>
+          </div>
+          <div id="funding-results" class="funding-results"></div>
+        </section>
         <div id="compare-body"></div>
 
         <section class="history-panel">
-          <div class="section-title compact"><div><span>Source history</span><h2>Freshness & change notes</h2><p>Preview entries keep a source-check record so a future date change can be surfaced instead of silently replacing the old value.</p></div></div>
+          <div class="section-title compact"><div><span>Source history</span><h2>Freshness, health & change audit</h2><p>Each record exposes source freshness and version notes. Production automation can extend this into deadline-change detection and admin rollback.</p></div><button id="refresh-source-health">Re-evaluate freshness</button></div>
           <div id="source-history" class="source-history"></div>
         </section>
       </section>
@@ -181,6 +240,43 @@
       <label><span>Date</span><input name="date" type="date" required></label>
       <label><span>Scholarship</span><select name="awardId" id="reminder-award"></select></label>
       <div class="dialog-actions"><button value="cancel" formnovalidate>Cancel</button><button value="default" id="save-reminder">Save reminder</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="assistant-dialog">
+    <form method="dialog" class="dialog-card assistant-dialog">
+      <div class="dialog-head"><div><span>Source-grounded assistant</span><h2>Ask this scholarship</h2></div><button value="cancel" formnovalidate aria-label="Close">×</button></div>
+      <label><span>Scholarship</span><select id="assistant-award"></select></label>
+      <label><span>Question</span><textarea id="assistant-question" placeholder="e.g. What language score is represented here?"></textarea></label>
+      <div id="assistant-answer" class="assistant-answer"><p>Answers use only the structured preview record and its official-source link.</p></div>
+      <div class="dialog-actions"><button value="cancel" formnovalidate>Close</button><button type="button" id="assistant-ask">Answer from source record</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="notification-dialog">
+    <div class="dialog-card notification-dialog">
+      <div class="dialog-head"><div><span>Scholarship alerts</span><h2>Notification center</h2></div><button id="close-notifications" aria-label="Close">×</button></div>
+      <div id="notification-list" class="notification-list"></div>
+      <div class="dialog-actions"><button id="mark-notifications-read">Mark all read</button></div>
+    </div>
+  </dialog>
+
+  <dialog id="community-dialog">
+    <form method="dialog" id="community-form" class="dialog-card">
+      <div class="dialog-head"><div><span>Community note</span><h2>Add applicant context</h2></div><button value="cancel" formnovalidate>×</button></div>
+      <label><span>Scholarship</span><select name="awardId" id="community-award"></select></label>
+      <label><span>Note</span><textarea name="note" required placeholder="Share a process observation. Do not present it as an official rule."></textarea></label>
+      <div class="dialog-actions"><button value="cancel" formnovalidate>Cancel</button><button value="default">Save note</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="review-dialog">
+    <form method="dialog" id="review-form" class="dialog-card">
+      <div class="dialog-head"><div><span>Peer review request</span><h2>Create a review checklist</h2></div><button value="cancel" formnovalidate>×</button></div>
+      <input type="hidden" name="awardId" id="review-award-id">
+      <label><span>Artifact</span><select name="artifact"><option>Personal statement</option><option>Study plan</option><option>Scholarship essay</option><option>Application packet</option></select></label>
+      <label><span>Review focus</span><textarea name="focus" required placeholder="e.g. Check whether my evidence supports the scholarship criteria clearly."></textarea></label>
+      <div class="dialog-actions"><button value="cancel" formnovalidate>Cancel</button><button value="default">Create review request</button></div>
     </form>
   </dialog>
 
