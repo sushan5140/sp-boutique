@@ -1033,3 +1033,13 @@ body.award-panel-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){
   .award-dialog,.award-modal,.award-modal-actions button,.award-modal-head>button{transition:none!important}
 }
+
+@media(prefers-reduced-motion:no-preference){
+  .award-dialog[open] .award-modal{
+    animation:award-panel-in .24s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes award-panel-in{
+    from{opacity:0;transform:translateY(14px) scale(.985)}
+    to{opacity:1;transform:none}
+  }
+}
