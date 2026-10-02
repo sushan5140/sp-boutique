@@ -190,7 +190,7 @@ const emptyProfile = {
 };
 
 let state = {
-  view:'discover',uni:'all',query:'',funding:'all',expanded:null,
+  view:'discover',uni:'all',query:'',funding:'all',deadline:'all',expanded:null,
   tracked:[],compare:[],profile:{...emptyProfile},applications:{},reminders:[],matchRun:false
 };
 
