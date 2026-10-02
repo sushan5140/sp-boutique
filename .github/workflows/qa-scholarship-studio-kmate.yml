@@ -118,9 +118,11 @@ jobs:
                 const firstExpand=firstAward.locator('[data-award-open]');
                 await firstExpand.click();
                 if(await p.locator('#award-dialog[open]').count()!==1)throw Error('V control did not open award modal');
+                await p.locator('#award-modal-track').click();
+                await p.locator('#award-modal-compare').click();
+                if((await p.locator('#award-modal-track').innerText()).indexOf('Tracked')<0)throw Error('modal Track action did not update');
+                if((await p.locator('#award-modal-compare').innerText()).indexOf('comparison')<0)throw Error('modal Compare action did not update');
                 await p.locator('#award-modal-close').click();
-                await firstAward.locator('[data-track]').click();
-                await firstAward.locator('[data-compare]').click();
                 if((await p.locator('#app-nav-count').innerText()).trim()!=='1')throw Error('tracked nav count failed');
                 if((await p.locator('#compare-nav-count').innerText()).trim()!=='1')throw Error('compare nav count failed');
                 if(await p.locator('#compare-tray:not([hidden])').count()!==1)throw Error('compare tray missing');
