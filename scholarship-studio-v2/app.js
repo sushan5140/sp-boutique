@@ -94,7 +94,12 @@ function syncShell(){
  const meter=$('.mini-progress'); if(meter){meter.setAttribute('aria-valuenow',completeness());$('#mini-progress-fill').style.width=(completeness()*20)+'%';}
 }
 function navigate(next){if(!['discover','eligibility','applications','compare'].includes(next))return;view=next;location.hash=next;render();window.scrollTo({top:0,behavior:'instant'});}
-function shell(body){return '<div class="main-content">'+body+'</div>';}
+function selectionTray(){
+ if(view==='compare'||!state.compare.length)return '';
+ const chosen=state.compare.map(byId).filter(Boolean);
+ return '<div class="selection-tray" role="region" aria-label="Current scholarship comparison"><div class="selection-tray-copy"><span>'+state.compare.length+'/3 selected</span><div>'+chosen.map(s=>'<button type="button" data-compare="'+s.id+'" title="Remove '+esc(s.name)+'">'+esc(s.uni)+' <b>×</b></button>').join('')+'</div></div><button type="button" class="selection-tray-action" data-view="compare">Compare now <span>→</span></button></div>';
+}
+function shell(body){return '<div class="main-content">'+body+'</div>'+selectionTray();}
 function sectionEyebrow(text){return '<div class="eyebrow">'+esc(text)+'</div>';}
 function stat(label,value,meta,highlight){return '<div class="stat'+(highlight?' highlight':'')+'"><div class="stat-label">'+label+'</div><div class="stat-value">'+value+'</div><div class="stat-meta">'+meta+'</div>'+(highlight?'<span class="stat-symbol">✳</span>':'')+'</div>';}
 function heroAside(){
@@ -156,6 +161,7 @@ function discover(){
  const searchText=esc(filters.search);
  const uniOpts=Object.keys(UNIVERSITY).map(u=>'<option value="'+esc(u)+'" '+(filters.uni===u?'selected':'')+'>'+esc(u)+'</option>').join('');
  const readiness=completeness();
+ const uniDesk=Object.keys(UNIVERSITY).map((u,i)=>'<button type="button" data-uni-desk="'+esc(u)+'"><span>0'+(i+1)+'</span><b>'+esc(u)+'</b><small>'+SCHOLARSHIPS.filter(s=>s.uni===u).length+' awards</small></button>').join('');
  let html=
  '<section class="nuri-hero" aria-label="Scholarship discovery">'+
    '<div class="nuri-hero-main">'+
@@ -271,6 +277,12 @@ function compare(){
 }
 function render(){syncShell();({discover,eligibility,applications:apps,compare})[view]();}
 document.addEventListener('click',e=>{
+ const uniDeskButton=e.target.closest('[data-uni-desk]');if(uniDeskButton){
+   filters.uni=uniDeskButton.dataset.uniDesk;
+   render();
+   requestAnimationFrame(()=>document.querySelector('.nuri-workbench')?.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'}));
+   return;
+ }
  const expand=e.target.closest('[data-expand]');if(expand){
    const cardEl=expand.closest('.scholarship-card');
    const open=cardEl?.classList.toggle('is-expanded');
