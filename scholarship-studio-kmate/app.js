@@ -365,6 +365,7 @@ function renderStream(){
           <button class="track ${tr?'active':''}" data-track="${a.id}">${tr?'✓ Tracked':'＋ Track'}</button>
           <button class="compare ${cmp?'active':''}" data-compare="${a.id}">${cmp?'✓ In comparison':'⇄ Compare'}</button>
           <button data-check-award="${a.id}">Check eligibility</button>
+          <button data-assistant-for="${a.id}">Ask scholarship</button>
           <a target="_blank" rel="noopener" href="${esc(a.source)}">Official source ↗</a>
         </div>
       </div></div></div>
@@ -723,6 +724,13 @@ async function vaultAll(){
     req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error);
   });
 }
+async function vaultGet(id){
+  const db=await openVaultDB();
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction('files','readonly');const req=tx.objectStore('files').get(id);
+    req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error);
+  });
+}
 async function vaultPut(record){
   const db=await openVaultDB();
   return new Promise((resolve,reject)=>{
@@ -820,8 +828,22 @@ function snapshotSources(){
   save();renderHistory();toast('Local source snapshots refreshed');
 }
 
+
+function populateGlobalSelectors(){
+  const options=AWARDS.map(a=>`<option value="${a.id}">${esc(a.uni)} · ${esc(a.name)}</option>`).join('');
+  if($('#assistant-award'))$('#assistant-award').innerHTML=options;
+  if($('#community-award'))$('#community-award').innerHTML='<option value="">General</option>'+options;
+}
+function openAssistant(id){
+  populateGlobalSelectors();
+  if(id&&award(id))$('#assistant-award').value=id;
+  $('#assistant-question').value='';
+  $('#assistant-answer').innerHTML='<p>Answers use only the structured preview record and its official-source link.</p>';
+  $('#assistant-dialog').showModal();
+}
+
 function renderAll(){
-  renderHero();renderFilters();renderStream();renderCompareTray();renderNavCounts();renderRadar();renderArchive();renderCommunity();renderNotifications();
+  populateGlobalSelectors();renderHero();renderFilters();renderStream();renderCompareTray();renderNavCounts();renderRadar();renderArchive();renderCommunity();renderNotifications();
   switchView(state.view,false);
 }
 
@@ -841,17 +863,67 @@ $('#profile-form').addEventListener('submit',e=>{
   const data=new FormData(e.currentTarget);
   state.profile={...state.profile,...Object.fromEntries(data.entries())};
   state.matchRun=true;
-  renderProfile();renderMatches();save();toast('Profile saved and eligibility signals refreshed');
+  renderProfile();renderMatches();renderGapAnalyzer();renderRadar();save();toast('Profile saved and eligibility signals refreshed');
 });
 $('#clear-profile').addEventListener('click',()=>{
-  state.profile={...emptyProfile};state.matchRun=false;fillProfileForm();renderProfile();renderMatches();save();
+  state.profile={...emptyProfile};state.matchRun=false;fillProfileForm();renderProfile();renderMatches();renderGapAnalyzer();renderRadar();save();
 });
 $('#run-match').addEventListener('click',()=>{
   const data=new FormData($('#profile-form'));
   state.profile={...state.profile,...Object.fromEntries(data.entries())};
-  state.matchRun=true;renderProfile();renderMatches();save();
+  state.matchRun=true;renderProfile();renderMatches();renderGapAnalyzer();renderRadar();save();
 });
 $('#clear-compare').addEventListener('click',()=>{state.compare=[];renderCompare();renderCompareTray();renderHistory();renderNavCounts();save()});
+
+$('#radar-profile').addEventListener('click',()=>switchView('eligibility'));
+$('#save-search-watch').addEventListener('click',saveCurrentWatch);
+$('#add-community-note').addEventListener('click',()=>{populateGlobalSelectors();$('#community-dialog').showModal()});
+$('#notification-button').addEventListener('click',()=>{renderNotifications();$('#notification-dialog').showModal()});
+$('#close-notifications').addEventListener('click',()=>$('#notification-dialog').close());
+$('#mark-notifications-read').addEventListener('click',()=>{state.notifications.forEach(n=>n.read=true);renderNotifications();save()});
+$('#assistant-button').addEventListener('click',()=>openAssistant(state.compare[0]||state.tracked[0]||AWARDS[0].id));
+$('#assistant-ask').addEventListener('click',answerAssistant);
+$('#generate-pathway').addEventListener('click',()=>{renderPathway();renderTimeline();toast('Combined pathway refreshed')});
+$('#export-calendar').addEventListener('click',exportCalendar);
+$('#export-workspace').addEventListener('click',exportWorkspace);
+$('#refresh-source-health').addEventListener('click',snapshotSources);
+['#calc-tuition','#calc-living','#calc-months','#calc-onetime'].forEach(sel=>$(sel)?.addEventListener('input',renderFundingCalculator));
+
+$('#vault-form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const data=new FormData(e.currentTarget),file=data.get('file');
+  if(!(file instanceof File)||!file.size)return;
+  if(file.size>15*1024*1024)return toast('Preview vault limit: 15 MB per file');
+  const record={id:'v'+Date.now(),type:String(data.get('type')||'specific'),name:file.name,size:file.size,mime:file.type,date:String(data.get('date')||''),notes:String(data.get('notes')||''),savedAt:new Date().toISOString(),blob:file};
+  await vaultPut(record);e.currentTarget.reset();await renderVault();toast('Document saved in browser vault');
+});
+
+$('#community-form').addEventListener('submit',e=>{
+  e.preventDefault();if(e.submitter?.value==='cancel')return;
+  const data=new FormData(e.currentTarget),note=String(data.get('note')||'').trim();if(!note)return;
+  state.communityNotes.unshift({id:'c'+Date.now(),awardId:String(data.get('awardId')||''),note,created:new Date().toISOString()});
+  save();renderCommunity();$('#community-dialog').close();e.currentTarget.reset();toast('Community note saved locally');
+});
+
+$('#review-form').addEventListener('submit',e=>{
+  e.preventDefault();if(e.submitter?.value==='cancel')return;
+  const data=new FormData(e.currentTarget),focus=String(data.get('focus')||'').trim();if(!focus)return;
+  state.reviews.unshift({id:'rv'+Date.now(),awardId:String(data.get('awardId')||''),artifact:String(data.get('artifact')||''),focus,created:new Date().toISOString()});
+  save();renderApplications();$('#review-dialog').close();e.currentTarget.reset();toast('Review request checklist created');
+});
+
+$('#import-workspace').addEventListener('change',async e=>{
+  const file=e.target.files?.[0];if(!file)return;
+  try{
+    const parsed=JSON.parse(await file.text());
+    if(!parsed||typeof parsed.state!=='object')throw new Error('Invalid workspace file');
+    state={...state,...parsed.state,profile:{...emptyProfile,...(parsed.state.profile||{})},applications:parsed.state.applications||{}};
+    state.compare=(state.compare||[]).slice(0,3);state.tracked=Array.isArray(state.tracked)?state.tracked:[];
+    save();renderAll();toast('Workspace imported. Vault files are not embedded in JSON backups.');
+  }catch(err){toast('Could not import that workspace file')}
+  e.target.value='';
+});
+
 $('#add-reminder').addEventListener('click',()=>openReminder(''));
 $('#reminder-form').addEventListener('submit',e=>{
   e.preventDefault();
@@ -882,7 +954,8 @@ document.addEventListener('pointerover',e=>{
 document.addEventListener('change',e=>{
   const doc=e.target.closest('[data-doc]');if(doc){appState(doc.dataset.appId).docs[doc.dataset.doc]=doc.checked;renderApplications();save();return}
   const req=e.target.closest('[data-req]');if(req){appState(req.dataset.appId).requirements[req.dataset.req]=req.checked;renderApplications();save();return}
-  const field=e.target.closest('[data-app-field]');if(field){appState(field.dataset.appId)[field.dataset.appField]=field.value;renderApplications();save();return}
+  const field=e.target.closest('[data-app-field]');if(field){appState(field.dataset.appId)[field.dataset.appField]=field.value;renderApplications();renderPathway();renderTimeline();save();return}
+  const target=e.target.closest('[data-target-date]');if(target){appState(target.dataset.targetDate).targetDate=target.value;renderApplications();renderPathway();renderTimeline();save();return}
 });
 document.addEventListener('input',e=>{
   const note=e.target.closest('[data-notes]');if(note){appState(note.dataset.notes).notes=note.value;save()}
@@ -900,4 +973,15 @@ document.addEventListener('click',e=>{
   const chk=e.target.closest('[data-check-award]');if(chk){state.matchRun=true;switchView('eligibility');requestAnimationFrame(()=>document.querySelector(`.match-card[data-award="${chk.dataset.checkAward}"]`)?.scrollIntoView({behavior:'smooth'}));return}
   const rem=e.target.closest('[data-reminder-for]');if(rem){openReminder(rem.dataset.reminderFor);return}
   const del=e.target.closest('[data-delete-reminder]');if(del){state.reminders=state.reminders.filter(r=>r.id!==del.dataset.deleteReminder);renderTimeline();save();return}
+
+  const radar=e.target.closest('[data-radar-award]');if(radar){state.expanded=radar.dataset.radarAward;switchView('discover');requestAnimationFrame(()=>document.querySelector('[data-award="'+radar.dataset.radarAward+'"]')?.scrollIntoView({behavior:'smooth',block:'center'}));return}
+  const dw=e.target.closest('[data-delete-watch]');if(dw){state.watches=state.watches.filter(w=>w.id!==dw.dataset.deleteWatch);renderSavedWatches();save();return}
+  const cw=e.target.closest('[data-cycle-watch]');if(cw){const id=cw.dataset.cycleWatch,adding=!state.cycleWatches.includes(id);state.cycleWatches=adding?[...state.cycleWatches,id]:state.cycleWatches.filter(x=>x!==id);renderArchive();save();if(adding)addNotification('Cycle Watch enabled',(ARCHIVE.find(a=>a.id===id)?.name||'Archived scholarship')+' is now on your future-cycle watchlist.','cycle');return}
+  const dc=e.target.closest('[data-delete-community]');if(dc){state.communityNotes=state.communityNotes.filter(n=>n.id!==dc.dataset.deleteCommunity);renderCommunity();save();return}
+  const gap=e.target.closest('[data-gap-award]');if(gap){state.expanded=gap.dataset.gapAward;switchView('discover');requestAnimationFrame(()=>document.querySelector('[data-award="'+gap.dataset.gapAward+'"]')?.scrollIntoView({behavior:'smooth',block:'center'}));return}
+  const assist=e.target.closest('[data-assistant-for]');if(assist){openAssistant(assist.dataset.assistantFor);return}
+  const review=e.target.closest('[data-review-for]');if(review){$('#review-award-id').value=review.dataset.reviewFor;$('#review-dialog').showModal();return}
+  const delReview=e.target.closest('[data-delete-review]');if(delReview){state.reviews=state.reviews.filter(r=>r.id!==delReview.dataset.deleteReview);renderApplications();save();return}
+  const vd=e.target.closest('[data-vault-delete]');if(vd){vaultRemove(vd.dataset.vaultDelete).then(renderVault);return}
+  const vdl=e.target.closest('[data-vault-download]');if(vdl){vaultGet(vdl.dataset.vaultDownload).then(file=>{if(file?.blob)downloadBlob(file.name,file.mime||'application/octet-stream',file.blob)});return}
 });
