@@ -701,3 +701,445 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     transform:none!important;
   }
 }
+
+
+/* =======================================================================
+   FUNDING ATLAS — internet-reference pass, Oct 2026
+   Spatial archive inspired by the discipline of recent showcase work:
+   one dominant field, real product data as the visual material.
+   ======================================================================= */
+
+.atlas-hero.page-mast-discover{
+  grid-template-columns:minmax(0,.88fr) minmax(500px,1.12fr);
+  min-height:510px;
+  padding:clamp(34px,4vw,60px);
+  background:var(--bh-blue-500);
+  border-color:var(--bh-blue-500);
+  box-shadow:none;
+}
+.atlas-hero.page-mast-discover::before{
+  background:
+    linear-gradient(rgba(255,255,255,.065) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.065) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:none;
+}
+.atlas-hero.page-mast-discover::after{display:none}
+.atlas-hero .mast-copy{
+  position:relative;
+  z-index:3;
+  justify-content:flex-end;
+  padding:0 0 5px;
+}
+.atlas-hero .mast-eyebrow{
+  margin-bottom:auto;
+  color:rgba(255,255,255,.72);
+}
+.atlas-hero .mast-eyebrow-mark{
+  border-color:rgba(255,255,255,.22);
+  color:white;
+}
+.atlas-hero .mast-eyebrow-line{background:rgba(255,255,255,.25)}
+.atlas-hero .mast-copy h1{
+  max-width:700px;
+  color:white;
+  font-size:clamp(52px,5.7vw,88px);
+  line-height:.88;
+  letter-spacing:-.078em;
+}
+.atlas-hero .mast-copy h1 em{
+  display:inline-block;
+  color:oklch(0.955 0.02 88);
+  font-family:var(--oct-serif);
+  font-size:1.04em;
+  letter-spacing:-.035em;
+}
+.atlas-hero .mast-copy>p{
+  max-width:570px;
+  margin-top:22px;
+  color:rgba(255,255,255,.76);
+  font-size:12px;
+  line-height:1.66;
+}
+.atlas-hero .mast-meta span{
+  border-color:rgba(255,255,255,.18);
+  background:transparent;
+  color:rgba(255,255,255,.72);
+}
+.atlas-hero .mast-meta b{color:white}
+.atlas-actions{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-top:20px;
+}
+.atlas-primary{
+  min-height:43px;
+  padding:0 14px;
+  border:1px solid white;
+  border-radius:8px;
+  background:white;
+  color:var(--bh-blue-700);
+}
+.atlas-primary:hover{
+  background:oklch(0.95 0.025 88);
+}
+.atlas-note{
+  color:rgba(255,255,255,.58);
+  font-size:8px;
+  font-weight:750;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+/* The scholarships themselves are the hero artwork. */
+.atlas-stage{
+  position:relative;
+  min-height:390px;
+  align-self:stretch;
+  perspective:1100px;
+  isolation:isolate;
+}
+.atlas-year{
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:-1;
+  transform:translate(-50%,-50%);
+  color:rgba(255,255,255,.11);
+  font:600 clamp(118px,12vw,190px)/.8 var(--oct-display);
+  letter-spacing:-.11em;
+  pointer-events:none;
+  user-select:none;
+}
+.atlas-axis{
+  position:absolute;
+  inset:50% 8% auto 8%;
+  height:1px;
+  background:rgba(255,255,255,.16);
+  pointer-events:none;
+}
+.atlas-axis::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-150px;
+  width:1px;
+  height:300px;
+  background:rgba(255,255,255,.16);
+}
+
+.atlas-ticket{
+  position:absolute;
+  width:230px;
+  min-height:146px;
+  display:flex;
+  flex-direction:column;
+  padding:15px 16px 16px;
+  border:1px solid rgba(21,24,43,.14);
+  border-radius:4px;
+  background:oklch(0.982 0.008 88);
+  color:var(--bh-ink);
+  box-shadow:
+    0 1px 1px rgba(17,17,17,.05),
+    0 10px 28px rgba(17,17,17,.09);
+  transform-origin:center;
+  transition:
+    transform 260ms cubic-bezier(.23,1,.32,1),
+    box-shadow 180ms ease;
+}
+.atlas-ticket::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  height:4px;
+  background:var(--bh-orange);
+}
+.atlas-ticket-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  color:var(--bh-muted);
+  font-size:7px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.atlas-ticket-uni{
+  margin-top:20px;
+  color:var(--bh-blue-700);
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.atlas-ticket strong{
+  display:block;
+  margin-top:7px;
+  color:var(--bh-ink);
+  font:600 18px/1.04 var(--oct-display);
+  letter-spacing:-.045em;
+}
+.atlas-ticket small{
+  margin-top:auto;
+  padding-top:14px;
+  color:var(--bh-muted);
+  font-size:7.5px;
+  line-height:1.35;
+}
+.atlas-ticket-1{
+  left:6%;
+  top:4%;
+  transform:rotate(-7deg) translateZ(16px);
+}
+.atlas-ticket-2{
+  right:3%;
+  top:13%;
+  transform:rotate(5deg) translateZ(42px);
+}
+.atlas-ticket-3{
+  left:15%;
+  bottom:3%;
+  transform:rotate(4deg) translateZ(28px);
+}
+.atlas-ticket-4{
+  right:11%;
+  bottom:5%;
+  transform:rotate(-5deg) translateZ(12px);
+}
+.atlas-caption{
+  position:absolute;
+  right:0;
+  bottom:-3px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:rgba(255,255,255,.65);
+  font-size:7px;
+  font-weight:800;
+  letter-spacing:.13em;
+}
+.atlas-caption b{color:white;font-variant-numeric:tabular-nums}
+
+@media(hover:hover) and (pointer:fine){
+  .atlas-stage:hover .atlas-ticket-1{transform:translate(-7px,-6px) rotate(-8deg) translateZ(24px)}
+  .atlas-stage:hover .atlas-ticket-2{transform:translate(9px,-6px) rotate(6deg) translateZ(50px)}
+  .atlas-stage:hover .atlas-ticket-3{transform:translate(-5px,7px) rotate(5deg) translateZ(36px)}
+  .atlas-stage:hover .atlas-ticket-4{transform:translate(8px,6px) rotate(-6deg) translateZ(20px)}
+  .atlas-ticket:hover{
+    z-index:5;
+    box-shadow:
+      0 2px 2px rgba(17,17,17,.05),
+      0 18px 44px rgba(17,17,17,.14);
+  }
+}
+
+/* Catalogue becomes an archive/index rather than a grid of equal SaaS cards. */
+@media(min-width:1181px){
+  .card-grid{
+    display:block;
+    border-top:1px solid var(--bh-line-strong);
+  }
+  .scholarship-card,
+  .scholarship-card:first-child{
+    position:relative;
+    display:grid;
+    grid-template-columns:190px minmax(290px,1.35fr) minmax(220px,.82fr) minmax(250px,1fr);
+    grid-template-areas:
+      "head main benefit criteria"
+      "actions actions actions actions";
+    gap:18px 24px;
+    width:100%;
+    margin:0;
+    padding:25px 0 22px 52px;
+    border:0;
+    border-bottom:1px solid var(--bh-line);
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
+    overflow:visible;
+  }
+  .scholarship-card::before,
+  .scholarship-card:first-child::before{
+    left:0;
+    top:27px;
+    bottom:auto;
+    width:27px;
+    height:3px;
+    background:var(--bh-blue-500)!important;
+  }
+  .scholarship-card::after,
+  .scholarship-card:first-child::after{
+    left:0;
+    right:auto;
+    top:8px;
+    color:var(--bh-faint);
+    font-size:7px;
+  }
+  .scholarship-card:hover,
+  .scholarship-card:first-child:hover{
+    transform:none;
+    border-color:var(--bh-line);
+    background:color-mix(in oklab,var(--bh-blue-50) 34%,transparent);
+    box-shadow:none;
+  }
+  .scholarship-card .card-head,
+  .scholarship-card:first-child .card-head{
+    grid-area:head;
+    align-items:flex-start;
+    padding:0;
+  }
+  .scholarship-card .card-main,
+  .scholarship-card:first-child .card-main{
+    grid-area:main;
+    margin:0;
+  }
+  .scholarship-card h3,
+  .scholarship-card:first-child h3{
+    margin:8px 0 7px;
+    font-size:clamp(20px,1.7vw,27px);
+  }
+  .scholarship-card .benefit,
+  .scholarship-card:first-child .benefit{
+    grid-area:benefit;
+    align-self:stretch;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:flex-start;
+    min-height:0;
+    margin:0;
+    padding:0 0 0 20px;
+    border:0;
+    border-left:1px solid var(--bh-line);
+    border-radius:0;
+    background:transparent;
+  }
+  .scholarship-card .benefit strong,
+  .scholarship-card:first-child .benefit strong{
+    margin-top:8px;
+    font-size:17px;
+    color:var(--bh-blue-900);
+  }
+  .scholarship-card .small-note,
+  .scholarship-card:first-child .small-note{
+    margin-top:7px;
+    text-align:left;
+  }
+  .scholarship-card .criteria,
+  .scholarship-card:first-child .criteria{
+    grid-area:criteria;
+    display:grid;
+    grid-template-columns:28px 1fr;
+    gap:10px;
+    margin:0;
+    padding:0 0 0 20px;
+    border:0;
+    border-left:1px solid var(--bh-line);
+  }
+  .scholarship-card .criteria-icon,
+  .scholarship-card:first-child .criteria-icon{
+    width:28px;
+    height:28px;
+  }
+  .scholarship-card .card-actions,
+  .scholarship-card:first-child .card-actions{
+    grid-area:actions;
+    margin:0;
+    padding:16px 0 0;
+    border-top:0;
+  }
+}
+
+/* Workbench reads like a control strip. */
+.discovery-workbench{
+  padding:20px 22px 16px;
+  border-radius:14px;
+}
+.discovery-workbench-head{
+  margin-bottom:14px;
+  padding-bottom:14px;
+}
+.discovery-workbench-head h2{font-size:clamp(25px,2.1vw,34px)}
+.discovery-search-label{background:transparent}
+.filter-toolbar{padding-top:3px}
+
+/* Kinetic identity, only on the low-frequency brand mark. */
+.brand-name.strong{
+  transition:letter-spacing 280ms cubic-bezier(.23,1,.32,1);
+}
+@media(hover:hover) and (pointer:fine){
+  .brand:hover .brand-name.strong{letter-spacing:-.025em}
+}
+
+/* Viewport-specific redesign, not a desktop squeeze. */
+@media(max-width:1180px){
+  .atlas-hero.page-mast-discover{
+    grid-template-columns:minmax(0,.92fr) minmax(420px,1.08fr);
+    min-height:470px;
+  }
+  .atlas-ticket{width:200px;min-height:132px}
+  .atlas-ticket strong{font-size:16px}
+}
+@media(max-width:920px){
+  .atlas-hero.page-mast-discover{
+    grid-template-columns:1fr;
+    min-height:0;
+  }
+  .atlas-hero .mast-copy{min-height:360px}
+  .atlas-stage{min-height:390px;margin-top:2px}
+  .atlas-year{font-size:clamp(125px,26vw,190px)}
+  .atlas-caption{right:5px}
+}
+@media(max-width:640px){
+  .atlas-hero.page-mast-discover{
+    padding:21px;
+    border-radius:20px;
+  }
+  .atlas-hero .mast-copy{min-height:315px}
+  .atlas-hero .mast-copy h1{
+    font-size:clamp(42px,12vw,58px);
+    line-height:.91;
+  }
+  .atlas-actions{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:10px;
+  }
+  .atlas-note{font-size:7px}
+  .atlas-stage{
+    min-height:360px;
+    margin-top:10px;
+  }
+  .atlas-year{
+    top:49%;
+    font-size:clamp(112px,35vw,150px);
+  }
+  .atlas-axis{inset:50% 2% auto 2%}
+  .atlas-ticket{
+    width:47%;
+    min-height:137px;
+    padding:13px 12px;
+  }
+  .atlas-ticket-1{left:0;top:4%;transform:rotate(-4deg)}
+  .atlas-ticket-2{right:0;top:10%;transform:rotate(3deg)}
+  .atlas-ticket-3{left:3%;bottom:5%;transform:rotate(3deg)}
+  .atlas-ticket-4{right:2%;bottom:1%;transform:rotate(-3deg)}
+  .atlas-ticket strong{font-size:14px}
+  .atlas-ticket small{font-size:7px}
+  .atlas-caption{bottom:-2px}
+}
+@media(max-width:430px){
+  .atlas-stage{min-height:340px}
+  .atlas-ticket{min-height:128px}
+  .atlas-ticket-3{bottom:6%}
+  .atlas-ticket-4{bottom:2%}
+}
+@media(prefers-reduced-motion:reduce){
+  .atlas-ticket,.brand-name.strong{
+    transition:none!important;
+    transform:none!important;
+  }
+}
