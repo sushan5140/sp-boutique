@@ -286,9 +286,10 @@ function switchView(view,scroll=true){
   $$('.studio-view').forEach(p=>p.classList.toggle('active',p.dataset.viewPanel===view));
   $$('.subnav [data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
   renderNavCounts();
+  if(view==='discover'){renderNextAction()}
   if(view==='eligibility'){fillProfileForm();renderProfile();renderMatches();renderGapAnalyzer();renderVault()}
-  if(view==='applications'){renderApplications();renderTimeline();renderPathway()}
-  if(view==='compare'){renderCompare();renderHistory();renderFundingCalculator()}
+  if(view==='applications'){renderApplications();renderTimeline();renderPathway();renderWorkloadMap();renderPortfolioPlan()}
+  if(view==='compare'){renderCompare();renderHistory();renderFundingCalculator();renderChangeMode()}
   save();
   if(scroll)window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -401,7 +402,7 @@ function trackAward(id){
   const adding=!state.tracked.includes(id);
   state.tracked=adding?[...state.tracked,id]:state.tracked.filter(x=>x!==id);
   if(adding)appState(id);
-  renderStream();renderCompareTray();renderNavCounts();save();syncAwardModal(id);
+  renderStream();renderCompareTray();renderNavCounts();renderNextAction();renderWorkloadMap();renderPortfolioPlan();renderPathway();renderVault();save();syncAwardModal(id);
   toast(adding?'Saved to Applications':'Removed from active Applications');
 }
 
@@ -410,7 +411,7 @@ function toggleCompare(id){
   else if(state.compare.length<3)state.compare=[...state.compare,id];
   else return toast('Comparison is limited to 3 awards');
   renderStream();renderCompareTray();renderNavCounts();save();syncAwardModal(id);
-  if(state.view==='compare'){renderCompare();renderHistory()}
+  if(state.view==='compare'){renderCompare();renderHistory();renderFundingCalculator();renderChangeMode()}
 }
 
 function renderCompareTray(){
@@ -558,7 +559,7 @@ function renderApplications(){
       </div>
       <div class="handoff-row">
         <div><span>KMate handoffs</span><p>Carry this application context into writing guidance, interview preparation, or a peer-review checklist.</p></div>
-        <div><a href="${KMATE_BASE}/gks" target="_blank" rel="noopener">Open GKS Assistant ↗</a><a href="${KMATE_BASE}/interview-db" target="_blank" rel="noopener">Interview DB ↗</a><button data-review-for="${id}">＋ Peer review request</button></div>
+        <div><a href="${KMATE_BASE}/gks" target="_blank" rel="noopener">Open GKS Assistant ↗</a><a href="${KMATE_BASE}/interview-db" target="_blank" rel="noopener">Interview DB ↗</a><button data-review-for="${id}">＋ Peer review request</button><button data-build-packet="${id}">Build packet .zip</button></div>
       </div>
       ${reviewRequests.length?`<div class="review-requests">${reviewRequests.map(r=>`<article><span>${esc(r.artifact)}</span><p>${esc(r.focus)}</p><small>Local review request · ${new Date(r.created).toLocaleString()}</small><button data-delete-review="${r.id}">×</button></article>`).join('')}</div>`:''}
       <div class="notes-row"><label><span>Notes</span><textarea data-notes="${id}" placeholder="Questions, source details, document issues, interview notes…">${esc(app.notes)}</textarea></label><div><button data-reminder-for="${id}">＋ Reminder</button><button data-compare="${id}">⇄ Compare</button><button data-assistant-for="${id}">Ask scholarship</button><button class="danger-lite" data-track="${id}">Remove workspace</button></div></div>
@@ -775,6 +776,9 @@ async function renderVault(){
   $('#vault-count').textContent=files.length;
   $('#vault-files').innerHTML=files.length?files.map(file=>`<article><div><span>${esc(DOC_LABELS[file.type]||file.type)}</span><h3>${esc(file.name)}</h3><p>${Math.ceil(file.size/1024)} KB${file.date?' · '+esc(fmtDate(file.date)):''}${file.notes?' · '+esc(file.notes):''}</p></div><div><button data-vault-download="${file.id}">Download</button><button data-vault-delete="${file.id}">Delete</button></div></article>`).join(''):'<div class="empty"><b>Your browser vault is empty.</b><p>Add a document above. The file is stored in IndexedDB on this device only.</p></div>';
   renderCompatibility(files);
+  renderEvidenceGraph(files);
+  renderDependencyGraph(files);
+  renderPortfolioPlan();
 }
 function renderCompatibility(files){
   const root=$('#compatibility-matrix');if(!root)return;
@@ -849,7 +853,7 @@ function snapshotSources(){
     state.sourceSnapshots[a.id]=[snap,...list].slice(0,10);
     if(changed)addNotification('Scholarship source snapshot changed',a.uni+' · '+a.name+' differs from the previous locally recorded snapshot.','source');
   });
-  save();renderHistory();toast('Local source snapshots refreshed');
+  save();renderHistory();renderChangeMode();toast('Local source snapshots refreshed');
 }
 
 
@@ -905,7 +909,7 @@ function renderEvidenceGraph(files=[]){
       const saved=savedByType.get(type)||[];
       const common=COMMON_DOC_PLAN.includes(type);
       const edges=ids.map(id=>{
-        const a=award(id),app=appState(id);
+        const a=award(id),app=state.applications[id]||null;
         const checklistKey=type==='recommendation'||type==='essay'?'specific':type;
         const checked=app?.docs?.[checklistKey]||false;
         const available=saved.length>0;
@@ -1066,7 +1070,7 @@ function applyEmailUpdate(){
 }
 
 function renderAll(){
-  populateGlobalSelectors();renderHero();renderFilters();renderStream();renderCompareTray();renderNavCounts();renderRadar();renderArchive();renderCommunity();renderNotifications();
+  populateGlobalSelectors();renderHero();renderFilters();renderStream();renderCompareTray();renderNavCounts();renderRadar();renderNextAction();renderArchive();renderCommunity();renderNotifications();
   switchView(state.view,false);
 }
 
@@ -1094,17 +1098,17 @@ $('#profile-form').addEventListener('submit',e=>{
   const data=new FormData(e.currentTarget);
   state.profile={...state.profile,...Object.fromEntries(data.entries())};
   state.matchRun=true;
-  renderProfile();renderMatches();renderGapAnalyzer();renderRadar();save();toast('Profile saved and eligibility signals refreshed');
+  renderProfile();renderMatches();renderGapAnalyzer();renderRadar();renderNextAction();renderVault();save();toast('Profile saved and eligibility signals refreshed');
 });
 $('#clear-profile').addEventListener('click',()=>{
-  state.profile={...emptyProfile};state.matchRun=false;fillProfileForm();renderProfile();renderMatches();renderGapAnalyzer();renderRadar();save();
+  state.profile={...emptyProfile};state.matchRun=false;fillProfileForm();renderProfile();renderMatches();renderGapAnalyzer();renderRadar();renderNextAction();renderVault();save();
 });
 $('#run-match').addEventListener('click',()=>{
   const data=new FormData($('#profile-form'));
   state.profile={...state.profile,...Object.fromEntries(data.entries())};
-  state.matchRun=true;renderProfile();renderMatches();renderGapAnalyzer();renderRadar();save();
+  state.matchRun=true;renderProfile();renderMatches();renderGapAnalyzer();renderRadar();renderNextAction();renderVault();save();
 });
-$('#clear-compare').addEventListener('click',()=>{state.compare=[];renderCompare();renderCompareTray();renderHistory();renderNavCounts();save()});
+$('#clear-compare').addEventListener('click',()=>{state.compare=[];renderCompare();renderCompareTray();renderHistory();renderFundingCalculator();renderChangeMode();renderNavCounts();save()});
 
 $('#radar-profile').addEventListener('click',()=>switchView('eligibility'));
 $('#save-search-watch').addEventListener('click',saveCurrentWatch);
@@ -1114,7 +1118,12 @@ $('#close-notifications').addEventListener('click',()=>$('#notification-dialog')
 $('#mark-notifications-read').addEventListener('click',()=>{state.notifications.forEach(n=>n.read=true);renderNotifications();save()});
 $('#assistant-button').addEventListener('click',()=>openAssistant(state.compare[0]||state.tracked[0]||AWARDS[0].id));
 $('#assistant-ask').addEventListener('click',answerAssistant);
-$('#generate-pathway').addEventListener('click',()=>{renderPathway();renderTimeline();toast('Combined pathway refreshed')});
+$('#generate-pathway').addEventListener('click',()=>{renderPathway();renderTimeline();renderWorkloadMap();renderPortfolioPlan();toast('Combined pathway refreshed')});
+$('#refresh-next-action').addEventListener('click',()=>{renderNextAction();toast('Next action refreshed')});
+$('#email-update-button').addEventListener('click',()=>{populateEmailUpdateApps();pendingEmailUpdate=null;$('#email-update-text').value='';$('#email-update-suggestion').innerHTML='<p>Paste an email to generate a suggested application update. Nothing changes until you approve it.</p>';$('#apply-email-update').disabled=true;$('#email-update-dialog').showModal()});
+$('#parse-email-update').addEventListener('click',parseEmailUpdate);
+$('#apply-email-update').addEventListener('click',applyEmailUpdate);
+$('#capture-change-snapshot').addEventListener('click',snapshotSources);
 $('#export-calendar').addEventListener('click',exportCalendar);
 $('#export-workspace').addEventListener('click',exportWorkspace);
 $('#refresh-source-health').addEventListener('click',snapshotSources);
@@ -1132,6 +1141,7 @@ $('#vault-form').addEventListener('submit',async e=>{
     await vaultPut(record);
     form.reset();
     await renderVault();
+    renderNextAction();renderWorkloadMap();renderPortfolioPlan();
     toast('Document saved in browser vault');
   }catch(err){
     console.error('Vault save failed',err);
@@ -1204,10 +1214,10 @@ document.addEventListener('pointerover',e=>{
 });
 
 document.addEventListener('change',e=>{
-  const doc=e.target.closest('[data-doc]');if(doc){appState(doc.dataset.appId).docs[doc.dataset.doc]=doc.checked;renderApplications();save();return}
-  const req=e.target.closest('[data-req]');if(req){appState(req.dataset.appId).requirements[req.dataset.req]=req.checked;renderApplications();save();return}
-  const field=e.target.closest('[data-app-field]');if(field){appState(field.dataset.appId)[field.dataset.appField]=field.value;renderApplications();renderPathway();renderTimeline();save();return}
-  const target=e.target.closest('[data-target-date]');if(target){appState(target.dataset.targetDate).targetDate=target.value;renderApplications();renderPathway();renderTimeline();save();return}
+  const doc=e.target.closest('[data-doc]');if(doc){appState(doc.dataset.appId).docs[doc.dataset.doc]=doc.checked;renderApplications();renderWorkloadMap();renderPortfolioPlan();renderNextAction();renderVault();save();return}
+  const req=e.target.closest('[data-req]');if(req){appState(req.dataset.appId).requirements[req.dataset.req]=req.checked;renderApplications();renderWorkloadMap();renderPortfolioPlan();renderNextAction();renderVault();save();return}
+  const field=e.target.closest('[data-app-field]');if(field){appState(field.dataset.appId)[field.dataset.appField]=field.value;renderApplications();renderPathway();renderTimeline();renderWorkloadMap();renderPortfolioPlan();renderNextAction();save();return}
+  const target=e.target.closest('[data-target-date]');if(target){appState(target.dataset.targetDate).targetDate=target.value;renderApplications();renderPathway();renderTimeline();renderWorkloadMap();renderPortfolioPlan();renderNextAction();save();return}
 });
 document.addEventListener('input',e=>{
   const note=e.target.closest('[data-notes]');if(note){appState(note.dataset.notes).notes=note.value;save()}
@@ -1235,6 +1245,8 @@ document.addEventListener('click',e=>{
   const assist=e.target.closest('[data-assistant-for]');if(assist){openAssistant(assist.dataset.assistantFor);return}
   const review=e.target.closest('[data-review-for]');if(review){$('#review-award-id').value=review.dataset.reviewFor;$('#review-dialog').showModal();return}
   const delReview=e.target.closest('[data-delete-review]');if(delReview){state.reviews=state.reviews.filter(r=>r.id!==delReview.dataset.deleteReview);renderApplications();save();return}
-  const vd=e.target.closest('[data-vault-delete]');if(vd){vaultRemove(vd.dataset.vaultDelete).then(renderVault);return}
+  const packet=e.target.closest('[data-build-packet]');if(packet){buildApplicationPacket(packet.dataset.buildPacket);return}
+  const next=e.target.closest('#next-action-cta');if(next){const spec=nextAction();if(spec.kind==='profile')switchView('eligibility');else if(spec.kind==='award'&&spec.awardId)openAwardPanel(spec.awardId);else switchView('applications');return}
+  const vd=e.target.closest('[data-vault-delete]');if(vd){vaultRemove(vd.dataset.vaultDelete).then(()=>{renderVault();renderPortfolioPlan();renderNextAction()});return}
   const vdl=e.target.closest('[data-vault-download]');if(vdl){vaultGet(vdl.dataset.vaultDownload).then(file=>{if(file?.bytes)downloadBlob(file.name,file.mime||'application/octet-stream',new Blob([file.bytes],{type:file.mime||'application/octet-stream'}))});return}
 });
