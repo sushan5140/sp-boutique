@@ -1,0 +1,103 @@
+/* Interaction polish informed by the project's design-skill stack.
+   Keep high-frequency navigation instant; animate only feedback/state changes. */
+:root{
+  --motion-fast:160ms;
+  --motion-ui:180ms;
+  --ease-ui:cubic-bezier(.23,1,.32,1);
+}
+
+.btn{
+  min-height:44px;
+  transition:
+    transform var(--motion-fast) var(--ease-ui),
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease;
+}
+.btn-small{min-height:38px}
+.btn:active:not(:disabled){transform:scale(.975)}
+.mast-link,.mini-link,.sidebar-utility,.source-link,.inline-link{
+  -webkit-tap-highlight-color:transparent;
+}
+.mast-link:active,.mini-link:active,.source-link:active,.inline-link:active{
+  opacity:.72;
+}
+
+/* Core navigation is frequent: no movement animation, only immediate state color. */
+.nav-item{
+  transition:background-color 120ms ease,color 120ms ease,border-color 120ms ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.nav-item.active .nav-icon{transform:none}
+
+/* Card/pill lift is pointer-only and deliberately tiny. */
+.scholarship-card{
+  transition:
+    transform var(--motion-fast) var(--ease-ui),
+    border-color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease;
+}
+.university-pill,.filter-chip,.filter-clear,.compare-choice{
+  transition:
+    transform var(--motion-fast) var(--ease-ui),
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease;
+}
+@media(hover:hover) and (pointer:fine){
+  .scholarship-card:hover{transform:translateY(-1px)}
+  .university-pill:hover{transform:translateY(-1px)}
+  .compare-choice:hover{transform:translateY(-1px)}
+}
+@media(hover:none){
+  .scholarship-card:hover,.university-pill:hover,.compare-choice:hover{transform:none}
+}
+
+/* Toast is occasional feedback: short enter/exit with explicit properties. */
+.toast{
+  opacity:0;
+  transform:translateY(10px) scale(.985);
+  transition:
+    opacity var(--motion-ui) var(--ease-ui),
+    transform var(--motion-ui) var(--ease-ui);
+}
+.toast.show{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+
+/* Strong keyboard visibility without changing pointer styling. */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible{
+  outline:3px solid #d69f24;
+  outline-offset:3px;
+}
+
+/* Mobile/native-web details: hit targets + prevent iOS form zoom. */
+@media(max-width:740px){
+  .nav-item{min-height:44px;height:44px}
+  .university-pill{min-height:44px;padding-block:10px}
+  .compare-slot-pick{min-height:44px}
+  .btn-small{min-height:42px}
+  .input,.select,.textarea{font-size:16px}
+  .mini-link,.sidebar-utility,.mast-link,.source-link,.inline-link{min-height:44px}
+  .mast-link,.mini-link,.source-link,.inline-link{display:inline-flex;align-items:center}
+}
+
+/* Respect motion preferences completely. */
+@media(prefers-reduced-motion:reduce){
+  .btn,.nav-item,.scholarship-card,.university-pill,.filter-chip,.filter-clear,
+  .compare-choice,.toast,.mast-link span{
+    transition:none!important;
+    animation:none!important;
+  }
+  .btn:active:not(:disabled),
+  .scholarship-card:hover,.university-pill:hover,.compare-choice:hover{
+    transform:none!important;
+  }
+}
