@@ -790,7 +790,7 @@ function exportCalendar(){
 }
 async function exportWorkspace(){
   const files=await vaultAll();
-  const manifest=files.map(({blob,...meta})=>meta);
+  const manifest=files.map(({bytes,...meta})=>meta);
   downloadBlob('kmate-scholarship-workspace.json','application/json',JSON.stringify({version:1,exportedAt:new Date().toISOString(),state,vaultManifest:manifest},null,2));
 }
 function renderFundingCalculator(){
@@ -894,7 +894,8 @@ $('#vault-form').addEventListener('submit',async e=>{
   const data=new FormData(e.currentTarget),file=data.get('file');
   if(!(file instanceof File)||!file.size)return;
   if(file.size>15*1024*1024)return toast('Preview vault limit: 15 MB per file');
-  const record={id:'v'+Date.now(),type:String(data.get('type')||'specific'),name:file.name,size:file.size,mime:file.type,date:String(data.get('date')||''),notes:String(data.get('notes')||''),savedAt:new Date().toISOString(),blob:file};
+  const bytes=await file.arrayBuffer();
+  const record={id:'v'+Date.now(),type:String(data.get('type')||'specific'),name:file.name,size:file.size,mime:file.type,date:String(data.get('date')||''),notes:String(data.get('notes')||''),savedAt:new Date().toISOString(),bytes};
   await vaultPut(record);e.currentTarget.reset();await renderVault();toast('Document saved in browser vault');
 });
 
@@ -983,5 +984,5 @@ document.addEventListener('click',e=>{
   const review=e.target.closest('[data-review-for]');if(review){$('#review-award-id').value=review.dataset.reviewFor;$('#review-dialog').showModal();return}
   const delReview=e.target.closest('[data-delete-review]');if(delReview){state.reviews=state.reviews.filter(r=>r.id!==delReview.dataset.deleteReview);renderApplications();save();return}
   const vd=e.target.closest('[data-vault-delete]');if(vd){vaultRemove(vd.dataset.vaultDelete).then(renderVault);return}
-  const vdl=e.target.closest('[data-vault-download]');if(vdl){vaultGet(vdl.dataset.vaultDownload).then(file=>{if(file?.blob)downloadBlob(file.name,file.mime||'application/octet-stream',file.blob)});return}
+  const vdl=e.target.closest('[data-vault-download]');if(vdl){vaultGet(vdl.dataset.vaultDownload).then(file=>{if(file?.bytes)downloadBlob(file.name,file.mime||'application/octet-stream',new Blob([file.bytes],{type:file.mime||'application/octet-stream'}))});return}
 });
