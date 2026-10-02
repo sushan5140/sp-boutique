@@ -175,11 +175,11 @@
 
   <dialog id="reminder-dialog">
     <form method="dialog" id="reminder-form" class="dialog-card">
-      <div class="dialog-head"><div><span>Reminder</span><h2>Add a deadline reminder</h2></div><button value="cancel" aria-label="Close">×</button></div>
+      <div class="dialog-head"><div><span>Reminder</span><h2>Add a deadline reminder</h2></div><button value="cancel" formnovalidate aria-label="Close">×</button></div>
       <label><span>Label</span><input name="label" required placeholder="e.g. Request transcript"></label>
       <label><span>Date</span><input name="date" type="date" required></label>
       <label><span>Scholarship</span><select name="awardId" id="reminder-award"></select></label>
-      <div class="dialog-actions"><button value="cancel">Cancel</button><button value="default" id="save-reminder">Save reminder</button></div>
+      <div class="dialog-actions"><button value="cancel" formnovalidate>Cancel</button><button value="default" id="save-reminder">Save reminder</button></div>
     </form>
   </dialog>
 
