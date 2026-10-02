@@ -866,6 +866,205 @@ function openAssistant(id){
   $('#assistant-dialog').showModal();
 }
 
+
+function nextAction(){
+  const pct=profileCompletion();
+  if(pct<70)return{kind:'profile',eyebrow:'Profile foundation',title:'Finish your reusable profile',detail:'A more complete academic, major and language profile improves relevance and makes the Gap Analyzer useful.',cta:'Open Eligibility'};
+  if(!state.tracked.length){
+    const top=AWARDS.map(a=>({a,...relevanceScore(a)})).sort((x,y)=>y.score-x.score)[0];
+    return{kind:'award',awardId:top?.a.id,eyebrow:'Start a portfolio',title:top?.a.name||'Choose a scholarship to track',detail:'Tracking one scholarship unlocks workload, portfolio, packet and pathway planning.',cta:'Inspect scholarship'};
+  }
+  const apps=state.tracked.map(id=>({id,a:award(id),app:appState(id)})).filter(x=>x.a);
+  const noDate=apps.find(x=>!x.app.targetDate);
+  if(noDate)return{kind:'applications',awardId:noDate.id,eyebrow:noDate.a.uni,title:'Set a target submission date',detail:'A target date unlocks the automatic preparation pathway and deadline collision watch.',cta:'Open Applications'};
+  const sourceGap=apps.find(x=>!x.app.requirements.source);
+  if(sourceGap)return{kind:'applications',awardId:sourceGap.id,eyebrow:sourceGap.a.uni,title:'Review the official scholarship source',detail:'The source-review checkpoint is still open for this tracked application.',cta:'Open workspace'};
+  const docGap=apps.find(x=>Object.values(x.app.docs).some(v=>!v));
+  if(docGap){
+    const key=Object.keys(docGap.app.docs).find(k=>!docGap.app.docs[k]);
+    return{kind:'applications',awardId:docGap.id,eyebrow:docGap.a.uni,title:'Resolve '+(DOC_LABELS[key]||key),detail:'This document is still unchecked in the application workspace.',cta:'Open workspace'};
+  }
+  const next=apps.filter(x=>x.app.targetDate).sort((x,y)=>x.app.targetDate.localeCompare(y.app.targetDate))[0];
+  return{kind:'applications',awardId:next?.id,eyebrow:next?.a.uni||'Portfolio',title:'Review the next application milestone',detail:next?('Target submission · '+fmtDate(next.app.targetDate)):'Your tracked applications are ready for a final review.',cta:'Open pathway'};
+}
+function renderNextAction(){
+  const root=$('#next-action-content');if(!root)return;
+  const a=nextAction();
+  root.innerHTML=`<article data-next-kind="${esc(a.kind)}" ${a.awardId?`data-next-award="${a.awardId}"`:''}><div><span>${esc(a.eyebrow)}</span><h3>${esc(a.title)}</h3><p>${esc(a.detail)}</p></div><button id="next-action-cta">${esc(a.cta)} →</button></article>`;
+}
+
+function renderEvidenceGraph(files=[]){
+  const root=$('#evidence-graph');if(!root)return;
+  const ids=state.tracked.length?state.tracked:AWARDS.slice(0,4).map(a=>a.id);
+  const savedByType=new Map();
+  files.forEach(file=>{if(!savedByType.has(file.type))savedByType.set(file.type,[]);savedByType.get(file.type).push(file)});
+  const types=['transcript','graduation','language','identity','recommendation','essay','specific'];
+  let reusableEdges=0;
+  root.innerHTML=`<div class="evidence-head"><span>Evidence</span><span>Application reuse</span></div>`+
+    types.map(type=>{
+      const saved=savedByType.get(type)||[];
+      const common=COMMON_DOC_PLAN.includes(type);
+      const edges=ids.map(id=>{
+        const a=award(id),app=appState(id);
+        const checklistKey=type==='recommendation'||type==='essay'?'specific':type;
+        const checked=app?.docs?.[checklistKey]||false;
+        const available=saved.length>0;
+        if(available)reusableEdges++;
+        return `<span class="evidence-edge ${available?'available':'missing'} ${checked?'checked':''}" title="${esc(a?.name||'')}">${esc(a?.uni||'')}${checked?' ✓':''}</span>`;
+      }).join('');
+      return `<article><div class="evidence-node ${saved.length?'saved':'missing'}"><i></i><div><span>${esc(DOC_LABELS[type]||type)}</span><b>${saved.length?saved.length+' saved file'+(saved.length===1?'':'s'):'Not in Vault'}</b><small>${common?'Common reusable evidence':'Application-specific / verify'}</small></div></div><div class="evidence-links">${edges}</div></article>`;
+    }).join('');
+  const summary=$('#evidence-summary');
+  if(summary)summary.innerHTML=`<b>${files.length}</b><span>saved files</span><b>${ids.length}</b><span>applications</span><b>${reusableEdges}</b><span>reuse links</span>`;
+}
+function renderDependencyGraph(files=[]){
+  const root=$('#dependency-graph');if(!root)return;
+  const have=new Set(files.map(f=>f.type));
+  const profileReady=profileCompletion()>=70;
+  const languageReady=Boolean(state.profile.topik||state.profile.ielts||state.profile.toefl);
+  const evidenceReady=COMMON_DOC_PLAN.filter(t=>have.has(t)).length>=3;
+  const sourceReady=state.tracked.length?state.tracked.every(id=>appState(id).requirements.source):false;
+  const nodes=[
+    {id:'profile',label:'Profile',detail:profileReady?'Reusable profile ready':'Complete profile',ready:profileReady},
+    {id:'language',label:'Language evidence',detail:languageReady?'Score recorded':'TOPIK / IELTS / TOEFL missing',ready:languageReady},
+    {id:'evidence',label:'Core evidence',detail:evidenceReady?'Vault coverage strong':'Add transcript / graduation / language / ID',ready:evidenceReady},
+    {id:'source',label:'Source review',detail:sourceReady?'Tracked sources checked':'Verify official source',ready:sourceReady},
+    {id:'readiness',label:'Application readiness',detail:(profileReady&&evidenceReady&&sourceReady)?'Dependencies cleared':'Blocked by upstream items',ready:profileReady&&evidenceReady&&sourceReady}
+  ];
+  root.innerHTML=nodes.map((n,i)=>`<div class="dependency-step"><article class="${n.ready?'ready':'blocked'}"><span>0${i+1}</span><b>${esc(n.label)}</b><small>${esc(n.detail)}</small></article>${i<nodes.length-1?'<i>→</i>':''}</div>`).join('');
+}
+
+function workloadFor(id){
+  const a=award(id),app=appState(id);
+  const docs=Object.values(app.docs).filter(v=>!v).length;
+  const reqs=Object.values(app.requirements).filter(v=>!v).length;
+  const milestones=(app.submission==='Not started'?1:0)+(app.interview==='Not started'?1:0);
+  const datePenalty=app.targetDate?0:2;
+  const raw=docs+reqs*2+milestones+datePenalty;
+  const level=raw<=4?'Low':raw<=8?'Medium':'High';
+  const pct=Math.max(8,Math.min(100,100-Math.round(raw/14*100)));
+  return {a,app,docs,reqs,raw,level,pct};
+}
+function renderWorkloadMap(){
+  const root=$('#workload-map');if(!root)return;
+  if(!state.tracked.length){root.innerHTML='<div class="empty"><b>No workload to map yet.</b><p>Track scholarships first.</p></div>';return}
+  root.innerHTML=state.tracked.map(id=>{
+    const w=workloadFor(id);
+    return `<article><div><span>${esc(w.a.uni)}</span><b>${esc(w.a.name)}</b></div><div class="workload-meter"><i style="width:${w.pct}%"></i></div><div class="workload-meta"><strong>${w.level} effort</strong><small>${w.docs} docs · ${w.reqs} source checks · ${w.app.targetDate?'date set':'date missing'}</small></div></article>`;
+  }).join('');
+}
+async function renderPortfolioPlan(){
+  const root=$('#portfolio-plan');if(!root)return;
+  if(!state.tracked.length){root.innerHTML='<div class="empty"><b>No portfolio yet.</b><p>Track more than one scholarship to see reusable work.</p></div>';return}
+  const files=await vaultAll();
+  const savedTypes=new Set(files.map(f=>f.type));
+  const appCount=state.tracked.length;
+  const docSlots=appCount*STARTER_DOCS.length;
+  const completeSlots=state.tracked.reduce((n,id)=>n+Object.values(appState(id).docs).filter(Boolean).length,0);
+  const sourceOpen=state.tracked.reduce((n,id)=>n+Object.values(appState(id).requirements).filter(v=>!v).length,0);
+  const reusableTypes=STARTER_DOCS.filter(([type])=>savedTypes.has(type)).length;
+  const dates=state.tracked.filter(id=>appState(id).targetDate).length;
+  root.innerHTML=`<div class="portfolio-stats"><div><span>Applications</span><b>${appCount}</b></div><div><span>Document slots done</span><b>${completeSlots}/${docSlots}</b></div><div><span>Vault-backed doc types</span><b>${reusableTypes}/${STARTER_DOCS.length}</b></div><div><span>Open source checks</span><b>${sourceOpen}</b></div><div><span>Target dates set</span><b>${dates}/${appCount}</b></div></div><p>${reusableTypes?reusableTypes+' saved evidence type'+(reusableTypes===1?' is':'s are')+' available for reuse across this portfolio.':'Add documents to the Vault to unlock evidence reuse.'}</p>`;
+}
+
+function renderChangeMode(){
+  const root=$('#change-mode');if(!root)return;
+  const ids=state.compare.length?state.compare:(state.tracked.length?state.tracked.slice(0,3):AWARDS.slice(0,3).map(a=>a.id));
+  root.innerHTML=ids.map(id=>{
+    const a=award(id),snaps=state.sourceSnapshots[id]||[],current=snaps[0],previous=snaps[1];
+    if(!previous)return `<article><div><span>${esc(a.uni)}</span><h3>${esc(a.name)}</h3></div><div class="change-empty">Need two local snapshots before a diff can be shown.</div><button data-open-award="${a.id}">Open ↗</button></article>`;
+    const fields=[['Deadline',previous.deadline,current.deadline],['Funding',previous.benefit,current.benefit],['Language',previous.language,current.language]];
+    const changed=fields.filter(([,oldV,newV])=>oldV!==newV);
+    return `<article><div><span>${esc(a.uni)}</span><h3>${esc(a.name)}</h3></div><div class="change-fields">${fields.map(([label,oldV,newV])=>`<div class="${oldV!==newV?'changed':''}"><span>${label}</span><small>Previous</small><b>${esc(oldV)}</b><i>→</i><small>Current</small><strong>${esc(newV)}</strong></div>`).join('')}</div><em>${changed.length?changed.length+' field'+(changed.length===1?'':'s')+' changed':'No field changes between these two snapshots'}</em></article>`;
+  }).join('');
+}
+
+function zipCrc32(bytes){
+  let crc=0xffffffff;
+  for(const b of bytes){crc^=b;for(let k=0;k<8;k++)crc=(crc>>>1)^((crc&1)?0xedb88320:0)}
+  return (crc^0xffffffff)>>>0;
+}
+function zipU16(v){const a=new Uint8Array(2);new DataView(a.buffer).setUint16(0,v,true);return a}
+function zipU32(v){const a=new Uint8Array(4);new DataView(a.buffer).setUint32(0,v>>>0,true);return a}
+function zipJoin(parts){
+  const size=parts.reduce((n,p)=>n+p.length,0),out=new Uint8Array(size);let off=0;
+  parts.forEach(p=>{out.set(p,off);off+=p.length});return out;
+}
+function zipEntryName(name){return String(name||'file').replace(/[\\/:*?"<>|]+/g,'_').replace(/^\.+/,'').slice(0,120)||'file'}
+async function buildApplicationPacket(id){
+  const a=award(id),app=appState(id);if(!a)return;
+  const files=await vaultAll();
+  const enc=new TextEncoder(),entries=[];
+  const checklist=[
+    'KMate Scholarship Studio · Application Packet',
+    a.uni+' · '+a.name,
+    'Generated: '+new Date().toLocaleString(),
+    'Official source: '+a.source,
+    '',
+    'DOCUMENT CHECKLIST',
+    ...STARTER_DOCS.map(([key,label])=>'['+(app.docs[key]?'x':' ')+'] '+label),
+    '',
+    'SOURCE / REQUIREMENT CHECKS',
+    ...STARTER_REQUIREMENTS.map(([key,label])=>'['+(app.requirements[key]?'x':' ')+'] '+label),
+    '',
+    'Submission: '+app.submission,
+    'Interview: '+app.interview,
+    'Result: '+app.result,
+    'Target date: '+(app.targetDate||'Not set'),
+    '',
+    'Note: This packet is a preparation bundle, not an official university submission.'
+  ].join('\n');
+  entries.push({name:'00_PACKET_CHECKLIST.txt',data:enc.encode(checklist)});
+  const manifest={generatedAt:new Date().toISOString(),scholarship:{id:a.id,university:a.uni,name:a.name,source:a.source},workspace:{stage:app.stage,targetDate:app.targetDate,submission:app.submission,interview:app.interview,result:app.result},files:files.map(f=>({name:f.name,type:f.type,size:f.size,date:f.date,notes:f.notes}))};
+  entries.push({name:'00_MANIFEST.json',data:enc.encode(JSON.stringify(manifest,null,2))});
+  files.forEach((file,i)=>entries.push({name:String(i+1).padStart(2,'0')+'_'+zipEntryName((DOC_LABELS[file.type]||file.type)+'_'+file.name),data:new Uint8Array(file.bytes)}));
+  const locals=[],centrals=[];let offset=0;
+  for(const entry of entries){
+    const name=enc.encode(entry.name),data=entry.data,crc=zipCrc32(data);
+    const local=zipJoin([zipU32(0x04034b50),zipU16(20),zipU16(0),zipU16(0),zipU16(0),zipU16(0),zipU32(crc),zipU32(data.length),zipU32(data.length),zipU16(name.length),zipU16(0),name,data]);
+    locals.push(local);
+    const central=zipJoin([zipU32(0x02014b50),zipU16(20),zipU16(20),zipU16(0),zipU16(0),zipU16(0),zipU16(0),zipU32(crc),zipU32(data.length),zipU32(data.length),zipU16(name.length),zipU16(0),zipU16(0),zipU16(0),zipU16(0),zipU32(0),zipU32(offset),name]);
+    centrals.push(central);offset+=local.length;
+  }
+  const centralSize=centrals.reduce((n,p)=>n+p.length,0);
+  const eocd=zipJoin([zipU32(0x06054b50),zipU16(0),zipU16(0),zipU16(entries.length),zipU16(entries.length),zipU32(centralSize),zipU32(offset),zipU16(0)]);
+  const zip=zipJoin([...locals,...centrals,eocd]);
+  downloadBlob(zipEntryName(a.uni+'_'+a.name)+'_KMate_Packet.zip','application/zip',new Blob([zip],{type:'application/zip'}));
+  toast('Application packet built');
+}
+
+let pendingEmailUpdate=null;
+function populateEmailUpdateApps(){
+  const sel=$('#email-update-award');if(!sel)return;
+  sel.innerHTML=state.tracked.map(id=>{const a=award(id);return a?`<option value="${id}">${esc(a.uni)} · ${esc(a.name)}</option>`:''}).join('');
+}
+function parseEmailUpdate(){
+  const id=$('#email-update-award').value,text=String($('#email-update-text').value||'').trim(),a=award(id);
+  const root=$('#email-update-suggestion'),apply=$('#apply-email-update');
+  pendingEmailUpdate=null;apply.disabled=true;
+  if(!a||!text){root.innerHTML='<p>Select a tracked application and paste the relevant email text.</p>';return}
+  const low=text.toLowerCase(),changes={},reasons=[];
+  if(/interview|invited to interview|schedule.*interview/.test(low)){changes.stage='Interview';changes.interview='Scheduled';reasons.push('interview language detected')}
+  if(/application.*received|submission.*received|successfully submitted|application is complete/.test(low)){changes.stage='Submitted';changes.submission='Submitted';reasons.push('submission receipt language detected')}
+  if(/additional document|missing document|submit.*document|provide.*document/.test(low)){changes.stage='Preparing documents';reasons.push('additional-document request detected')}
+  if(/congratulations|awarded|selected for the scholarship|scholarship recipient/.test(low)){changes.stage='Result';changes.result='Awarded';reasons.push('award-result language detected')}
+  if(/waitlist|wait-listed|waitlisted/.test(low)){changes.stage='Result';changes.result='Waitlisted';reasons.push('waitlist language detected')}
+  if(/not selected|unsuccessful|not awarded/.test(low)){changes.stage='Result';changes.result='Not awarded';reasons.push('negative-result language detected')}
+  if(!Object.keys(changes).length){root.innerHTML='<p>No supported application-state phrase was detected. Nothing will be changed.</p>';return}
+  pendingEmailUpdate={id,changes,summary:reasons.join(' · '),excerpt:text.slice(0,240)};
+  root.innerHTML=`<span>Suggested update · ${esc(a.uni)}</span><h3>${esc(Object.entries(changes).map(([k,v])=>k+': '+v).join(' · '))}</h3><p>${esc(reasons.join(' · '))}</p><small>Nothing changes until you approve this suggestion.</small>`;
+  apply.disabled=false;
+}
+function applyEmailUpdate(){
+  if(!pendingEmailUpdate)return;
+  const app=appState(pendingEmailUpdate.id);
+  Object.assign(app,pendingEmailUpdate.changes);
+  app.notes=(app.notes?app.notes+'\n\n':'')+'Email update ('+new Date().toLocaleDateString()+'): '+pendingEmailUpdate.summary+'\n'+pendingEmailUpdate.excerpt;
+  save();renderApplications();renderWorkloadMap();renderPortfolioPlan();renderPathway();renderTimeline();
+  $('#email-update-dialog').close();toast('Suggested email update applied');
+  pendingEmailUpdate=null;
+}
+
 function renderAll(){
   populateGlobalSelectors();renderHero();renderFilters();renderStream();renderCompareTray();renderNavCounts();renderRadar();renderArchive();renderCommunity();renderNotifications();
   switchView(state.view,false);
