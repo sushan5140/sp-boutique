@@ -19,7 +19,7 @@ jobs:
         run: |
           npm install --no-save --no-package-lock --no-audit playwright@1.56.1
           npx playwright install chromium
-      - name: Render and exercise Nuri Edition
+      - name: Render and exercise Signal Edition
         shell: bash
         run: |
           set -euo pipefail
@@ -41,13 +41,13 @@ jobs:
               if(await p.locator('.nuri-role-card').count()!==4)throw Error(label+' interactive role cards missing');
               if(await p.locator('.nuri-metrics>button').count()!==4)throw Error(label+' interactive hero metrics missing');
               if(await p.locator('.discovery-search-label').count()!==1)throw Error(label+' finder search missing');
-              if((await p.locator('.edition-badge').innerText()).trim()!=='NURI EDITION')throw Error(label+' Nuri Edition badge missing');
+              if((await p.locator('.edition-badge').innerText()).trim()!=='V2 · SIGNAL')throw Error(label+' Signal Edition badge missing');
               const count=await p.locator('.scholarship-card').count();
               const overflow=await p.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth);
-              const indigo=await p.locator('body').evaluate(el=>getComputedStyle(el).getPropertyValue('--n-indigo').trim());
-              console.log(JSON.stringify({label,count,overflow,errors,indigo}));
+              const signal=await p.locator('body').evaluate(el=>getComputedStyle(el).getPropertyValue('--signal').trim());
+              console.log(JSON.stringify({label,count,overflow,errors,signal}));
               if(count!==15 || overflow || errors.length)throw Error('Failed '+label);
-              if(indigo!=='#5b55e7')throw Error('Refined Nuri indigo token missing: '+indigo);
+              if(signal!=='#f2d64b')throw Error('Signal yellow token missing: '+signal);
               const firstPeek=p.locator('[data-expand]').first();
               if(await firstPeek.count()!==1)throw Error('quick look trigger missing');
               await firstPeek.click();
@@ -95,7 +95,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: scholarship-studio-v2-nuri-visual-qa
+          name: scholarship-studio-v2-signal-visual-qa
           path: |
             desktop-v2.png
             mobile-v2.png
