@@ -891,14 +891,15 @@ $('#refresh-source-health').addEventListener('click',snapshotSources);
 
 $('#vault-form').addEventListener('submit',async e=>{
   e.preventDefault();
-  const data=new FormData(e.currentTarget),file=data.get('file');
+  const form=e.currentTarget;
+  const data=new FormData(form),file=data.get('file');
   if(!file||typeof file.arrayBuffer!=='function'||!Number(file.size)){toast('Choose a file first');return}
   if(file.size>15*1024*1024)return toast('Preview vault limit: 15 MB per file');
   try{
     const bytes=await file.arrayBuffer();
     const record={id:'v'+Date.now(),type:String(data.get('type')||'specific'),name:String(file.name||'document'),size:Number(file.size||bytes.byteLength),mime:String(file.type||'application/octet-stream'),date:String(data.get('date')||''),notes:String(data.get('notes')||''),savedAt:new Date().toISOString(),bytes};
     await vaultPut(record);
-    e.currentTarget.reset();
+    form.reset();
     await renderVault();
     toast('Document saved in browser vault');
   }catch(err){
