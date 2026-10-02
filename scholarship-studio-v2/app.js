@@ -131,10 +131,20 @@ function stats(){
 }
 function card(s){
  const tracked=state.apps.some(a=>a.id===s.id),compared=state.compare.includes(s.id),m=statusFor(s),u=UNIVERSITY[s.uni];
- return '<article class="scholarship-card" data-university="'+esc(s.uni)+'"><div class="card-head"><div class="university"><div class="university-icon">'+u.mark+'</div><div><div class="university-name">'+esc(s.uni)+'</div><div class="university-meta">'+esc(u.place)+' · Undergraduate</div></div></div>'+badge(s)+'</div>'+
+ return '<article class="scholarship-card" data-university="'+esc(s.uni)+'" data-award="'+esc(s.id)+'">'+
+ '<div class="card-head"><div class="university"><div class="university-icon">'+u.mark+'</div><div><div class="university-name">'+esc(s.uni)+'</div><div class="university-meta">'+esc(u.place)+' · Undergraduate</div></div></div>'+badge(s)+'</div>'+
  '<div class="card-main"><div class="card-meta">'+esc(s.category)+'<span aria-hidden="true">·</span>'+esc(s.scope)+'</div><h3>'+esc(s.name)+'</h3><p class="description">'+esc(s.route)+'</p></div>'+
  '<div class="benefit"><span class="benefit-kicker">PUBLISHED FUNDING</span><strong>'+esc(s.benefit)+'</strong><span class="small-note">'+esc(s.detail)+'</span></div>'+
  '<div class="criteria"><span class="criteria-icon" aria-hidden="true">◎</span><div><strong>YOUR PROFILE SIGNAL</strong><p>'+esc(m.reason)+'</p></div></div>'+
+ '<button class="card-peek" type="button" data-expand="'+s.id+'" aria-expanded="false"><span>Quick look</span><i aria-hidden="true">＋</i></button>'+
+ '<div class="card-detail-shell" data-detail="'+s.id+'"><div class="card-detail-inner"><div class="card-detail-grid">'+
+   '<div><span>TUITION</span><strong>'+esc(s.tuition)+'</strong></div>'+
+   '<div><span>LIVING SUPPORT</span><strong>'+esc(s.stipend)+'</strong></div>'+
+   '<div><span>LANGUAGE</span><strong>'+esc(s.language)+'</strong></div>'+
+   '<div><span>DEADLINE</span><strong>'+esc(s.deadline)+'</strong></div>'+
+ '</div><div class="card-detail-note"><span>SELECTION</span><p>'+esc(s.selection)+'</p></div>'+
+ '<div class="card-detail-note"><span>RENEWAL</span><p>'+esc(s.renewal)+'</p></div>'+
+ '<div class="card-caution"><span>!</span><p>'+esc(s.notice)+'</p></div></div></div>'+
  '<div class="card-actions"><div class="left"><button class="btn btn-small '+(tracked?'btn-light':'btn-primary')+'" data-track="'+s.id+'">'+(tracked?'✓ View application':'+ Track application')+'</button><button class="btn btn-small '+(compared?'btn-light':'')+'" data-compare="'+s.id+'">'+(compared?'✓ In comparison':'⊞ Compare')+'</button></div>'+sourceLink(s,'Official source ↗')+'</div></article>';
 }
 function filteredAwards(){return SCHOLARSHIPS.filter(s=>{
@@ -155,10 +165,10 @@ function discover(){
      '<p>Source-linked university scholarships, criteria checks and application tracking — organised like a workspace, not a pile of tabs.</p>'+
      '<div class="nuri-hero-actions"><button class="nuri-primary" data-view="eligibility">Set my profile <span>→</span></button><span class="nuri-hero-note">No login · saved in this browser</span></div>'+
      '<div class="nuri-metrics">'+
-       '<div><strong>'+SCHOLARSHIPS.length+'</strong><span>curated awards</span></div>'+
-       '<div><strong>4</strong><span>universities</span></div>'+
-       '<div><strong>'+state.apps.length+'</strong><span>tracked</span></div>'+
-       '<div><strong>'+state.compare.length+'/3</strong><span>comparing</span></div>'+
+       '<button type="button" data-jump-library><strong>'+SCHOLARSHIPS.length+'</strong><span>curated awards</span><i>Browse ↓</i></button>'+
+       '<button type="button" data-jump-universities><strong>4</strong><span>universities</span><i>Filter ↓</i></button>'+
+       '<button type="button" data-view="applications"><strong>'+state.apps.length+'</strong><span>tracked</span><i>Open →</i></button>'+
+       '<button type="button" data-view="compare"><strong>'+state.compare.length+'/3</strong><span>comparing</span><i>Open →</i></button>'+
      '</div>'+
    '</div>'+
    '<aside class="nuri-desk-card">'+
@@ -173,10 +183,10 @@ function discover(){
    '</aside>'+
  '</section>'+
  '<section class="nuri-role-row" aria-label="Scholarship Studio tools">'+
-   '<div class="nuri-role-card indigo"><span>01</span><b>Discover</b><p>Search source-linked university funding.</p></div>'+
-   '<div class="nuri-role-card jade"><span>02</span><b>Check</b><p>Read criteria against your own profile.</p></div>'+
-   '<div class="nuri-role-card papaya"><span>03</span><b>Track</b><p>Keep documents and next actions together.</p></div>'+
-   '<div class="nuri-role-card sun"><span>04</span><b>Compare</b><p>Put funding terms side by side.</p></div>'+
+   '<button type="button" class="nuri-role-card indigo" data-jump-library><span>01</span><b>Discover</b><p>Search source-linked university funding.</p><i>Browse awards →</i></button>'+
+   '<button type="button" class="nuri-role-card jade" data-view="eligibility"><span>02</span><b>Check</b><p>Read criteria against your own profile.</p><i>Check profile →</i></button>'+
+   '<button type="button" class="nuri-role-card papaya" data-view="applications"><span>03</span><b>Track</b><p>Keep documents and next actions together.</p><i>Open tracker →</i></button>'+
+   '<button type="button" class="nuri-role-card sun" data-view="compare"><span>04</span><b>Compare</b><p>Put funding terms side by side.</p><i>Compare awards →</i></button>'+
  '</section>'+
  '<div class="discovery-workbench nuri-workbench"><div class="discovery-workbench-head"><div><span class="section-kicker">SOURCE-LINKED OPPORTUNITIES</span><h2>Explore the scholarship library</h2><p>Filter the catalogue, inspect the published terms and keep only what deserves a place in your plan.</p></div><span class="workbench-source-tag"><span class="pulse"></span> 4 official sources</span></div>'+
  '<div class="university-quickbar" aria-label="Browse scholarships by university"><span class="quickbar-label">EXPLORE BY UNIVERSITY</span>'+[['all','All',SCHOLARSHIPS.length],...Object.keys(UNIVERSITY).map(u=>[u,u,SCHOLARSHIPS.filter(s=>s.uni===u).length])].map(([id,label,count])=>'<button type="button" class="university-pill '+(filters.uni===id?'active':'')+'" data-uni-quick="'+esc(id)+'" aria-pressed="'+(filters.uni===id?'true':'false')+'"><span class="university-pill-dot" aria-hidden="true"></span>'+esc(label)+' <span class="university-pill-count">'+count+'</span></button>').join('')+'</div>'+
@@ -261,6 +271,21 @@ function compare(){
 }
 function render(){syncShell();({discover,eligibility,applications:apps,compare})[view]();}
 document.addEventListener('click',e=>{
+ const expand=e.target.closest('[data-expand]');if(expand){
+   const cardEl=expand.closest('.scholarship-card');
+   const open=cardEl?.classList.toggle('is-expanded');
+   expand.setAttribute('aria-expanded',open?'true':'false');
+   const icon=expand.querySelector('i');if(icon)icon.textContent=open?'−':'＋';
+   return;
+ }
+ if(e.target.closest('[data-jump-library]')){
+   document.querySelector('.nuri-workbench')?.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+   return;
+ }
+ if(e.target.closest('[data-jump-universities]')){
+   document.querySelector('.university-quickbar')?.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+   return;
+ }
  if(e.target.closest('#jump-profile-form')){document.querySelector('#profile-form')?.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});return;}
  if(e.target.closest('#jump-awards')){document.querySelector('.section-heading')?.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});return;}
  const nav=e.target.closest('[data-view]');if(nav){navigate(nav.dataset.view);return;}
