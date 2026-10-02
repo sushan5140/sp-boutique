@@ -145,16 +145,24 @@ function renderCards(){const awards=filteredAwards();$('#catalog-count').textCon
 function discover(){
  const searchText=esc(filters.search);
  const uniOpts=Object.keys(UNIVERSITY).map(u=>'<option value="'+esc(u)+'" '+(filters.uni===u?'selected':'')+'>'+esc(u)+'</option>').join('');
+ const atlasAwards=['kaist-ug','ku-anam','ajou-frontier','unist-ug'].map(byId).filter(Boolean);
+ const atlasHtml=atlasAwards.map((s,i)=>{
+   const u=UNIVERSITY[s.uni];
+   return '<article class="atlas-ticket atlas-ticket-'+(i+1)+'" aria-label="'+esc(s.uni)+' '+esc(s.name)+'">'+
+     '<div class="atlas-ticket-top"><span>0'+(i+1)+'</span><span>'+esc(u.place)+'</span></div>'+
+     '<div class="atlas-ticket-uni">'+esc(s.uni)+'</div>'+
+     '<strong>'+esc(s.benefit)+'</strong>'+
+     '<small>'+esc(s.category)+'</small>'+
+   '</article>';
+ }).join('');
  let html=
- '<section class="page-mast page-mast-discover" aria-label="Scholarship discovery">'+
- '<div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">✳</span> SCHOLARSHIP EXPLORER <span class="mast-eyebrow-line"></span> NON-GKS ONLY</div>'+
- '<h1>Build your <em>funding shortlist.</em></h1>'+
- '<p>One workspace for university funding: source-linked awards, published criteria, tracking and comparison without the tab chaos.</p>'+
- '<div class="mast-meta"><span><b>'+SCHOLARSHIPS.length+'</b> curated awards</span><span><b>4</b> university sources</span><span>Snapshot · '+SOURCE_DATE+'</span></div></div>'+
- '<div class="mast-side mast-side-discover"><span class="mast-side-kicker">START WITH SIGNAL</span>'+
- '<div class="mast-search-mark">⌕</div><strong>Search the terms that actually change your decision.</strong>'+
- '<p>Filter by institution, published criteria and funding coverage — then track or compare what survives.</p>'+
- '<button class="mast-link" data-view="eligibility">Set my criteria <span>↗</span></button></div></section>'+
+ '<section class="page-mast page-mast-discover atlas-hero" aria-label="Scholarship discovery">'+
+ '<div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">✳</span> FUNDING ATLAS <span class="mast-eyebrow-line"></span> KOREA · 2027</div>'+
+ '<h1>Build a shortlist<br>that <em>survives scrutiny.</em></h1>'+
+ '<p>Source-linked university funding, criteria checks, tracking and comparison — arranged as one working field instead of fifteen browser tabs.</p>'+
+ '<div class="mast-meta"><span><b>'+SCHOLARSHIPS.length+'</b> awards</span><span><b>4</b> universities</span><span>Checked · '+SOURCE_DATE+'</span></div>'+
+ '<div class="atlas-actions"><button class="mast-link atlas-primary" data-view="eligibility">Set my criteria <span>↗</span></button><span class="atlas-note">Scroll to inspect the dossiers ↓</span></div></div>'+
+ '<div class="atlas-stage" aria-label="Featured scholarship dossiers"><div class="atlas-year" aria-hidden="true">2027</div><div class="atlas-axis" aria-hidden="true"></div>'+atlasHtml+'<div class="atlas-caption"><span>LIVE FIELD</span><b>04 / '+SCHOLARSHIPS.length+'</b></div></div></section>'+
  '<div class="discovery-workbench"><div class="discovery-workbench-head"><div><span class="section-kicker">SOURCE-LINKED OPPORTUNITIES</span><h2>Your funding field</h2><p>Scan the terms, inspect the criteria, then keep only what deserves attention.</p></div><span class="workbench-source-tag"><span class="pulse"></span> 4 official sources</span></div>'+
  '<div class="university-quickbar" aria-label="Browse scholarships by university"><span class="quickbar-label">EXPLORE BY UNIVERSITY</span>'+[['all','All',SCHOLARSHIPS.length],...Object.keys(UNIVERSITY).map(u=>[u,u,SCHOLARSHIPS.filter(s=>s.uni===u).length])].map(([id,label,count])=>'<button type="button" class="university-pill '+(filters.uni===id?'active':'')+'" data-uni-quick="'+esc(id)+'" aria-pressed="'+(filters.uni===id?'true':'false')+'"><span class="university-pill-dot" aria-hidden="true"></span>'+esc(label)+' <span class="university-pill-count">'+count+'</span></button>').join('')+'</div>'+
  '<div class="filters discovery-filters"><label class="discovery-search-label"><span aria-hidden="true">⌕</span><input id="search" class="input" type="search" placeholder="Search universities, awards, funding…" value="'+searchText+'" aria-label="Search scholarships"></label>'+
