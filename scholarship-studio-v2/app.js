@@ -57,7 +57,7 @@ function byId(id){return SCHOLARSHIPS.find(s=>s.id===id);}
 function readState(){try{const old=JSON.parse(localStorage.getItem(STORAGE_KEY));if(old&&typeof old==='object')return {profile:Object.assign({},DEFAULT_PROFILE,old.profile||{}),apps:Array.isArray(old.apps)?old.apps.filter(a=>byId(a.id)):[],compare:Array.isArray(old.compare)?old.compare.filter(id=>byId(id)).slice(0,3):[]};}catch(e){}return {profile:{...DEFAULT_PROFILE},apps:[],compare:[]};}
 let state=readState();
 let view=['discover','eligibility','applications','compare'].includes(location.hash.slice(1))?location.hash.slice(1):'discover';
-let filters={search:'',uni:'all',match:'all'};
+let filters={search:'',uni:'all',match:'all',tracked:false};
 let timer=0;
 function store(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){toast('Browser storage is unavailable. Use Export to keep a copy.');}syncShell();}
 function toast(msg){const node=$('#toast');node.textContent=msg;node.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>node.classList.remove('show'),3400);}
@@ -91,32 +91,78 @@ function syncShell(){
  $('#nav-compare-count').textContent=state.compare.length;
  $('#crumb-current').textContent=({discover:'DISCOVER',eligibility:'MY ELIGIBILITY',applications:'APPLICATIONS',compare:'COMPARE'})[view];
  $('#mini-profile').textContent=state.profile.name||((completeness()?completeness()+'/5 essentials saved':'Not completed yet'));
+ const meter=$('.mini-progress'); if(meter){meter.setAttribute('aria-valuenow',completeness());$('#mini-progress-fill').style.width=(completeness()*20)+'%';}
 }
 function navigate(next){if(!['discover','eligibility','applications','compare'].includes(next))return;view=next;location.hash=next;render();window.scrollTo({top:0,behavior:'instant'});}
 function shell(body){return '<div class="main-content">'+body+'</div>';}
 function sectionEyebrow(text){return '<div class="eyebrow">'+esc(text)+'</div>';}
 function stat(label,value,meta,highlight){return '<div class="stat'+(highlight?' highlight':'')+'"><div class="stat-label">'+label+'</div><div class="stat-value">'+value+'</div><div class="stat-meta">'+meta+'</div>'+(highlight?'<span class="stat-symbol">✳</span>':'')+'</div>';}
-function header(title,subtitle,action){return '<section class="hero-row'+(view==='discover'?' hero-discover':' hero-compact')+'"><div class="hero-copy"><div class="hero-overline"><span class="hero-overline-line"></span>University funding, made navigable <span class="hero-overline-tail">/ South Korea</span></div><h1>'+title+'</h1><p>'+subtitle+'</p></div><div class="hero-actions">'+(action||'')+'</div><div class="hero-graphic" aria-hidden="true"><span class="graphic-index">SCHOLARSHIP STUDIO <b>2027</b></span><div class="graphic-orbit orbit-outer"></div><div class="graphic-orbit orbit-inner"></div><div class="graphic-center">KR<span>✳</span></div><span class="graphic-star">✳</span><span class="graphic-foot">EXPLORE THE POSSIBILITIES</span></div></section>';}
-function stats(){const meets=SCHOLARSHIPS.filter(s=>statusFor(s).key==='good').length;return '<div class="stats-strip">'+stat('Curated awards',SCHOLARSHIPS.length,'4 university sources',true)+stat('Published criteria met',meets,'Not an award prediction')+stat('Applications tracked',state.apps.length,'Stored on this device')+stat('Ready to compare',state.compare.length+'/3','Select up to three awards')+'</div>';}
+function heroAside(){
+ const completed=completeness(),p=state.profile,selected=state.compare.length,tracked=state.apps.length;
+ const steps=[
+  {number:'01',view:'eligibility',title:completed>=5?'Review your profile':'Build your profile',detail:completed+'/5 essentials completed',done:completed>=5},
+  {number:'02',view:'applications',title:'Track your applications',detail:tracked+' saved application'+(tracked===1?'':'s'),done:tracked>0},
+  {number:'03',view:'compare',title:'Compare scholarships',detail:selected+'/3 selected for comparison',done:selected>0}
+ ];
+ return '<aside class="hero-aside" aria-label="Your scholarship plan">'+
+ '<div class="aside-top"><span class="aside-eyebrow"><span class="aside-label-dot"></span>YOUR SCHOLARSHIP PLAN</span><span class="aside-spark" aria-hidden="true">✳</span></div>'+
+ '<div class="aside-main"><span class="aside-index">'+(p.name?'HELLO, '+esc(p.name.toUpperCase()):'YOUR NEXT STEPS')+'</span>'+
+ '<h2>One plan.<br><em>Many possibilities.</em></h2>'+
+ '<p class="aside-intro">Your university funding journey, in one place.</p></div>'+
+ '<div class="aside-progress-row"><div class="aside-progress-head"><span>PROFILE COMPLETENESS</span><strong>'+completed+'<span class="progress-total"> / 5</span></strong></div>'+
+ '<div class="aside-progress" role="progressbar" aria-label="Profile essentials completed" aria-valuemin="0" aria-valuemax="5" aria-valuenow="'+completed+'"><span style="width:'+(completed*20)+'%"></span></div></div>'+
+ '<div class="aside-steps">'+steps.map(x=>'<button type="button" class="aside-step" data-view="'+x.view+'">'+
+ '<span class="step-index">'+x.number+'</span><span class="step-copy"><strong>'+x.title+'</strong><small>'+x.detail+'</small></span>'+
+ '<span class="step-arrow" aria-hidden="true">'+(x.done?'✓':'↗')+'</span></button>').join('')+'</div>'+
+ '<div class="aside-bottom"><span><span class="aside-live-dot"></span> Saved privately in your browser</span><span class="aside-bottom-right">NON-GKS · KOREA</span></div></aside>';
+}
+function header(title,subtitle,action){
+ return '<section class="hero-row'+(view==='discover'?' hero-discover':' hero-compact')+'">'+
+ '<div class="hero-copy"><div class="hero-overline"><span class="hero-overline-line"></span>YOUR KOREA FUNDING WORKSPACE'+
+ '<span class="hero-overline-tail">/ UNIVERSITY SCHOLARSHIPS</span></div>'+
+ '<h1>'+title+'</h1><p>'+subtitle+'</p><div class="hero-actions">'+(action||'')+
+ (view==='discover'?'<button type="button" id="jump-awards" class="hero-text-link">Explore scholarships <span aria-hidden="true">↓</span></button>':'')+
+ '</div><div class="hero-proof"><span class="proof-mark">✳</span><span><strong>'+SCHOLARSHIPS.length+' university awards</strong><small>Curated from 4 official university sources</small></span></div></div>'+
+ heroAside()+'</section>';
+}
+function stats(){
+ const meets=SCHOLARSHIPS.filter(s=>statusFor(s).key==='good').length;
+ return '<div class="stats-strip">'+stat('Curated awards',SCHOLARSHIPS.length,'4 official university sources',true)+stat('Published criteria met',meets,'Not an award prediction')+stat('Applications tracked',state.apps.length,'Saved on this device')+stat('Your comparison',state.compare.length+'/3','Up to three awards')+'</div>';
+}
 function card(s){
  const tracked=state.apps.some(a=>a.id===s.id),compared=state.compare.includes(s.id),m=statusFor(s),u=UNIVERSITY[s.uni];
- return '<article class="scholarship-card"><div class="card-head"><div class="university"><div class="university-icon">'+u.mark+'</div><div><div class="university-name">'+esc(s.uni)+'</div><div class="university-meta">'+u.place+' · Undergraduate</div></div></div>'+badge(s)+'</div>'+
- '<h3>'+esc(s.name)+'</h3><p class="description">'+esc(s.category)+' · '+esc(s.route)+'</p>'+
- '<div class="benefit"><strong>'+esc(s.benefit)+'</strong><span class="small-note">'+esc(s.detail)+'</span></div>'+
- '<div class="criteria"><strong>Profile insight · </strong>'+esc(m.reason)+'</div>'+
- '<div class="card-actions"><div class="left"><button class="btn btn-small '+(tracked?'btn-light':'btn-primary')+'" data-track="'+s.id+'">'+(tracked?'✓ Tracking':'＋ Track application')+'</button><button class="btn btn-small '+(compared?'btn-light':'')+'" data-compare="'+s.id+'">'+(compared?'✓ Selected':'⊞ Compare')+'</button></div>'+sourceLink(s)+'</div></article>';
+ return '<article class="scholarship-card" data-university="'+esc(s.uni)+'"><div class="card-head"><div class="university"><div class="university-icon">'+u.mark+'</div><div><div class="university-name">'+esc(s.uni)+'</div><div class="university-meta">'+esc(u.place)+' · Undergraduate</div></div></div>'+badge(s)+'</div>'+
+ '<div class="card-main"><div class="card-meta">'+esc(s.category)+'<span aria-hidden="true">·</span>'+esc(s.scope)+'</div><h3>'+esc(s.name)+'</h3><p class="description">'+esc(s.route)+'</p></div>'+
+ '<div class="benefit"><span class="benefit-kicker">PUBLISHED FUNDING</span><strong>'+esc(s.benefit)+'</strong><span class="small-note">'+esc(s.detail)+'</span></div>'+
+ '<div class="criteria"><span class="criteria-icon" aria-hidden="true">◎</span><div><strong>YOUR PROFILE SIGNAL</strong><p>'+esc(m.reason)+'</p></div></div>'+
+ '<div class="card-actions"><div class="left"><button class="btn btn-small '+(tracked?'btn-light':'btn-primary')+'" data-track="'+s.id+'">'+(tracked?'✓ View application':'+ Track application')+'</button><button class="btn btn-small '+(compared?'btn-light':'')+'" data-compare="'+s.id+'">'+(compared?'✓ In comparison':'⊞ Compare')+'</button></div>'+sourceLink(s,'Official source ↗')+'</div></article>';
 }
 function filteredAwards(){return SCHOLARSHIPS.filter(s=>{
  const text=(s.uni+' '+s.name+' '+s.benefit+' '+s.category).toLowerCase();
- return text.includes(filters.search.toLowerCase())&&(filters.uni==='all'||s.uni===filters.uni)&&(filters.match==='all'||statusFor(s).key===filters.match);
+ return text.includes(filters.search.toLowerCase())&&(filters.uni==='all'||s.uni===filters.uni)&&(filters.match==='all'||statusFor(s).key===filters.match)&&(!filters.tracked||state.apps.some(a=>a.id===s.id));
 });}
 function renderCards(){const awards=filteredAwards();$('#catalog-count').textContent=awards.length+' of '+SCHOLARSHIPS.length+' shown';$('#catalog-grid').innerHTML=awards.length?awards.map(card).join(''):'<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⌕</div><h3>No awards in this view</h3><p>Try another university or remove the profile-criterion filter.</p><button class="btn btn-primary" id="clear-filters">Clear filters</button></div>';}
 function discover(){
- const profileButton='<button class="btn btn-primary" data-view="eligibility">✦ Set up my profile →</button>';
- let html=header('Your next chapter,<br><em>funded with clarity.</em>','A focused workspace for university-funded opportunities in South Korea. Explore official awards, check published criteria, and organize applications — separate from GKS.',profileButton)+stats()+
- '<div class="banner"><span>ⓘ</span><div><strong>Curated preview, not a live admissions feed.</strong> Award details were checked against official university pages on '+SOURCE_DATE+'. Deadlines follow individual admissions rounds. Always verify current intake requirements at the source.</div></div>'+
- '<div class="section-heading"><div><div class="eyebrow">Discover opportunities</div><h2>Explore scholarships</h2><p>Source-linked university awards. Your criteria insights appear on every card.</p></div><div class="no-gks"><span class="pulse"></span> Non-GKS awards only</div></div>'+
- '<div class="filters"><input id="search" class="input" type="search" placeholder="Search university, award or benefit…" value="'+esc(filters.search)+'" aria-label="Search scholarships"><select id="uni-filter" class="select" aria-label="Filter university"><option value="all">All universities</option>'+Object.keys(UNIVERSITY).map(u=>'<option value="'+esc(u)+'" '+(filters.uni===u?'selected':'')+'>'+esc(u)+'</option>').join('')+'</select><select id="match-filter" class="select" aria-label="Filter profile signals"><option value="all">All profile signals</option><option value="good" '+(filters.match==='good'?'selected':'')+'>Criterion met</option><option value="gap" '+(filters.match==='gap'?'selected':'')+'>Needs attention</option><option value="check" '+(filters.match==='check'?'selected':'')+'>Review required</option></select><div id="catalog-count" class="filter-count"></div></div>'+
+ const searchText=esc(filters.search);
+ const uniOpts=Object.keys(UNIVERSITY).map(u=>'<option value="'+esc(u)+'" '+(filters.uni===u?'selected':'')+'>'+esc(u)+'</option>').join('');
+ let html=
+ '<section class="page-mast page-mast-discover" aria-label="Scholarship discovery">'+
+ '<div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">✳</span> SCHOLARSHIP EXPLORER <span class="mast-eyebrow-line"></span> NON-GKS ONLY</div>'+
+ '<h1>Build your <em>funding shortlist.</em></h1>'+
+ '<p>One workspace for university funding: source-linked awards, published criteria, tracking and comparison without the tab chaos.</p>'+
+ '<div class="mast-meta"><span><b>'+SCHOLARSHIPS.length+'</b> curated awards</span><span><b>4</b> university sources</span><span>Snapshot · '+SOURCE_DATE+'</span></div></div>'+
+ '<div class="mast-side mast-side-discover"><span class="mast-side-kicker">START WITH SIGNAL</span>'+
+ '<div class="mast-search-mark">⌕</div><strong>Search the terms that actually change your decision.</strong>'+
+ '<p>Filter by institution, published criteria and funding coverage — then track or compare what survives.</p>'+
+ '<button class="mast-link" data-view="eligibility">Set my criteria <span>↗</span></button></div></section>'+
+ '<div class="discovery-workbench"><div class="discovery-workbench-head"><div><span class="section-kicker">SOURCE-LINKED OPPORTUNITIES</span><h2>Your funding field</h2><p>Scan the terms, inspect the criteria, then keep only what deserves attention.</p></div><span class="workbench-source-tag"><span class="pulse"></span> 4 official sources</span></div>'+
+ '<div class="university-quickbar" aria-label="Browse scholarships by university"><span class="quickbar-label">EXPLORE BY UNIVERSITY</span>'+[['all','All',SCHOLARSHIPS.length],...Object.keys(UNIVERSITY).map(u=>[u,u,SCHOLARSHIPS.filter(s=>s.uni===u).length])].map(([id,label,count])=>'<button type="button" class="university-pill '+(filters.uni===id?'active':'')+'" data-uni-quick="'+esc(id)+'" aria-pressed="'+(filters.uni===id?'true':'false')+'"><span class="university-pill-dot" aria-hidden="true"></span>'+esc(label)+' <span class="university-pill-count">'+count+'</span></button>').join('')+'</div>'+
+ '<div class="filters discovery-filters"><label class="discovery-search-label"><span aria-hidden="true">⌕</span><input id="search" class="input" type="search" placeholder="Search universities, awards, funding…" value="'+searchText+'" aria-label="Search scholarships"></label>'+
+ '<select id="uni-filter" class="select" aria-label="Filter university"><option value="all">All universities</option>'+uniOpts+'</select>'+
+ '<select id="match-filter" class="select" aria-label="Filter profile signals"><option value="all">All profile signals</option><option value="good" '+(filters.match==='good'?'selected':'')+'>Criterion met</option><option value="gap" '+(filters.match==='gap'?'selected':'')+'>Needs attention</option><option value="check" '+(filters.match==='check'?'selected':'')+'>Review required</option></select>'+
+ '<div id="catalog-count" class="filter-count"></div></div>'+
+ '<div class="filter-toolbar"><div class="filter-tabs"><span class="filter-tabs-label">QUICK VIEW</span><button class="filter-chip '+(!filters.tracked?'is-selected':'')+'" id="all-awards">All awards</button><button class="filter-chip '+(filters.tracked?'is-selected':'')+'" id="tracked-only">My tracked awards <span>'+state.apps.length+'</span></button></div><button class="filter-clear" id="clear-filters">Reset filters ↺</button></div></div>'+
+ '<div class="banner page-source-note"><span>ⓘ</span><div><strong>Curated preview, not a live admissions feed.</strong> Award information checked '+SOURCE_DATE+'. Confirm intake-specific eligibility and exact dates on the university’s current official page.</div></div>'+
  '<div id="catalog-grid" class="card-grid"></div>';
  $('#view-root').innerHTML=shell(html);renderCards();
 }
@@ -127,7 +173,13 @@ function field(label,name,type,opts,extra){
 function eligibility(){
  const p=state.profile;
  const assessment=SCHOLARSHIPS.map(s=>({s,m:statusFor(s)}));
- let html=header('One profile.<br><em>Every opportunity.</em>','Tell us a little about your study plans. We compare only explicitly published award criteria — never invent admission probabilities.','<button class="btn" data-view="discover">← Browse scholarships</button>')+
+ let html='<section class="page-mast page-mast-eligibility" aria-label="My eligibility overview"><div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">◎</span> PERSONAL CRITERIA CHECK</div>'+
+ '<h1>Your profile, <em>against the rules.</em></h1><p>Record your academic and language profile, then check it against published scholarship criteria. This is a criteria workspace, not an admissions prediction.</p>'+
+ '<div class="mast-meta"><span>'+esc(p.degree||'Degree not set')+'</span><span>'+esc(p.major||'Major not set')+'</span><span>'+esc(p.intake||'Intake not set')+'</span></div></div>'+
+ '<div class="mast-side eligibility-side"><span class="mast-side-kicker">PROFILE READINESS</span><div class="eligibility-progress-number">'+completeness()+'<span> / 5</span></div><strong>Essentials completed</strong>'+
+ '<div class="progress-track" role="progressbar" aria-label="Profile essentials completed" aria-valuemin="0" aria-valuemax="5" aria-valuenow="'+completeness()+'"><span style="width:'+(completeness()*20)+'%"></span></div>'+
+ '<p>'+ (completeness()===5?'Your essentials are recorded. Check individual university rules.':'Finish your essentials to make scholarship criteria checks more useful.')+'</p>'+
+ '<button class="mast-link" id="jump-profile-form" type="button">Complete your details <span>↓</span></button></div></section>'+
  '<div class="two-col"><section class="panel"><div class="panel-title"><h3>My scholarship profile</h3><span class="tag">'+completeness()+'/5 essentials</span></div><p class="panel-subtitle">Your information is stored locally in this browser, not sent to KMate or any university.</p><form id="profile-form"><div class="field-grid">'+
  field('Display name','name','text',null,'maxlength="80" placeholder="How should we address you?"')+
  field('Nationality / citizenship','nationality','text',null,'maxlength="80" placeholder="e.g. India"')+
@@ -147,10 +199,14 @@ function eligibility(){
  $('#view-root').innerHTML=shell(html);
 }
 function apps(){
- let intro=header('Every application,<br><em>in its place.</em>','Move each opportunity through research, preparation and submission. Your dates, notes and checklist stay on this device.','<button class="btn btn-primary" data-view="discover">＋ Discover an award</button>');
- let overview= '<div class="stats-strip">'+stat('In your workspace',state.apps.length,'Independent award records',true)+stat('Preparing',state.apps.filter(a=>a.stage==='Preparing documents').length,'Document stage')+stat('Submitted',state.apps.filter(a=>a.stage==='Submitted').length,'Recorded by you')+stat('Offers recorded',state.apps.filter(a=>a.stage==='Offer received').length,'Not validated by KMate')+'</div>';
+ let intro='<section class="page-mast page-mast-applications" aria-label="Application control center"><div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">▤</span> APPLICATION CONTROL CENTER</div>'+
+ '<h1>Move every application <em>forward.</em></h1><p>Turn research into next actions with stages, checklists, notes and dates — without mixing one university into another.</p>'+
+ '<div class="mast-meta"><span><b>'+state.apps.length+'</b> tracked</span><span><b>'+state.apps.filter(a=>a.stage==="Submitted").length+'</b> submitted</span><span>Saved locally on this device</span></div></div>'+
+ '<div class="mast-side applications-side"><span class="mast-side-kicker">NEXT MOVE</span><div class="mast-side-symbol">↗</div><strong>Give every application a next move.</strong><p>Add an opportunity, update its stage, and give it a next action.</p>'+
+ '<button class="btn btn-primary" data-view="discover">+ Add an application</button><button class="mast-secondary" id="export-data">↧ Export records</button></div></section>';
+ let overview= '<div class="stats-strip">'+stat('In your workspace',state.apps.length,'Independent award records',true)+stat('Preparing',state.apps.filter(a=>a.stage==='Preparing documents').length,'Document stage')+stat('Submitted',state.apps.filter(a=>a.stage==='Submitted').length,'Recorded by you')+stat('Offers recorded',state.apps.filter(a=>a.stage==='Offer received').length,'Entered by you')+'</div>';
  let content=state.apps.length?'<div class="app-list">'+state.apps.map(appCard).join('')+'</div>':'<div class="empty-state"><div class="empty-icon">▤</div><h3>No applications tracked yet</h3><p>Pick an award from Discover and choose “Track application”. You’ll get an independent checklist, status, notes and deadline field.</p><button class="btn btn-primary" data-view="discover">Explore scholarships →</button></div>';
- $('#view-root').innerHTML=shell(intro+overview+'<div class="section-heading"><div><div class="eyebrow">Your application desk</div><h2>My applications</h2><p>Manual tracking — this demo does not submit university applications.</p></div></div>'+content);
+ $('#view-root').innerHTML=shell(intro+overview+'<div class="section-heading"><div><div class="eyebrow">YOUR APPLICATION DESK</div><h2>Active work, in one place</h2><p>Manual tracking only — nothing is submitted to a university from this workspace.</p></div></div>'+content);
 }
 function appCard(a){
  const s=byId(a.id),tasks=Array.isArray(a.tasks)?a.tasks:[],done=TASKS.filter(t=>tasks.includes(t)).length;
@@ -162,8 +218,18 @@ function appCard(a){
  '<div class="app-tools"><span class="app-status">Personal tracker · not connected to admissions portal</span>'+sourceLink(s,'Check official award ↗')+'</div></article>';
 }
 function compare(){
- const title=header('The details,<br><em>side by side.</em>','Select up to three university awards. See documented funding, selection route, continuation and your personal criteria signal without misleading ranking or guessed eligibility.','<button class="btn" data-view="discover">← Find awards</button>');
- let picks='<div class="section-heading"><div><div class="eyebrow">The details that matter</div><h2>Choose your comparison set</h2><p>'+state.compare.length+' of 3 awards selected · click to add or remove</p></div><button class="btn btn-small" id="clear-comparison">Clear selection</button></div>'+
+ const slots=Array.from({length:3},(_,i)=>{
+ const s=byId(state.compare[i]);
+ return '<div class="compare-slot '+(s?'filled':'')+'"><span>SLOT 0'+(i+1)+'</span>'+
+ (s?'<strong>'+esc(s.name)+'</strong><small>'+esc(s.uni)+' · '+esc(s.benefit)+'</small><button data-compare="'+s.id+'" aria-label="Remove '+esc(s.name)+' from comparison">×</button>':
+ '<strong>Choose an award</strong><small>Select below or from Discover</small><button type="button" class="compare-slot-pick" data-view="discover" aria-label="Browse awards for slot '+(i+1)+'">+ Browse awards</button>')+'</div>';
+ }).join('');
+ const title='<section class="page-mast page-mast-compare" aria-label="Scholarship comparison builder"><div class="mast-copy"><div class="mast-eyebrow"><span class="mast-eyebrow-mark">⊞</span> COMPARISON DESK</div>'+
+ '<h1>Compare the terms, <em>not the hype.</em></h1><p>Put documented funding, selection routes and continuation rules side by side — without invented rankings or acceptance scores.</p>'+
+ '<div class="mast-meta"><span><b>'+state.compare.length+' / 3</b> selected</span><span>Official award sources</span></div></div>'+
+ '<div class="mast-side compare-side"><span class="mast-side-kicker">BUILD THE SHORTLIST</span><strong>Make the differences impossible to miss.</strong><p>Select up to three awards. Your comparison updates immediately.</p><div class="compare-mast-actions"><button class="btn btn-primary" data-view="discover">+ Explore awards</button><button class="mast-secondary" id="clear-comparison">Clear all</button></div></div></section>';
+ let picks='<div class="compare-builder"><div class="compare-builder-head"><div><span class="section-kicker">YOUR SELECTION</span><h2>Three awards. One decision surface.</h2><p>'+state.compare.length+' of 3 awards selected · choose or remove below</p></div><button class="btn btn-small" data-view="discover">Browse awards ↗</button></div><div class="compare-slots">'+slots+'</div></div>'+
+ '<div class="section-heading compare-pick-heading"><div><div class="eyebrow">SOURCE-LINKED AWARDS</div><h2>Build the comparison</h2><p>Select an award to put its published conditions into the same view.</p></div></div>'+
  '<div class="compare-choices">'+SCHOLARSHIPS.map(s=>'<label class="compare-choice '+(state.compare.includes(s.id)?'selected':'')+'"><input type="checkbox" data-compare="'+s.id+'" '+(state.compare.includes(s.id)?'checked':'')+' '+(state.compare.length>=3&&!state.compare.includes(s.id)?'disabled':'')+'><div><strong>'+esc(s.name)+'</strong><small>'+esc(s.uni)+' · '+esc(s.benefit)+'</small></div></label>').join('')+'</div>';
  let chosen=state.compare.map(byId).filter(Boolean);
  let rows=[['University',s=>s.uni],['Profile signal',s=>esc(statusFor(s).label)+' — '+esc(statusFor(s).reason)],['Tuition coverage',s=>esc(s.tuition)],['Living allowance',s=>esc(s.stipend)],['Scholarship route',s=>esc(s.route)],['Published language condition',s=>esc(s.language)],['Selection method',s=>esc(s.selection)],['Renewal / duration',s=>esc(s.renewal)],['Deadline',s=>esc(s.deadline)],['Important caution',s=>esc(s.notice)],['Official source',s=>sourceLink(s,'Open university source ↗')]];
@@ -172,12 +238,17 @@ function compare(){
 }
 function render(){syncShell();({discover,eligibility,applications:apps,compare})[view]();}
 document.addEventListener('click',e=>{
+ if(e.target.closest('#jump-profile-form')){document.querySelector('#profile-form')?.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});return;}
+ if(e.target.closest('#jump-awards')){document.querySelector('.section-heading')?.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});return;}
  const nav=e.target.closest('[data-view]');if(nav){navigate(nav.dataset.view);return;}
  const track=e.target.closest('button[data-track]');if(track){const id=track.dataset.track;if(state.apps.some(a=>a.id===id)){navigate('applications');toast('Opened your application tracker.');return;}state.apps.push({id,stage:'Researching',intake:state.profile.intake||'',date:'',tasks:[],notes:''});store();render();toast('Added to your applications.');return;}
  const comp=e.target.closest('button[data-compare]');if(comp){toggleCompare(comp.dataset.compare);return;}
  const remove=e.target.closest('button[data-remove]');if(remove){if(confirm('Remove this application and its locally saved notes?')){state.apps=state.apps.filter(a=>a.id!==remove.dataset.remove);store();render();toast('Application removed.');}return;}
+ const quick=e.target.closest('[data-uni-quick]');if(quick){filters.uni=quick.dataset.uniQuick;render();return;}
+ if(e.target.id==='tracked-only'){filters.tracked=true;render();return;}
+ if(e.target.id==='all-awards'){filters.tracked=false;render();return;}
  if(e.target.id==='clear-comparison'){state.compare=[];store();render();toast('Comparison cleared.');return;}
- if(e.target.id==='clear-filters'){filters={search:'',uni:'all',match:'all'};render();return;}
+ if(e.target.id==='clear-filters'){filters={search:'',uni:'all',match:'all',tracked:false};render();return;}
  if(e.target.id==='top-profile'){navigate('eligibility');return;}
  if(e.target.id==='sample-profile'){state.profile={name:'Example applicant',nationality:'Example country',degree:'Undergraduate',major:'AI / Computer Science',gpa:'',scale:'',topik:'4',ielts:'7.0',language:'Korean track',intake:'Fall 2027',stemEvidence:false};store();render();toast('Example loaded. Replace with your own details.');return;}
  if(e.target.id==='export-data'){const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),sourceDate:SOURCE_DATE,...state},null,2)],{type:'application/json'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='scholarship-studio-workspace.json';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),1000);toast('Workspace exported.');}
