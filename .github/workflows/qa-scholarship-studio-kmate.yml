@@ -63,10 +63,33 @@ jobs:
                 if(await p.locator('.match-card').count()!==15)throw Error('eligibility match results missing');
                 const pct=parseInt((await p.locator('#profile-complete').innerText()).replace('%',''),10);
                 if(!(pct>=80))throw Error('profile completeness did not update');
+                if(await p.locator('#gap-results article').count()<1)throw Error('gap analyzer missing');
+                // Real browser-local document vault.
+                await p.locator('#vault-form input[type="file"]').setInputFiles({name:'transcript.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4 preview transcript')});
+                await p.locator('#vault-form [name="type"]').selectOption('transcript');
+                await p.locator('#vault-form button[type="submit"]').click();
+                await p.waitForFunction(()=>document.querySelectorAll('#vault-files article').length===1);
+                if((await p.locator('#vault-count').innerText()).trim()!=='1')throw Error('vault file count failed');
+                if(await p.locator('.compat-table .ready').count()<1)throw Error('document compatibility did not react to vault file');
                 await p.screenshot({path:'eligibility.png',fullPage:true,animations:'disabled'});
 
-                // Track + compare from Discover.
+                // Radar, saved-search watch, Cycle Watch and assistant.
                 await p.locator('[data-view="discover"]').click();
+                if(await p.locator('.radar-hit').count()<1)throw Error('personalized radar missing after profile');
+                await p.locator('#save-search-watch').click();
+                if(await p.locator('#saved-watches>div').count()!==1)throw Error('saved search watch failed');
+                await p.locator('[data-cycle-watch]').first().click();
+                if(await p.locator('[data-cycle-watch].active').count()!==1)throw Error('Cycle Watch failed');
+                await p.locator('#notification-button').click();
+                if(await p.locator('#notification-list .notice-item').count()<2)throw Error('notification center did not receive watch alerts');
+                await p.locator('#close-notifications').click();
+                await p.locator('#assistant-button').click();
+                await p.locator('#assistant-question').fill('What funding does this scholarship provide?');
+                await p.locator('#assistant-ask').click();
+                if(await p.locator('#assistant-answer a').count()!==1)throw Error('scholarship assistant source grounding missing');
+                await p.locator('#assistant-dialog').evaluate(el=>el.close());
+
+                // Track + compare from Discover.
                 const firstExpand=p.locator('[data-expand]').first();
                 await firstExpand.click();
                 const firstAward=firstExpand.locator('xpath=ancestor::article[contains(@class,"award")]');
@@ -82,7 +105,24 @@ jobs:
                 await p.locator('[data-doc]').first().check();
                 await p.locator('[data-app-field="stage"]').selectOption({label:'Preparing documents'});
                 await p.locator('[data-notes]').fill('Need to verify the intake-specific document list.');
+                await p.locator('[data-target-date]').fill('2026-11-15');
                 if(!(await p.locator('[data-doc]').first().isChecked()))throw Error('document checkbox failed');
+                if(await p.locator('.pathway-list article').count()<5)throw Error('automatic application pathway missing');
+                // Peer review request + KMate handoffs.
+                if(await p.locator('.handoff-row a').count()<2)throw Error('KMate writing/interview handoffs missing');
+                await p.locator('[data-review-for]').click();
+                await p.locator('#review-form [name="focus"]').fill('Check evidence alignment.');
+                await p.locator('#review-form button[value="default"]').click();
+                if(await p.locator('.review-requests article').count()!==1)throw Error('peer review request failed');
+                const workspaceDownload=p.waitForEvent('download');
+                await p.locator('#export-workspace').click();
+                const ws=await workspaceDownload;
+                if(!(await ws.suggestedFilename()).endsWith('.json'))throw Error('workspace export failed');
+                // Calendar export.
+                const calendarDownload=p.waitForEvent('download');
+                await p.locator('#export-calendar').click();
+                const cal=await calendarDownload;
+                if(!(await cal.suggestedFilename()).endsWith('.ics'))throw Error('calendar export failed');
 
                 // Reminder + timeline.
                 await p.locator('[data-reminder-for]').click();
@@ -101,6 +141,11 @@ jobs:
                 await p.locator('[data-view="compare"]').click();
                 if(await p.locator('.compare-table').count()!==1)throw Error('comparison table missing');
                 if(await p.locator('.source-history article').count()<1)throw Error('source history missing');
+                if(await p.locator('.funding-results article').count()<1)throw Error('funding calculator results missing');
+                await p.locator('#calc-living').fill('1200000');
+                if(await p.locator('.funding-results .gap').count()<1)throw Error('funding calculator did not recalculate');
+                await p.locator('#refresh-source-health').click();
+                if((await p.locator('.history-state').first().innerText()).indexOf('snapshot')<0)throw Error('source snapshot audit failed');
                 await p.screenshot({path:'compare.png',fullPage:true,animations:'disabled'});
 
                 // Persistence after reload.
@@ -109,6 +154,11 @@ jobs:
                 if(await p.locator('.application-card').count()!==1)throw Error('tracked workspace did not persist');
                 if(!(await p.locator('[data-doc]').first().isChecked()))throw Error('document state did not persist');
                 if((await p.locator('[data-notes]').inputValue()).indexOf('intake-specific')<0)throw Error('notes did not persist');
+                if((await p.locator('[data-target-date]').inputValue())!=='2026-11-15')throw Error('target date did not persist');
+                if(await p.locator('.review-requests article').count()!==1)throw Error('review request did not persist');
+                await p.locator('[data-view="eligibility"]').click();
+                await p.waitForFunction(()=>document.querySelectorAll('#vault-files article').length===1);
+                if(await p.locator('#vault-files article').count()!==1)throw Error('IndexedDB vault did not persist');
               } else {
                 const navHeight=await p.locator('.subnav button').first().evaluate(el=>el.getBoundingClientRect().height);
                 if(navHeight<44)throw Error('mobile Studio nav target below 44px');
