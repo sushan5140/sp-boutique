@@ -867,3 +867,73 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     scroll-behavior:auto!important;
   }
 }
+
+
+/* --- Final Nuri-family polish ------------------------------------------ */
+.nuri-metrics>div{position:relative;overflow:hidden}
+.nuri-metrics>div::before{
+  content:"";
+  position:absolute;
+  left:12px;right:12px;top:0;
+  height:2px;border-radius:0 0 3px 3px;
+  background:var(--n-indigo);
+}
+.nuri-metrics>div:nth-child(2)::before{background:var(--n-cyan)}
+.nuri-metrics>div:nth-child(3)::before{background:var(--n-papaya)}
+.nuri-metrics>div:nth-child(4)::before{background:var(--n-jade)}
+
+.nuri-role-card{
+  position:relative;
+  overflow:hidden;
+  border-radius:18px 18px 7px 18px;
+}
+.nuri-role-card::after{
+  content:"";
+  position:absolute;
+  width:72px;height:72px;
+  right:-26px;bottom:-30px;
+  border:14px solid currentColor;
+  border-radius:50%;
+  opacity:.07;
+  pointer-events:none;
+}
+.nuri-role-card:nth-child(even){border-radius:18px 18px 18px 7px}
+
+.nuri-desk-tile:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 18px rgba(52,42,168,.045);
+}
+.nuri-primary span,
+.nuri-desk-tile>i{
+  transition:transform 160ms var(--n-ease);
+}
+@media(hover:hover) and (pointer:fine){
+  .nuri-primary:hover span{transform:translateX(2px)}
+  .nuri-desk-tile:hover>i{transform:translateX(2px)}
+}
+
+.scholarship-card .card-actions{
+  border-top:1px solid #f0f0f4;
+}
+.scholarship-card .btn-small{min-height:40px}
+.scholarship-card .source-link{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+}
+.scholarship-card .benefit strong{font-size:17px}
+.scholarship-card .criteria p{line-height:1.52}
+
+@media(max-width:640px){
+  .nuri-desk-grid{gap:7px}
+  .nuri-desk-tile{min-height:58px}
+  .nuri-role-card p{max-width:26ch}
+  .scholarship-card .card-actions{gap:12px}
+  .scholarship-card .card-actions .left{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    width:100%;
+  }
+  .scholarship-card .card-actions .btn{width:100%}
+  .scholarship-card .source-link{min-height:36px}
+}
