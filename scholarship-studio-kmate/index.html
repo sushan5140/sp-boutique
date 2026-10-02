@@ -243,6 +243,73 @@
     </form>
   </dialog>
 
+  <dialog id="award-dialog" class="award-dialog">
+    <article class="award-modal">
+      <header class="award-modal-head">
+        <div>
+          <span id="award-modal-uni">University</span>
+          <p id="award-modal-type">Scholarship</p>
+        </div>
+        <button type="button" id="award-modal-close" aria-label="Close scholarship details">×</button>
+      </header>
+
+      <div class="award-modal-scroll">
+        <section class="award-modal-hero">
+          <div>
+            <span class="award-modal-kicker">SCHOLARSHIP RECORD</span>
+            <h2 id="award-modal-title">Scholarship title</h2>
+            <p id="award-modal-deadline">Deadline</p>
+          </div>
+          <div class="award-modal-signal">
+            <span>Published funding</span>
+            <strong id="award-modal-funding">Funding</strong>
+            <p id="award-modal-funding-detail">Funding detail</p>
+          </div>
+        </section>
+
+        <section class="award-modal-grid">
+          <article>
+            <span>Language</span>
+            <strong id="award-modal-language">—</strong>
+          </article>
+          <article>
+            <span>Academic / renewal</span>
+            <strong id="award-modal-academic">—</strong>
+          </article>
+          <article>
+            <span>Renewal</span>
+            <strong id="award-modal-renewal">—</strong>
+          </article>
+          <article>
+            <span>Source health</span>
+            <strong id="award-modal-health">—</strong>
+          </article>
+        </section>
+
+        <section class="award-modal-notes">
+          <article>
+            <span>Selection</span>
+            <p id="award-modal-selection">—</p>
+          </article>
+          <article class="caution">
+            <span>Caution</span>
+            <p id="award-modal-notice">—</p>
+          </article>
+        </section>
+      </div>
+
+      <footer class="award-modal-actions">
+        <div>
+          <button type="button" id="award-modal-track">＋ Track</button>
+          <button type="button" id="award-modal-compare">⇄ Compare</button>
+          <button type="button" id="award-modal-eligibility">Check eligibility</button>
+          <button type="button" id="award-modal-assistant">Ask scholarship</button>
+        </div>
+        <a id="award-modal-source" href="#" target="_blank" rel="noopener">Official source ↗</a>
+      </footer>
+    </article>
+  </dialog>
+
   <dialog id="assistant-dialog">
     <form method="dialog" class="dialog-card assistant-dialog">
       <div class="dialog-head"><div><span>Source-grounded assistant</span><h2>Ask this scholarship</h2></div><button value="cancel" formnovalidate aria-label="Close">×</button></div>
