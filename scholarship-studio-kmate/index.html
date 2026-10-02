@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#12141c">
+  <meta name="theme-color" content="#f7f9fb">
   <title>KMate · Scholarship Studio Preview</title>
-  <meta name="description" content="Public GitHub Pages preview of KMate Scholarship Studio.">
+  <meta name="description" content="Public GitHub Pages preview of the KMate Scholarship Studio workspace.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -42,70 +42,147 @@
     <header class="mobile-topbar"><strong>KMate</strong><span>Scholarship Studio</span></header>
 
     <main class="page">
-      <nav class="subnav">
-        <a class="active" href="#discover">Discover</a>
-        <a href="#stream">Eligibility</a>
-        <a href="#stream">Applications</a>
-        <a href="#compare">Compare</a>
+      <nav class="subnav" aria-label="Scholarship Studio">
+        <button class="active" data-view="discover">Discover</button>
+        <button data-view="eligibility">Eligibility</button>
+        <button data-view="applications">Applications <span id="app-nav-count">0</span></button>
+        <button data-view="compare">Compare <span id="compare-nav-count">0</span></button>
         <span>Scholarship Studio · KMate</span>
       </nav>
 
-      <section id="discover" class="hero">
-        <div class="hero-grid" aria-hidden="true"></div>
-        <div class="hero-top"><span>KMATE / SCHOLARSHIP STUDIO</span><span>UNIVERSITY FUNDING · KOREA</span><span id="hero-total">15 LIVE INDEXED AWARDS</span></div>
-        <div class="hero-main">
-          <div class="hero-copy">
-            <div class="eyebrow"><i></i> Source-linked university scholarships</div>
-            <h1>Scholarships<br><em>worth your time.</em></h1>
-            <p>Find university funding, inspect the published rules, save the awards that matter, and compare the terms without leaving KMate.</p>
-            <div class="hero-actions"><button id="explore-btn">Explore scholarships <span>→</span></button><button class="ghost" id="profile-btn">Check my profile</button></div>
+      <section class="studio-view active" data-view-panel="discover">
+        <section id="discover" class="hero">
+          <div class="hero-grid" aria-hidden="true"></div>
+          <div class="hero-top"><span>KMATE / SCHOLARSHIP STUDIO</span><span>UNIVERSITY FUNDING · KOREA</span><span id="hero-total">15 LIVE INDEXED AWARDS</span></div>
+          <div class="hero-main">
+            <div class="hero-copy">
+              <div class="eyebrow"><i></i> Source-linked university scholarships</div>
+              <h1>Scholarships <em>worth your time.</em></h1>
+              <p>Find university funding, inspect the published rules, save the awards that matter, and compare the terms without leaving KMate.</p>
+              <div class="hero-actions"><button id="explore-btn">Explore scholarships <span>→</span></button><button class="ghost" id="profile-btn">Check my profile ↗</button></div>
+            </div>
+            <div class="hero-signal">
+              <span class="signal-label">LIVE FUNDING SIGNAL</span>
+              <small id="signal-place">Daejeon</small>
+              <strong id="signal-name">KAIST</strong>
+              <div class="signal-meta"><b id="signal-count">1</b> indexed awards · official sources</div>
+              <p id="signal-benefit">Full tuition · 8 semesters</p>
+              <button id="signal-filter">Show these awards ↗</button>
+            </div>
           </div>
-          <div class="hero-signal">
-            <span class="signal-label">LIVE FUNDING SIGNAL</span>
-            <small id="signal-place">Daejeon</small>
-            <strong id="signal-name">KAIST</strong>
-            <div class="signal-meta"><b id="signal-count">1</b> indexed awards · official sources</div>
-            <p id="signal-benefit">Full tuition · 8 semesters</p>
-            <button id="signal-filter">Show these awards ↗</button>
+          <div class="hero-unis" id="hero-unis"></div>
+        </section>
+
+        <section class="journey">
+          <button data-action-view="discover"><span>01</span><div><b>Discover</b><small>Find university funding</small></div><i>↗</i></button>
+          <button data-action-view="eligibility"><span>02</span><div><b>Check</b><small>Compare your profile with published criteria</small></div><i>↗</i></button>
+          <button data-action-view="applications"><span>03</span><div><b>Track</b><small>Run each application as a workspace</small></div><i>↗</i></button>
+          <button data-action-view="compare"><span>04</span><div><b>Compare</b><small>Put funding and rules side by side</small></div><i>↗</i></button>
+        </section>
+
+        <section id="stream" class="stream-wrap">
+          <div class="stream-tools">
+            <div class="stream-head">
+              <div><span>Scholarship stream</span><h2><b id="stream-total">15</b> awards. One working view.</h2><p>Search, inspect, save and compare without leaving the page.</p></div>
+              <div class="live-dot"><i></i> Public preview data</div>
+            </div>
+            <div class="uni-filters" id="uni-filters"></div>
+            <div class="controls">
+              <label class="search"><span>⌕</span><input id="search" placeholder="Search awards, funding, TOPIK…"></label>
+              <select id="uni-select"></select>
+              <select id="funding-filter">
+                <option value="all">All funding</option>
+                <option value="full">Full tuition</option>
+                <option value="partial">Partial tuition</option>
+              </select>
+              <div class="count"><span id="shown-count">15 shown</span><button id="reset">Reset</button></div>
+            </div>
           </div>
+
+          <div class="source-note">ⓘ <span><b>Public design preview.</b> Production KMate uses the live Supabase scholarship index and current official sources. Matching below only evaluates criteria explicitly represented in the preview data.</span></div>
+          <div id="award-stream" class="award-stream"></div>
+        </section>
+      </section>
+
+      <section class="studio-view" data-view-panel="eligibility">
+        <header class="workspace-heading">
+          <div><span>Eligibility workspace</span><h1>One profile. Every published criterion in view.</h1><p>Reuse your academic and language profile across scholarships. The match engine explains what is supported, missing, or still needs official-source review.</p></div>
+          <div class="heading-stat"><small>PROFILE COMPLETENESS</small><strong id="profile-complete">0%</strong><div><i id="profile-progress"></i></div></div>
+        </header>
+
+        <div class="workspace-grid">
+          <form id="profile-form" class="workspace-card profile-form">
+            <div class="card-title"><div><span>Reusable profile</span><h2>Your scholarship profile</h2></div><button type="button" id="clear-profile">Clear</button></div>
+            <div class="form-grid">
+              <label><span>Degree</span><select name="degree"><option value="Undergraduate">Undergraduate</option></select></label>
+              <label><span>Intended major</span><input name="major" placeholder="e.g. Computer Science"></label>
+              <label><span>Nationality</span><input name="nationality" placeholder="e.g. Indian"></label>
+              <label><span>Education status</span><select name="education"><option value="">Choose…</option><option>High school completed</option><option>Expected graduation</option><option>Currently enrolled</option></select></label>
+              <label><span>Grading scale</span><select name="gradingScale"><option value="">Choose…</option><option value="100">100-point</option><option value="4.0">4.0</option><option value="4.3">4.3</option><option value="5.0">5.0</option></select></label>
+              <label><span>GPA / score</span><input name="gpa" type="number" step="0.01" min="0" placeholder="Your official score"></label>
+              <label><span>TOPIK</span><select name="topik"><option value="">Not entered</option><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option><option value="4">Level 4</option><option value="5">Level 5</option><option value="6">Level 6</option></select></label>
+              <label><span>IELTS</span><input name="ielts" type="number" min="0" max="9" step="0.5" placeholder="0–9"></label>
+              <label><span>TOEFL iBT</span><input name="toefl" type="number" min="0" max="120" step="1" placeholder="0–120"></label>
+              <label><span>Target intake</span><input name="intake" placeholder="e.g. Fall 2027"></label>
+              <label class="full"><span>Funding preference</span><select name="funding"><option value="any">Any published funding</option><option value="full">Full tuition preferred</option><option value="living">Tuition + living support preferred</option></select></label>
+            </div>
+            <div class="form-footer"><p>Your profile stays in this browser for the preview.</p><button type="submit">Save profile</button></div>
+          </form>
+
+          <aside class="workspace-card profile-summary">
+            <span>Profile reuse</span><h2 id="profile-name">Build your profile once.</h2><p id="profile-summary-copy">Add your major, academic scale and language scores. Scholarship Studio will reuse them across every eligibility check.</p>
+            <div class="profile-facts" id="profile-facts"></div>
+            <button id="run-match" type="button">Run eligibility check →</button>
+          </aside>
         </div>
-        <div class="hero-unis" id="hero-unis"></div>
+
+        <section class="match-section">
+          <div class="section-title"><div><span>Explainable matching</span><h2>Published-criteria signals</h2><p>No admission prediction. Each result shows exactly which structured criterion was checked.</p></div><div class="legend"><i class="ok"></i> met <i class="warn"></i> missing/review <i class="bad"></i> not met</div></div>
+          <div id="match-results" class="match-results"></div>
+        </section>
       </section>
 
-      <section class="journey">
-        <button data-jump="stream"><span>01</span><div><b>Discover</b><small>Find university funding</small></div><i>↗</i></button>
-        <button data-jump="stream"><span>02</span><div><b>Check</b><small>Read the published rules</small></div><i>↗</i></button>
-        <button data-jump="stream"><span>03</span><div><b>Track</b><small>Keep your next move visible</small></div><i>↗</i></button>
-        <button data-jump="compare"><span>04</span><div><b>Compare</b><small>Put the terms side by side</small></div><i>↗</i></button>
+      <section class="studio-view" data-view-panel="applications">
+        <header class="workspace-heading">
+          <div><span>Application workspace</span><h1>Every saved scholarship gets its own control room.</h1><p>Track documents, requirements, submission, interview, results, notes and reminders without mixing one university with another.</p></div>
+          <div class="heading-stat"><small>ACTIVE WORKSPACES</small><strong id="application-count">0</strong><p id="application-meta">Track an award to begin.</p></div>
+        </header>
+
+        <section class="deadline-board">
+          <div class="section-title compact"><div><span>Deadline intelligence</span><h2>Timeline & collision watch</h2><p>Custom reminders and known fixed dates are shown together. Nearby deadlines are flagged rather than silently competing for attention.</p></div><button id="add-reminder">＋ Add reminder</button></div>
+          <div id="timeline" class="timeline"></div>
+        </section>
+
+        <div id="application-list" class="application-list"></div>
       </section>
 
-      <section id="stream" class="stream-wrap">
-        <div class="stream-tools">
-          <div class="stream-head">
-            <div><span>Scholarship stream</span><h2><b id="stream-total">15</b> awards. One working view.</h2><p>Search, inspect, save and compare without leaving the page.</p></div>
-            <div class="live-dot"><i></i> Public preview data</div>
-          </div>
-          <div class="uni-filters" id="uni-filters"></div>
-          <div class="controls">
-            <label class="search"><span>⌕</span><input id="search" placeholder="Search awards, funding, TOPIK…"></label>
-            <select id="uni-select"></select>
-            <select id="deadline-filter"><option value="all">All deadlines</option><option value="soon">Closing soon</option></select>
-            <div class="count"><span id="shown-count">15 shown</span><button id="reset">Reset</button></div>
-          </div>
-        </div>
-
-        <div class="source-note">ⓘ <span><b>Public design preview.</b> The production KMate route uses the live Supabase scholarship index and authentication.</span></div>
-        <div id="award-stream" class="award-stream"></div>
-      </section>
-
-      <section id="compare" class="compare-section">
-        <div class="compare-head"><div><span>Comparison field</span><h2>Compare the terms, not the hype.</h2><p>Choose up to three awards from the stream above.</p></div><button id="clear-compare">Clear</button></div>
+      <section class="studio-view" data-view-panel="compare">
+        <header class="workspace-heading">
+          <div><span>Comparison field</span><h1>Compare the terms, not the hype.</h1><p>Place up to three awards side by side across funding, published criteria, deadline behavior, renewal notes and official sources.</p></div>
+          <div class="heading-stat"><small>SELECTED</small><strong id="compare-heading-count">0/3</strong><button id="clear-compare">Clear comparison</button></div>
+        </header>
         <div id="compare-body"></div>
+
+        <section class="history-panel">
+          <div class="section-title compact"><div><span>Source history</span><h2>Freshness & change notes</h2><p>Preview entries keep a source-check record so a future date change can be surfaced instead of silently replacing the old value.</p></div></div>
+          <div id="source-history" class="source-history"></div>
+        </section>
       </section>
     </main>
   </div>
 
   <div id="compare-tray" class="compare-tray" hidden></div>
+
+  <dialog id="reminder-dialog">
+    <form method="dialog" id="reminder-form" class="dialog-card">
+      <div class="dialog-head"><div><span>Reminder</span><h2>Add a deadline reminder</h2></div><button value="cancel" aria-label="Close">×</button></div>
+      <label><span>Label</span><input name="label" required placeholder="e.g. Request transcript"></label>
+      <label><span>Date</span><input name="date" type="date" required></label>
+      <label><span>Scholarship</span><select name="awardId" id="reminder-award"></select></label>
+      <div class="dialog-actions"><button value="cancel">Cancel</button><button value="default" id="save-reminder">Save reminder</button></div>
+    </form>
+  </dialog>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
