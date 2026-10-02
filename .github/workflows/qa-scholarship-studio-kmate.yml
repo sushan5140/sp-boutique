@@ -97,20 +97,28 @@ jobs:
                 if(await p.locator('#assistant-answer a').count()!==1)throw Error('scholarship assistant source grounding missing');
                 await p.locator('#assistant-dialog').evaluate(el=>el.close());
 
-                // Whole scholarship row is the primary detail trigger; V remains secondary.
+                // Scholarship opens in a Hallium-style modal, never an inline accordion.
                 const firstRow=p.locator('[data-open-award]').first();
+                const streamHeightBefore=await p.locator('#award-stream').evaluate(el=>el.getBoundingClientRect().height);
                 await firstRow.click({position:{x:280,y:28}});
-                let firstAward=firstRow.locator('xpath=ancestor::article[contains(@class,"award")]');
-                if(!(await firstAward.evaluate(el=>el.classList.contains('open'))))throw Error('whole scholarship row did not open details');
-                if((await firstRow.getAttribute('aria-expanded'))!=='true')throw Error('row aria-expanded did not update');
-                // Close/reopen through keyboard and V to keep every affordance synchronized.
+                if(await p.locator('#award-dialog[open]').count()!==1)throw Error('row click did not open scholarship modal');
+                const modalRect=await p.locator('#award-dialog').evaluate(el=>{const r=el.getBoundingClientRect();return {w:r.width,h:r.height,vw:innerWidth,vh:innerHeight}});
+                if(modalRect.w/modalRect.vw<0.68||modalRect.w/modalRect.vw>0.92)throw Error('award modal width is not near three-quarters viewport: '+JSON.stringify(modalRect));
+                if(modalRect.h/modalRect.vh<0.68||modalRect.h/modalRect.vh>0.92)throw Error('award modal height is not near three-quarters viewport: '+JSON.stringify(modalRect));
+                const streamHeightOpen=await p.locator('#award-stream').evaluate(el=>el.getBoundingClientRect().height);
+                if(Math.abs(streamHeightOpen-streamHeightBefore)>3)throw Error('award list expanded vertically instead of using modal');
+                if((await p.locator('#award-modal-title').innerText()).trim().length<3)throw Error('modal scholarship details missing');
+                await p.keyboard.press('Escape');
+                if(await p.locator('#award-dialog[open]').count()!==0)throw Error('Escape did not close award modal');
                 await firstRow.focus();
                 await p.keyboard.press('Enter');
-                firstAward=p.locator('.award').first();
-                if(await firstAward.evaluate(el=>el.classList.contains('open')))throw Error('keyboard row toggle did not close details');
-                const firstExpand=firstAward.locator('[data-expand]');
+                if(await p.locator('#award-dialog[open]').count()!==1)throw Error('keyboard did not open award modal');
+                await p.locator('#award-modal-close').click();
+                const firstAward=p.locator('.award').first();
+                const firstExpand=firstAward.locator('[data-award-open]');
                 await firstExpand.click();
-                if(!(await firstAward.evaluate(el=>el.classList.contains('open'))))throw Error('V control did not reopen details');
+                if(await p.locator('#award-dialog[open]').count()!==1)throw Error('V control did not open award modal');
+                await p.locator('#award-modal-close').click();
                 await firstAward.locator('[data-track]').click();
                 await firstAward.locator('[data-compare]').click();
                 if((await p.locator('#app-nav-count').innerText()).trim()!=='1')throw Error('tracked nav count failed');
