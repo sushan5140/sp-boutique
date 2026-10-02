@@ -70,9 +70,13 @@ jobs:
                 if(sidebarPosition!=='fixed')throw Error('mobile bottom nav not fixed');
               }
               await p.screenshot({path:label+'.png',fullPage:true,animations:'disabled'});
-              await p.locator('.university-pill[data-uni-quick="KAIST"]').click();
+              const kaistQuick=p.locator('.university-pill[data-uni-quick="KAIST"]');
+              await kaistQuick.scrollIntoViewIfNeeded();
+              await kaistQuick.click({force:true});
               if(await p.locator('.scholarship-card').count()!==1)throw Error('University quick filter failed');
-              await p.locator('.university-pill[data-uni-quick="all"]').click();
+              const allQuick=p.locator('.university-pill[data-uni-quick="all"]');
+              await allQuick.scrollIntoViewIfNeeded();
+              await allQuick.click({force:true});
               if(await p.locator('.scholarship-card').count()!==15)throw Error('All universities quick filter failed');
               if(label==='desktop-v2'){
                 await p.locator('[data-view="eligibility"]').first().click();
