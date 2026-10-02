@@ -185,6 +185,7 @@ function discover(){
        '<button data-view="applications" class="nuri-desk-tile papaya"><span>▤</span><div><b>Applications</b><small>'+state.apps.length+' tracked right now</small></div><i>→</i></button>'+
        '<button data-view="compare" class="nuri-desk-tile jade"><span>⊞</span><div><b>Compare</b><small>'+state.compare.length+' of 3 selected</small></div><i>→</i></button>'+
      '</div>'+
+     '<div class="desk-universities"><div class="desk-universities-head"><span>Browse by university</span><small>live catalogue</small></div><div class="desk-universities-grid">'+uniDesk+'</div></div>'+
      '<div class="nuri-next"><span class="nuri-next-icon">↗</span><div><small>Next move</small><strong>'+(readiness<5?'Finish the five essentials before narrowing awards.':'Your profile is ready — start narrowing the catalogue.')+'</strong></div></div>'+
    '</aside>'+
  '</section>'+
