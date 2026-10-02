@@ -1,0 +1,133 @@
+name: QA KMate Scholarship Studio Preview
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/qa-scholarship-studio-kmate.yml'
+      - 'scholarship-studio-kmate/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare browser
+        run: |
+          npm install --no-save --no-package-lock --no-audit playwright@1.56.1
+          npx playwright install chromium
+      - name: Exercise complete preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/scholarship-studio-kmate.log 2>&1 &
+          sleep 2
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const url='http://127.0.0.1:8765/scholarship-studio-kmate/';
+            for(const [width,height,label] of [[1440,900,'desktop'],[390,844,'mobile']]){
+              const p=await browser.newPage({viewport:{width,height},deviceScaleFactor:1});
+              const errors=[]; p.on('pageerror',e=>errors.push(e.message));
+              await p.goto(url,{waitUntil:'networkidle'});
+              if(await p.locator('.hero').count()!==1)throw Error(label+' hero missing');
+              if(await p.locator('.subnav [data-view]').count()!==4)throw Error(label+' Studio nav missing');
+              if(await p.locator('.award').count()!==15)throw Error(label+' expected 15 awards');
+              const overflow=await p.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth);
+              if(overflow)throw Error(label+' horizontal overflow');
+              if(errors.length)throw Error(label+' page errors: '+errors.join(' | '));
+              const heroBg=await p.locator('.hero').evaluate(el=>getComputedStyle(el).backgroundColor);
+              if(heroBg==='rgb(10, 10, 10)'||heroBg==='rgb(18, 20, 28)')throw Error('dark hero regression');
+              const second=p.locator('[data-hero-uni]').nth(1);
+              await second.hover();
+              if((await p.locator('#signal-name').innerText()).trim()!==(await second.locator('b').innerText()).trim())throw Error('hero live signal failed');
+
+              if(label==='desktop'){
+                // Eligibility profile + explainable matching.
+                await p.locator('[data-view="eligibility"]').click();
+                await p.locator('[name="major"]').fill('Computer Science');
+                await p.locator('[name="nationality"]').fill('Indian');
+                await p.locator('[name="education"]').selectOption({label:'High school completed'});
+                await p.locator('[name="gradingScale"]').selectOption('100');
+                await p.locator('[name="gpa"]').fill('93');
+                await p.locator('[name="topik"]').selectOption('4');
+                await p.locator('[name="ielts"]').fill('7.5');
+                await p.locator('[name="intake"]').fill('Fall 2027');
+                await p.locator('#profile-form button[type="submit"]').click();
+                if(await p.locator('.match-card').count()!==15)throw Error('eligibility match results missing');
+                const pct=parseInt((await p.locator('#profile-complete').innerText()).replace('%',''),10);
+                if(!(pct>=80))throw Error('profile completeness did not update');
+                await p.screenshot({path:'eligibility.png',fullPage:true,animations:'disabled'});
+
+                // Track + compare from Discover.
+                await p.locator('[data-view="discover"]').click();
+                const firstExpand=p.locator('[data-expand]').first();
+                await firstExpand.click();
+                const firstAward=firstExpand.locator('xpath=ancestor::article[contains(@class,"award")]');
+                await firstAward.locator('[data-track]').click();
+                await firstAward.locator('[data-compare]').click();
+                if((await p.locator('#app-nav-count').innerText()).trim()!=='1')throw Error('tracked nav count failed');
+                if((await p.locator('#compare-nav-count').innerText()).trim()!=='1')throw Error('compare nav count failed');
+                if(await p.locator('#compare-tray:not([hidden])').count()!==1)throw Error('compare tray missing');
+
+                // Applications workspace persistence.
+                await p.locator('[data-view="applications"]').click();
+                if(await p.locator('.application-card').count()!==1)throw Error('application workspace missing');
+                await p.locator('[data-doc]').first().check();
+                await p.locator('[data-app-field="stage"]').selectOption({label:'Preparing documents'});
+                await p.locator('[data-notes]').fill('Need to verify the intake-specific document list.');
+                if(!(await p.locator('[data-doc]').first().isChecked()))throw Error('document checkbox failed');
+
+                // Reminder + timeline.
+                await p.locator('[data-reminder-for]').click();
+                await p.locator('#reminder-form [name="label"]').fill('Request transcript');
+                await p.locator('#reminder-form [name="date"]').fill('2026-10-10');
+                await p.locator('#save-reminder').click();
+                if(await p.locator('.timeline-item').count()!==1)throw Error('reminder timeline failed');
+                await p.locator('#add-reminder').click();
+                await p.locator('#reminder-form [name="label"]').fill('Review application');
+                await p.locator('#reminder-form [name="date"]').fill('2026-10-12');
+                await p.locator('#save-reminder').click();
+                if(await p.locator('.timeline-item.collision').count()<2)throw Error('deadline collision detection failed');
+                await p.screenshot({path:'applications.png',fullPage:true,animations:'disabled'});
+
+                // Compare.
+                await p.locator('[data-view="compare"]').click();
+                if(await p.locator('.compare-table').count()!==1)throw Error('comparison table missing');
+                if(await p.locator('.source-history article').count()<1)throw Error('source history missing');
+                await p.screenshot({path:'compare.png',fullPage:true,animations:'disabled'});
+
+                // Persistence after reload.
+                await p.reload({waitUntil:'networkidle'});
+                await p.locator('[data-view="applications"]').click();
+                if(await p.locator('.application-card').count()!==1)throw Error('tracked workspace did not persist');
+                if(!(await p.locator('[data-doc]').first().isChecked()))throw Error('document state did not persist');
+                if((await p.locator('[data-notes]').inputValue()).indexOf('intake-specific')<0)throw Error('notes did not persist');
+              } else {
+                const navHeight=await p.locator('.subnav button').first().evaluate(el=>el.getBoundingClientRect().height);
+                if(navHeight<44)throw Error('mobile Studio nav target below 44px');
+                await p.locator('[data-view="eligibility"]').click();
+                const font=await p.locator('.form-grid input').first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+                if(font<16)throw Error('mobile form input below 16px');
+                await p.locator('[data-view="discover"]').click();
+                await p.screenshot({path:'mobile.png',fullPage:true,animations:'disabled'});
+              }
+              await p.close();
+            }
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kmate-scholarship-studio-preview-qa
+          path: |
+            eligibility.png
+            applications.png
+            compare.png
+            mobile.png
+          retention-days: 3
+          if-no-files-found: error
