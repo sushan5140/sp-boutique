@@ -345,14 +345,14 @@ function renderStream(){
   $('#award-stream').innerHTML=rows.map((a,index)=>{
     const open=state.expanded===a.id,tr=state.tracked.includes(a.id),cmp=state.compare.includes(a.id);
     return `<article class="award ${open?'open':''} ${tr?'tracked':''} ${cmp?'compared':''}" data-award="${a.id}">
-      <div class="award-row">
+      <div class="award-row" data-open-award="${a.id}" role="button" tabindex="0" aria-expanded="${open}" aria-controls="details-${a.id}">
         <div><div class="uni-index">${String(index+1).padStart(2,'0')}</div><div class="uni-name">${esc(a.uni)}</div><div class="degree">${esc(a.degree)}</div><span class="status">Active</span></div>
         <div class="award-main"><div class="type">${esc(a.type)}</div><h3>${esc(a.name)}</h3><p>Deadline · <b style="color:var(--ink)">${esc(a.deadline)}</b></p></div>
         <div class="funding"><div class="col-label">Published funding</div><strong>${esc(a.benefit)}</strong><p>${esc(a.detail)}</p></div>
         <div class="criteria"><div><div class="col-label">Published criteria</div><strong>${esc(a.topik)}</strong><p>${esc(a.gpa)}</p></div></div>
         <button class="expand" data-expand="${a.id}" aria-expanded="${open}" aria-label="Toggle details">${open?'⌃':'⌄'}</button>
       </div>
-      <div class="details"><div class="details-inner"><div class="detail-box">
+      <div class="details" id="details-${a.id}"><div class="details-inner"><div class="detail-box">
         <div class="detail-grid">
           <div><span>Deadline</span><p>${esc(a.deadline)}</p></div>
           <div><span>Funding</span><p>${esc(a.benefit)}</p></div>
@@ -952,6 +952,18 @@ function openReminder(awardId){
   $('#reminder-dialog').showModal();
 }
 
+
+document.addEventListener('keydown',e=>{
+  const row=e.target.closest?.('[data-open-award]');
+  if(!row||e.target.closest('[data-expand]'))return;
+  if(e.key==='Enter'||e.key===' '){
+    e.preventDefault();
+    state.expanded=state.expanded===row.dataset.openAward?null:row.dataset.openAward;
+    renderStream();
+    requestAnimationFrame(()=>document.querySelector('[data-open-award="'+row.dataset.openAward+'"]')?.focus());
+  }
+});
+
 document.addEventListener('pointermove',e=>{
   const hero=e.target.closest('.hero');if(!hero)return;
   const r=hero.getBoundingClientRect();
@@ -978,6 +990,7 @@ document.addEventListener('click',e=>{
   const h=e.target.closest('[data-hero-uni]');if(h){state.uni=h.dataset.heroUni;previewUni=h.dataset.heroUni;renderFilters();renderStream();$('#stream').scrollIntoView({behavior:'smooth'});return}
   const f=e.target.closest('[data-filter-uni]');if(f){state.uni=f.dataset.filterUni;renderFilters();renderStream();save();return}
   const ex=e.target.closest('[data-expand]');if(ex){state.expanded=state.expanded===ex.dataset.expand?null:ex.dataset.expand;renderStream();return}
+  const row=e.target.closest('[data-open-award]');if(row){state.expanded=state.expanded===row.dataset.openAward?null:row.dataset.openAward;renderStream();return}
   const tr=e.target.closest('[data-track]');if(tr){trackAward(tr.dataset.track);if(state.view==='eligibility')renderMatches();if(state.view==='applications'){renderApplications();renderTimeline()}return}
   const cp=e.target.closest('[data-compare]');if(cp){toggleCompare(cp.dataset.compare);return}
   const rm=e.target.closest('[data-remove-compare]');if(rm){state.compare=state.compare.filter(x=>x!==rm.dataset.removeCompare);renderStream();renderCompare();renderCompareTray();renderHistory();renderNavCounts();save();return}
