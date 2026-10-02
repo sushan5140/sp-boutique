@@ -79,11 +79,14 @@ jobs:
                 if(vaultDiag.count!==1||await p.locator('#vault-files article').count()!==1)throw Error('vault persistence/render failed: '+JSON.stringify(vaultDiag));
                 if((await p.locator('#vault-count').innerText()).trim()!=='1')throw Error('vault file count failed');
                 if(await p.locator('.compat-table .ready').count()<1)throw Error('document compatibility did not react to vault file');
+                if(await p.locator('#evidence-graph>article').count()<7)throw Error('universal evidence graph missing');
+                if(await p.locator('.dependency-step').count()!==5)throw Error('requirement dependency graph missing');
                 await p.screenshot({path:'eligibility.png',fullPage:true,animations:'disabled'});
 
                 // Radar, saved-search watch, Cycle Watch and assistant.
                 await p.locator('[data-view="discover"]').click();
                 if(await p.locator('.radar-hit').count()<1)throw Error('personalized radar missing after profile');
+                if(await p.locator('#next-action-content article').count()!==1)throw Error('next best action missing');
                 await p.locator('#save-search-watch').click();
                 if(await p.locator('#saved-watches>div').count()!==1)throw Error('saved search watch failed');
                 await p.locator('[data-cycle-watch]').first().click();
@@ -136,6 +139,22 @@ jobs:
                 await p.locator('[data-target-date]').fill('2026-11-15');
                 if(!(await p.locator('[data-doc]').first().isChecked()))throw Error('document checkbox failed');
                 if(await p.locator('.pathway-list article').count()<5)throw Error('automatic application pathway missing');
+                if(await p.locator('#workload-map article').count()!==1)throw Error('workload map missing');
+                if(await p.locator('.portfolio-stats>div').count()<5)throw Error('portfolio planner missing');
+                // Build a real ZIP packet from the Vault + workspace.
+                const packetDownload=p.waitForEvent('download');
+                await p.locator('[data-build-packet]').click();
+                const packet=await packetDownload;
+                if(!(await packet.suggestedFilename()).endsWith('.zip'))throw Error('application packet ZIP failed');
+                // Email update parser requires approval before changing state.
+                const beforeInterview=await p.locator('[data-app-field="interview"]').inputValue();
+                await p.locator('#email-update-button').click();
+                await p.locator('#email-update-text').fill('You are invited to interview. Please schedule your interview next week.');
+                await p.locator('#parse-email-update').click();
+                if(await p.locator('#apply-email-update').isDisabled())throw Error('email update parser did not create a suggestion');
+                if((await p.locator('[data-app-field="interview"]').inputValue())!==beforeInterview)throw Error('email parser changed state before approval');
+                await p.locator('#apply-email-update').click();
+                if((await p.locator('[data-app-field="interview"]').inputValue())!=='Scheduled')throw Error('approved email update did not apply');
                 // Peer review request + KMate handoffs.
                 if(await p.locator('.handoff-row a').count()<2)throw Error('KMate writing/interview handoffs missing');
                 await p.locator('[data-review-for]').click();
@@ -171,11 +190,15 @@ jobs:
                 await p.locator('[data-view="compare"]').click();
                 if(await p.locator('.compare-table').count()!==1)throw Error('comparison table missing');
                 if(await p.locator('.source-history article').count()<1)throw Error('source history missing');
+                if(await p.locator('.source-history [class*="health-"]').count()<1)throw Error('source confidence/freshness state missing');
+                if(await p.locator('#change-mode article').count()<1)throw Error('What Changed mode missing');
                 if(await p.locator('.funding-results article').count()<1)throw Error('funding calculator results missing');
                 await p.locator('#calc-living').fill('1200000');
                 if(await p.locator('.funding-results .gap').count()<1)throw Error('funding calculator did not recalculate');
                 await p.locator('#refresh-source-health').click();
                 if((await p.locator('.history-state').first().innerText()).indexOf('snapshot')<0)throw Error('source snapshot audit failed');
+                await p.locator('#capture-change-snapshot').click();
+                if((await p.locator('#change-mode').innerText()).indexOf('No field changes')<0)throw Error('What Changed local diff did not compare two snapshots');
                 await p.screenshot({path:'compare.png',fullPage:true,animations:'disabled'});
 
                 // Persistence after reload.
