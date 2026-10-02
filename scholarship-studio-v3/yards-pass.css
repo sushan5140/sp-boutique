@@ -1,0 +1,412 @@
+/* Scholarship Studio — YARDS-inspired hierarchy / contrast / micro-detail pass.
+   Loaded last so the existing V3/coastal system remains the functional baseline. */
+:root{
+  --green:#137b70;
+  --display:"Bricolage Grotesque",Manrope,ui-sans-serif,system-ui,sans-serif;
+  --signal:#ffc857;
+  --signal-soft:#fff3c7;
+  --signal-ink:#3b2a03;
+  --paper:#f5f3ed;
+  --ink-strong:#102d2c;
+  --rule:#cadbd4;
+  --editorial-shadow:0 18px 45px -34px rgba(11,53,49,.52);
+}
+
+body{
+  background:
+    radial-gradient(circle at 82% 8%,rgba(255,200,87,.10),transparent 24rem),
+    linear-gradient(180deg,#f6f8f5 0%,#f2f5f1 100%);
+}
+h1,h2,h3,.brand-name.strong,.stat-value,.eligibility-progress-number{
+  font-family:var(--display);
+}
+::selection{background:var(--signal);color:#18211f}
+
+/* Typography: make the hierarchy visibly intentional. */
+.mast-copy h1{
+  font-family:var(--display);
+  font-size:clamp(44px,5.15vw,78px);
+  line-height:.96;
+  letter-spacing:-.078em;
+  max-width:780px;
+  text-wrap:balance;
+}
+.page-mast-discover .mast-copy h1{
+  font-size:clamp(52px,5.9vw,88px);
+  max-width:850px;
+}
+.mast-copy h1 em{
+  font-family:"Instrument Serif",Georgia,serif;
+  font-size:1.08em;
+  letter-spacing:-.035em;
+  font-weight:400;
+}
+.mast-copy>p{
+  font-size:clamp(12.5px,1.03vw,14px);
+  line-height:1.72;
+  max-width:620px;
+}
+.discovery-workbench-head h2,
+.compare-builder-head h2,
+.section-heading h2{
+  font-family:var(--display);
+  font-size:clamp(25px,2.3vw,37px);
+  line-height:1.04;
+  letter-spacing:-.06em;
+}
+.section-heading .eyebrow,.section-kicker,.mast-eyebrow,.quickbar-label{
+  letter-spacing:.16em;
+}
+.mast-eyebrow{
+  font-size:9.5px;
+  margin-bottom:19px;
+}
+
+/* Contrast: quiet surfaces + one unmistakable signal color. */
+.edition-badge{
+  background:var(--signal);
+  color:var(--signal-ink);
+  border:1px solid #e7ad32;
+  font-weight:850;
+}
+.page-mast{
+  border-radius:24px;
+  box-shadow:var(--editorial-shadow);
+}
+.page-mast-discover{
+  background:
+    radial-gradient(circle at 81% 16%,rgba(255,200,87,.17),transparent 20rem),
+    linear-gradient(122deg,#102f34 0%,#174c4b 56%,#1a675b 100%);
+  border-color:#174e49;
+  min-height:320px;
+}
+.page-mast-discover:after{
+  content:"";
+  display:block;
+  position:absolute;
+  width:180px;
+  height:180px;
+  right:29%;
+  bottom:-116px;
+  border-radius:50%;
+  border:36px solid rgba(255,200,87,.12);
+  z-index:-1;
+}
+.page-mast-discover .mast-copy h1 em{color:#ffe09a}
+.page-mast-discover .mast-eyebrow-mark{
+  background:var(--signal);
+  color:#243b35;
+  border-color:#f3ba42;
+}
+.page-mast-discover .mast-eyebrow-line{background:rgba(255,224,154,.7)}
+.page-mast-discover .mast-meta span:last-child{
+  color:#ffe6ad;
+}
+.mast-side{
+  position:relative;
+  overflow:hidden;
+}
+.mast-side::after{
+  content:"";
+  width:74px;
+  height:7px;
+  border-radius:99px;
+  background:var(--signal);
+  position:absolute;
+  right:18px;
+  top:18px;
+  opacity:.9;
+}
+.mast-side-discover{
+  background:#fffdf8;
+  border-color:#efe2c4;
+  box-shadow:0 18px 34px -30px rgba(21,64,58,.55);
+}
+.mast-side-discover .mast-search-mark{
+  background:var(--signal-soft);
+  color:#775300;
+  border-color:#f0d98f;
+  border-radius:14px;
+}
+.mast-side-kicker{font-size:9px}
+.mast-side strong{
+  font-family:var(--display);
+  font-size:clamp(19px,1.5vw,24px);
+  line-height:1.04;
+  letter-spacing:-.045em;
+}
+
+/* Sidebar: less dashboard-template, more product identity. */
+.brand-name.strong{
+  font-size:20px;
+  letter-spacing:-.075em;
+}
+.brand-symbol{
+  border-radius:14px;
+  box-shadow:0 10px 0 -6px var(--signal),0 13px 28px -18px rgba(5,55,49,.62);
+}
+.brand-symbol i,.brand-dot{color:var(--signal)}
+.nav-item{
+  position:relative;
+  border-radius:12px;
+}
+.nav-item.active{
+  background:#edf8f3;
+  box-shadow:none;
+  color:#0f675f;
+}
+.nav-item.active::before{
+  content:"";
+  position:absolute;
+  left:6px;
+  width:6px;
+  height:6px;
+  border-radius:2px;
+  background:var(--signal);
+  box-shadow:0 0 0 1px #ddb13f;
+}
+.nav-item.active .nav-icon{transform:translateX(2px)}
+
+/* Workspace: stronger separation and editorial rules. */
+.discovery-workbench,.compare-builder,.panel,.app-card{
+  border:1px solid #dbe7e1;
+  box-shadow:0 14px 34px -31px rgba(22,77,69,.58);
+}
+.discovery-workbench{
+  border-radius:19px;
+  padding:24px 24px 12px;
+}
+.discovery-workbench-head,.compare-builder-head{
+  padding-bottom:17px;
+  border-bottom:1px solid #e1ebe6;
+}
+.workbench-source-tag{
+  background:#143e3a;
+  color:#eef9f4;
+  border-color:#143e3a;
+}
+.workbench-source-tag .pulse{background:var(--signal);box-shadow:none}
+.university-quickbar{
+  padding-top:1px;
+  padding-bottom:16px;
+}
+.university-pill{
+  border-radius:9px;
+}
+.university-pill.active{
+  background:#173f3b;
+  color:white;
+  border-color:#173f3b;
+  box-shadow:0 5px 15px -12px #173f3b;
+}
+.university-pill.active .university-pill-count{
+  background:var(--signal);
+  color:var(--signal-ink);
+}
+
+/* Cards: number the collection, vary scale, expose the useful detail first. */
+.card-grid{counter-reset:award;gap:17px}
+.scholarship-card,.scholarship-card:first-child{
+  counter-increment:award;
+  position:relative;
+  border-radius:18px;
+  padding:25px;
+  overflow:hidden;
+  box-shadow:0 12px 30px -29px rgba(11,65,58,.62);
+}
+.scholarship-card::after,.scholarship-card:first-child::after{
+  content:counter(award, decimal-leading-zero);
+  display:block;
+  position:absolute;
+  top:16px;
+  right:18px;
+  width:auto;
+  height:auto;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:#a5b8b1;
+  font:800 10px/1 var(--display);
+  letter-spacing:.14em;
+  pointer-events:none;
+}
+.card-head{padding-right:34px}
+.scholarship-card h3,.scholarship-card:first-child h3{
+  font-family:var(--display);
+  font-size:clamp(20px,1.85vw,27px);
+  line-height:1.05;
+  letter-spacing:-.055em;
+  margin-top:11px;
+  max-width:650px;
+}
+.description{font-size:11.5px;line-height:1.72}
+.benefit,.scholarship-card:first-child .benefit{
+  background:linear-gradient(135deg,#fff9e8,#fffdf7);
+  border-color:#f2e1a8;
+  border-left:4px solid var(--signal);
+}
+.benefit-kicker{color:#8a6b13}
+.benefit strong,.scholarship-card:first-child .benefit strong{
+  color:#4f3d09;
+  font-family:var(--display);
+  letter-spacing:-.025em;
+}
+.criteria-icon{
+  background:#173f3b;
+  color:#fff;
+}
+.source-link{
+  text-decoration-thickness:1px;
+  text-underline-offset:4px;
+  text-decoration-color:#9fc8bb;
+}
+.source-link:hover{text-decoration-color:currentColor}
+
+/* Stats should not all whisper at the same volume. */
+.stats-strip{
+  gap:10px;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  overflow:visible;
+}
+.stat{
+  border:1px solid #dbe7e1!important;
+  border-top:0!important;
+  border-radius:16px;
+  box-shadow:0 12px 24px -25px rgba(21,67,60,.6);
+  min-height:112px;
+}
+.stat:first-child,.stat.highlight{
+  background:#133b38;
+  color:white;
+  border-color:#133b38!important;
+}
+.stat:first-child::before,.stat.highlight::before{
+  content:"";
+  position:absolute;
+  left:18px;
+  top:15px;
+  width:28px;
+  height:5px;
+  border-radius:99px;
+  background:var(--signal);
+}
+.stat:first-child .stat-value,.stat.highlight .stat-value{color:white}
+.stat:first-child .stat-label,.stat:first-child .stat-meta,
+.stat.highlight .stat-label,.stat.highlight .stat-meta{color:#cfe3db}
+.stat .stat-value{
+  font-family:var(--display);
+  font-size:clamp(28px,2.5vw,38px);
+  letter-spacing:-.07em;
+}
+
+/* Controls: stronger tactile feedback without turning neon. */
+.btn{
+  border-radius:11px;
+  font-weight:800;
+}
+.btn-primary,.btn.btn-primary{
+  background:#143e3a;
+  border-color:#143e3a;
+  color:white;
+}
+.btn-primary:hover:not(:disabled),.btn.btn-primary:hover:not(:disabled){
+  background:#0d2f2c;
+  border-color:#0d2f2c;
+}
+.btn-primary:active:not(:disabled){transform:translateY(1px) scale(.985)}
+.filter-chip.is-selected{
+  background:var(--signal-soft);
+  border-color:#e9c86f;
+  color:#604600;
+}
+.discovery-search-label:focus-within{
+  border-color:#c99b2d;
+  box-shadow:0 0 0 3px rgba(255,200,87,.23);
+}
+
+/* Eligibility / applications / compare each get a distinct accent instead of a recolor-only hero. */
+.page-mast-eligibility .mast-eyebrow-mark{background:#dff3ec}
+.page-mast-eligibility .eligibility-progress-number{
+  font-size:clamp(42px,4vw,64px);
+  letter-spacing:-.075em;
+  color:#123f3a;
+}
+.page-mast-applications{
+  border-color:#eadfd4;
+  background:linear-gradient(120deg,#fffdfa,#fff7f0);
+}
+.page-mast-applications .mast-eyebrow-mark{
+  background:#fff0e6;
+  color:#aa5d3e;
+  border-color:#f2d7c9;
+}
+.page-mast-applications .mast-copy h1 em{color:#c36d4d}
+.page-mast-compare{
+  background:
+    radial-gradient(circle at 8% 5%,rgba(119,99,180,.11),transparent 20rem),
+    #fbfaff;
+}
+.page-mast-compare .mast-side::after{background:#b8a8ff}
+.compare-slot{
+  border-radius:14px;
+}
+.compare-slot.filled{
+  box-shadow:inset 0 0 0 1px rgba(103,85,171,.08);
+}
+.compare-choice{
+  border-radius:14px;
+}
+.compare-choice.selected{
+  box-shadow:inset 4px 0 0 #7563b5;
+}
+
+/* Micro details. */
+.topbar{box-shadow:0 1px 0 rgba(30,72,67,.03)}
+.footer{
+  letter-spacing:.015em;
+  background:rgba(255,255,255,.46);
+}
+.banner{
+  border-radius:14px;
+}
+.empty-state{
+  border-style:dashed;
+  border-width:1.5px;
+}
+.toast{
+  border-radius:13px;
+  box-shadow:0 18px 40px -25px #0d2f2c;
+}
+
+@media(max-width:980px){
+  .mast-copy h1,.page-mast-discover .mast-copy h1{font-size:clamp(42px,7.1vw,66px)}
+  .page-mast-discover{min-height:280px}
+  .mast-side::after{width:54px}
+}
+@media(max-width:740px){
+  .page-mast{border-radius:19px}
+  .mast-copy h1,.page-mast-discover .mast-copy h1{font-size:clamp(42px,10.5vw,62px);line-height:.97}
+  .mast-copy>p{font-size:12.5px}
+  .page-mast-discover{min-height:0}
+  .discovery-workbench{padding:19px 16px 10px}
+  .discovery-workbench-head,.compare-builder-head{align-items:flex-start}
+  .workbench-source-tag{white-space:normal}
+  .scholarship-card,.scholarship-card:first-child{padding:22px}
+  .scholarship-card h3,.scholarship-card:first-child h3{font-size:23px}
+}
+@media(max-width:520px){
+  .page-mast{border-radius:17px}
+  .mast-copy h1,.page-mast-discover .mast-copy h1{font-size:clamp(39px,12.3vw,53px)}
+  .mast-side::after{width:40px;right:14px;top:14px}
+  .mast-meta{gap:7px 13px}
+  .stats-strip{gap:7px}
+  .stat{min-height:103px}
+  .brand-name.strong{font-size:16px}
+  .nav-item.active::before{display:none}
+  .edition-badge{padding-left:7px;padding-right:7px}
+}
+@media(prefers-reduced-motion:reduce){
+  .btn,.nav-item,.scholarship-card{transition:none!important}
+}
