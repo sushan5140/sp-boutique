@@ -45,7 +45,7 @@ jobs:
               if(count!==15 || overflow || errors.length)throw Error('Failed '+label);
               if(!blue.startsWith('oklch('))throw Error('Blue Hour palette token missing');
               if(label==='mobile-v2'){
-                const nav=await p.locator('.nav-item').first().evaluate(el=>getBoundingClientRect().height);
+                const nav=await p.locator('.nav-item').first().evaluate(el=>el.getBoundingClientRect().height);
                 const inputSize=await p.locator('.input').first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
                 const sidebarPosition=await p.locator('.sidebar').evaluate(el=>getComputedStyle(el).position);
                 if(nav<44)throw Error('mobile nav target below 44px: '+nav);
