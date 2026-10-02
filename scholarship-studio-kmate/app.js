@@ -387,12 +387,14 @@ function openAwardPanel(id){
   $('#award-modal-source').href=a.source;
   syncAwardModal(id);
   if(!dialog.open)dialog.showModal();
+  document.body.classList.add('award-panel-open');
   requestAnimationFrame(()=>$('#award-modal-close')?.focus({preventScroll:true}));
 }
 
 function closeAwardPanel(){
   const dialog=$('#award-dialog');
   if(dialog?.open)dialog.close();
+  document.body.classList.remove('award-panel-open');
 }
 
 function trackAward(id){
@@ -882,6 +884,7 @@ $('#profile-btn').addEventListener('click',()=>switchView('eligibility'));
 
 $('#award-modal-close').addEventListener('click',closeAwardPanel);
 $('#award-dialog').addEventListener('click',e=>{if(e.target===$('#award-dialog'))closeAwardPanel()});
+$('#award-dialog').addEventListener('close',()=>document.body.classList.remove('award-panel-open'));
 $('#award-modal-track').addEventListener('click',()=>{const id=$('#award-dialog').dataset.awardId;if(id)trackAward(id)});
 $('#award-modal-compare').addEventListener('click',()=>{const id=$('#award-dialog').dataset.awardId;if(id)toggleCompare(id)});
 $('#award-modal-eligibility').addEventListener('click',()=>{const id=$('#award-dialog').dataset.awardId;closeAwardPanel();state.matchRun=true;switchView('eligibility');requestAnimationFrame(()=>document.querySelector('.match-card[data-award="'+id+'"]')?.scrollIntoView({behavior:'smooth',block:'center'}))});
