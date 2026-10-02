@@ -286,9 +286,9 @@ function switchView(view,scroll=true){
   $$('.studio-view').forEach(p=>p.classList.toggle('active',p.dataset.viewPanel===view));
   $$('.subnav [data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
   renderNavCounts();
-  if(view==='eligibility'){fillProfileForm();renderProfile();renderMatches()}
-  if(view==='applications'){renderApplications();renderTimeline()}
-  if(view==='compare'){renderCompare();renderHistory()}
+  if(view==='eligibility'){fillProfileForm();renderProfile();renderMatches();renderGapAnalyzer();renderVault()}
+  if(view==='applications'){renderApplications();renderTimeline();renderPathway()}
+  if(view==='compare'){renderCompare();renderHistory();renderFundingCalculator()}
   save();
   if(scroll)window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -582,8 +582,224 @@ function renderHistory(){
   }).join('');
 }
 
+
+function daysSince(iso){
+  const d=new Date(iso+'T00:00:00');
+  return Math.max(0,Math.floor((Date.now()-d.getTime())/86400000));
+}
+function sourceHealth(){
+  const days=daysSince(SOURCE_CHECKED_ISO);
+  return days<=14?{label:'Fresh',className:'fresh',days}:days<=30?{label:'Recheck soon',className:'aging',days}:{label:'Stale',className:'stale',days};
+}
+function addNotification(title,body,kind='info'){
+  const duplicate=state.notifications.find(n=>n.title===title&&n.body===body&&!n.read);
+  if(duplicate)return;
+  state.notifications.unshift({id:'n'+Date.now()+Math.random().toString(36).slice(2,6),title,body,kind,read:false,created:new Date().toISOString()});
+  state.notifications=state.notifications.slice(0,30);
+  renderNotifications();save();
+}
+function renderNotifications(){
+  const unread=state.notifications.filter(n=>!n.read).length;
+  $('#notification-count').textContent=unread;
+  const root=$('#notification-list');
+  if(!root)return;
+  root.innerHTML=state.notifications.length?state.notifications.map(n=>`<article class="notice-item ${n.read?'read':''} ${n.kind}"><div><span>${esc(n.kind)}</span><h3>${esc(n.title)}</h3><p>${esc(n.body)}</p></div><small>${new Date(n.created).toLocaleString()}</small></article>`).join(''):'<div class="empty"><b>No alerts yet.</b><p>Saved searches, Cycle Watch, reminders and source-health notices will appear here.</p></div>';
+}
+function relevanceScore(a){
+  let score=0,reasons=[];
+  if(state.profile.degree&&a.degree===state.profile.degree){score+=2;reasons.push('degree')}
+  if(state.profile.major){
+    if(a.major==='STEM'&&majorLooksStem(state.profile.major)){score+=2;reasons.push('STEM route')}
+    else if(a.major==='Business Administration'&&majorLooksBusiness(state.profile.major)){score+=2;reasons.push('major')}
+    else if(!a.major){score+=1}
+  }
+  if(a.minTopik&&state.profile.topik&&Number(state.profile.topik)>=a.minTopik){score+=2;reasons.push('TOPIK')}
+  if(a.minIelts&&state.profile.ielts&&Number(state.profile.ielts)>=a.minIelts){score+=2;reasons.push('IELTS')}
+  if(state.profile.funding==='full'&&(a.funding==='full'||a.funding==='living')){score+=2;reasons.push('funding preference')}
+  if(state.profile.funding==='living'&&a.funding==='living'){score+=3;reasons.push('living support')}
+  return {score,reasons};
+}
+function renderRadar(){
+  const root=$('#radar-content');if(!root)return;
+  const pct=profileCompletion();
+  if(pct<35){
+    root.innerHTML='<div class="radar-empty"><b>Build your profile to personalize the radar.</b><p>Degree, major and at least one language/funding preference make this useful.</p><button data-action-view="eligibility">Complete profile →</button></div>';
+    renderSavedWatches();return;
+  }
+  const rows=AWARDS.map(a=>({a,...relevanceScore(a)})).sort((x,y)=>y.score-x.score).slice(0,4);
+  root.innerHTML=rows.map(({a,score,reasons})=>`<button class="radar-hit" data-radar-award="${a.id}"><span>${esc(a.uni)}</span><strong>${esc(a.name)}</strong><small>${score?esc(reasons.join(' · ')):'Needs source review'}</small><i>↗</i></button>`).join('');
+  renderSavedWatches();
+}
+function watchLabel(w){
+  const parts=[];
+  if(w.uni!=='all')parts.push(w.uni);
+  if(w.funding!=='all')parts.push(w.funding==='full'?'full tuition':'partial tuition');
+  if(w.query)parts.push('“'+w.query+'”');
+  return parts.length?parts.join(' · '):'All scholarships';
+}
+function renderSavedWatches(){
+  const root=$('#saved-watches');if(!root)return;
+  root.innerHTML=state.watches.length?state.watches.map(w=>`<div><span>${esc(watchLabel(w))}</span><button data-delete-watch="${w.id}">×</button></div>`).join(''):'<p>No saved searches yet.</p>';
+}
+function saveCurrentWatch(){
+  const spec={uni:state.uni,funding:state.funding,query:state.query.trim(),deadline:state.deadline};
+  const key=JSON.stringify(spec);
+  if(state.watches.some(w=>JSON.stringify({uni:w.uni,funding:w.funding,query:w.query,deadline:w.deadline})===key))return toast('That search is already being watched');
+  const w={id:'w'+Date.now(),...spec,created:new Date().toISOString()};
+  state.watches.push(w);renderSavedWatches();save();
+  const old={uni:state.uni,funding:state.funding,query:state.query,deadline:state.deadline};
+  const matches=AWARDS.filter(a=>{
+    if(w.uni!=='all'&&a.uni!==w.uni)return false;
+    if(w.funding==='full'&&a.funding!=='full'&&a.funding!=='living')return false;
+    if(w.funding==='partial'&&a.funding!=='partial')return false;
+    if(w.deadline!=='all'&&a.deadlineKind!==w.deadline)return false;
+    if(w.query&&!Object.values(a).some(v=>String(v).toLowerCase().includes(w.query.toLowerCase())))return false;
+    return true;
+  }).length;
+  addNotification('Saved search watch created',`${watchLabel(w)} currently matches ${matches} preview award${matches===1?'':'s'}.`,'watch');
+}
+function renderArchive(){
+  const root=$('#archive-list');if(!root)return;
+  root.innerHTML=ARCHIVE.map(a=>`<article><div><span>${esc(a.cycle)}</span><h3>${esc(a.name)}</h3><p>Historical reference surface only. Re-check the future cycle before relying on prior terms.</p></div><div class="archive-actions"><button class="${state.cycleWatches.includes(a.id)?'active':''}" data-cycle-watch="${a.id}">${state.cycleWatches.includes(a.id)?'✓ Watching next cycle':'◌ Watch next cycle'}</button><a href="${esc(a.source)}" target="_blank" rel="noopener">Source ↗</a></div></article>`).join('');
+}
+function renderCommunity(){
+  const root=$('#community-list');if(!root)return;
+  root.innerHTML=state.communityNotes.length?state.communityNotes.map(n=>{const a=award(n.awardId);return `<article><div><span>Community note · ${esc(a?.uni||'General')}</span><p>${esc(n.note)}</p><small>${new Date(n.created).toLocaleString()}</small></div><button data-delete-community="${n.id}">×</button></article>`}).join(''):'<div class="empty"><b>No applicant notes in this browser yet.</b><p>Add process observations here. Official rules stay separate in the scholarship record.</p></div>';
+}
+function renderGapAnalyzer(){
+  const root=$('#gap-results');if(!root)return;
+  if(!state.matchRun){root.innerHTML='<div class="empty"><b>Run eligibility first.</b><p>The Gap Analyzer turns review/missing criteria into a practical action list.</p></div>';return}
+  const candidates=AWARDS.map(a=>({a,e:evaluateAward(a),r:relevanceScore(a)})).sort((x,y)=>y.r.score-x.r.score);
+  const actions=[];
+  for(const {a,e} of candidates){
+    for(const check of e.checks.filter(c=>c.result!=='ok')){
+      const key=a.id+'|'+check.label;
+      if(actions.some(x=>x.key===key))continue;
+      const action=check.result==='bad'
+        ?`Published ${check.label.toLowerCase()} criterion is not met for this tier. Consider a different tier or update the relevant qualification before relying on this award.`
+        :`Verify or complete: ${check.detail}`;
+      actions.push({key,a,label:check.label,result:check.result,action});
+      if(actions.length>=8)break;
+    }
+    if(actions.length>=8)break;
+  }
+  root.innerHTML=actions.length?actions.map((x,i)=>`<article class="${x.result}"><span>${String(i+1).padStart(2,'0')}</span><div><small>${esc(x.a.uni)} · ${esc(x.a.name)}</small><h3>${esc(x.label)}</h3><p>${esc(x.action)}</p></div><button data-gap-award="${x.a.id}">Open award ↗</button></article>`).join(''):'<div class="empty"><b>No structured gaps detected in the current preview checks.</b><p>Still confirm every intake-specific official source before applying.</p></div>';
+}
+
+const VAULT_DB='kmate-scholarship-vault-preview';
+function openVaultDB(){
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open(VAULT_DB,1);
+    req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains('files'))db.createObjectStore('files',{keyPath:'id'})};
+    req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+  });
+}
+async function vaultAll(){
+  const db=await openVaultDB();
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction('files','readonly');const req=tx.objectStore('files').getAll();
+    req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error);
+  });
+}
+async function vaultPut(record){
+  const db=await openVaultDB();
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction('files','readwrite');tx.objectStore('files').put(record);
+    tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
+  });
+}
+async function vaultRemove(id){
+  const db=await openVaultDB();
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction('files','readwrite');tx.objectStore('files').delete(id);
+    tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
+  });
+}
+async function renderVault(){
+  if(!$('#vault-files'))return;
+  const files=await vaultAll();
+  $('#vault-count').textContent=files.length;
+  $('#vault-files').innerHTML=files.length?files.map(file=>`<article><div><span>${esc(DOC_LABELS[file.type]||file.type)}</span><h3>${esc(file.name)}</h3><p>${Math.ceil(file.size/1024)} KB${file.date?' · '+esc(fmtDate(file.date)):''}${file.notes?' · '+esc(file.notes):''}</p></div><div><button data-vault-download="${file.id}">Download</button><button data-vault-delete="${file.id}">Delete</button></div></article>`).join(''):'<div class="empty"><b>Your browser vault is empty.</b><p>Add a document above. The file is stored in IndexedDB on this device only.</p></div>';
+  renderCompatibility(files);
+}
+function renderCompatibility(files){
+  const root=$('#compatibility-matrix');if(!root)return;
+  const have=new Set(files.map(f=>f.type));
+  const ids=state.tracked.length?state.tracked:AWARDS.slice(0,6).map(a=>a.id);
+  const rows=COMMON_DOC_PLAN.map(type=>[type,DOC_LABELS[type]]);
+  root.innerHTML=`<div class="compat-table"><table><thead><tr><th>Evidence</th>${ids.map(id=>{const a=award(id);return a?`<th><small>${esc(a.uni)}</small><b>${esc(a.name)}</b></th>`:''}).join('')}</tr></thead><tbody>${rows.map(([type,label])=>`<tr><th>${esc(label)}<small>${have.has(type)?'Saved in vault':'Missing from vault'}</small></th>${ids.map(id=>`<td><span class="${have.has(type)?'ready':'missing'}">${have.has(type)?'Reusable file available':'Add / verify'}</span></td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+
+function planTasksFor(id){
+  const a=award(id),app=appState(id);if(!a||!app.targetDate)return[];
+  const end=new Date(app.targetDate+'T00:00:00');
+  if(Number.isNaN(end.getTime()))return[];
+  const defs=[[-28,'Review official source & criteria'],[-21,'Lock reusable document set'],[-14,'Finish scholarship-specific writing/evidence'],[-7,'Final document verification'],[-2,'Portal-ready application review'],[0,'Target submission']];
+  return defs.map(([offset,label])=>{const d=new Date(end);d.setDate(d.getDate()+offset);return{id:id+'-'+offset,awardId:id,label,date:d.toISOString().slice(0,10),auto:true}});
+}
+function allPathwayTasks(){return state.tracked.flatMap(planTasksFor).sort((a,b)=>a.date.localeCompare(b.date))}
+function renderPathway(){
+  const root=$('#pathway-content');if(!root)return;
+  const tasks=allPathwayTasks();
+  if(!state.tracked.length){root.innerHTML='<div class="empty"><b>Track scholarships to build a pathway.</b><p>The combined plan will show reusable work and target-date tasks across applications.</p></div>';return}
+  const reusable=STARTER_DOCS.filter(([key])=>state.tracked.every(id=>appState(id).docs[key])).length;
+  const unresolved=state.tracked.reduce((sum,id)=>sum+Object.values(appState(id).requirements).filter(v=>!v).length,0);
+  root.innerHTML=`<div class="pathway-summary"><div><span>Tracked</span><b>${state.tracked.length}</b></div><div><span>Docs completed across all</span><b>${reusable}/${STARTER_DOCS.length}</b></div><div><span>Unresolved source checks</span><b>${unresolved}</b></div><div><span>Generated tasks</span><b>${tasks.length}</b></div></div>`+(tasks.length?`<div class="pathway-list">${tasks.map(t=>{const a=award(t.awardId);return `<article><time>${esc(fmtDate(t.date))}</time><div><span>${esc(a?.uni||'')}</span><b>${esc(t.label)}</b><small>${esc(a?.name||'')}</small></div></article>`}).join('')}</div>`:'<div class="timeline-empty">Set a target submission date inside each application workspace, then generate the pathway.</div>');
+}
+function downloadBlob(name,type,content){
+  const blob=content instanceof Blob?content:new Blob([content],{type});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500);
+}
+function exportCalendar(){
+  const items=[...state.reminders.map(r=>({date:r.date,label:r.label,awardId:r.awardId})),...allPathwayTasks()];
+  if(!items.length)return toast('Add reminders or target submission dates first');
+  const escIcs=s=>String(s||'').replace(/\\/g,'\\\\').replace(/,/g,'\\,').replace(/;/g,'\\;').replace(/\n/g,'\\n');
+  const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//KMate//Scholarship Studio Preview//EN'];
+  items.forEach((item,i)=>{const a=award(item.awardId);const date=item.date.replaceAll('-','');lines.push('BEGIN:VEVENT','UID:kmate-'+Date.now()+'-'+i+'@preview','DTSTART;VALUE=DATE:'+date,'SUMMARY:'+escIcs(item.label+(a?' · '+a.uni:'')),'DESCRIPTION:'+escIcs(a?.name||'Scholarship Studio reminder'),'END:VEVENT')});
+  lines.push('END:VCALENDAR');downloadBlob('kmate-scholarship-calendar.ics','text/calendar',lines.join('\r\n'));toast('Calendar exported');
+}
+async function exportWorkspace(){
+  const files=await vaultAll();
+  const manifest=files.map(({blob,...meta})=>meta);
+  downloadBlob('kmate-scholarship-workspace.json','application/json',JSON.stringify({version:1,exportedAt:new Date().toISOString(),state,vaultManifest:manifest},null,2));
+}
+function renderFundingCalculator(){
+  const root=$('#funding-results');if(!root)return;
+  const ids=state.compare.length?state.compare:state.tracked.slice(0,3);
+  if(!ids.length){root.innerHTML='<div class="empty"><b>Select scholarships to calculate funding gaps.</b><p>Add awards to Compare or track them first.</p></div>';return}
+  const tuition=Number($('#calc-tuition')?.value||0),living=Number($('#calc-living')?.value||0),months=Number($('#calc-months')?.value||12),one=Number($('#calc-onetime')?.value||0);
+  root.innerHTML=ids.map(id=>{const a=award(id),m=FINANCE_META[id]||{tuitionPct:0,stipendMonthly:0};const base=tuition+living*months+one;const support=tuition*(m.tuitionPct/100)+m.stipendMonthly*months;const gap=Math.max(0,base-support);return `<article><span>${esc(a.uni)}</span><h3>${esc(a.name)}</h3><div><p>Assumed annual cost <b>₩${Math.round(base).toLocaleString()}</b></p><p>Modeled support <b>₩${Math.round(support).toLocaleString()}</b></p><p class="gap">Estimated gap <b>₩${Math.round(gap).toLocaleString()}</b></p></div><small>Uses your assumptions + structured preview tuition/stipend fields only.</small></article>`}).join('');
+}
+
+function answerAssistant(){
+  const id=$('#assistant-award').value,q=$('#assistant-question').value.trim().toLowerCase(),a=award(id),root=$('#assistant-answer');
+  if(!a){root.innerHTML='<p>Select a scholarship.</p>';return}
+  let label='Source-record summary',answer=`${a.benefit}. Deadline behavior: ${a.deadline}. Published language field: ${a.topik}.`;
+  if(/deadline|date|when/.test(q)){label='Deadline';answer=a.deadline}
+  else if(/topik|ielts|toefl|language|english|korean/.test(q)){label='Language';answer=a.topik}
+  else if(/gpa|grade|academic|score/.test(q)){label='Academic';answer=a.gpa}
+  else if(/fund|tuition|stipend|money|allowance|benefit/.test(q)){label='Funding';answer=a.benefit+' · '+a.detail}
+  else if(/renew|continue/.test(q)){label='Renewal';answer=a.renewal}
+  else if(/select|choose|evaluation|chance|probability/.test(q)){label='Selection';answer=a.selection+' Scholarship Studio does not estimate selection probability.'}
+  else if(/document|certificate|evidence/.test(q)){label='Documents';answer='This preview record does not encode a complete official document list. Use the official source and the Vault compatibility matrix only as planning support.'}
+  root.innerHTML=`<span>${esc(label)}</span><p>${esc(answer)}</p><a href="${esc(a.source)}" target="_blank" rel="noopener">Open official source ↗</a>`;
+}
+
+function snapshotSources(){
+  const now=new Date().toISOString();
+  AWARDS.forEach(a=>{
+    const list=state.sourceSnapshots[a.id]||[];
+    const snap={id:'s'+Date.now()+Math.random().toString(36).slice(2,5),capturedAt:now,deadline:a.deadline,benefit:a.benefit,language:a.topik,source:a.source};
+    const last=list[0];
+    const changed=last&&(last.deadline!==snap.deadline||last.benefit!==snap.benefit||last.language!==snap.language);
+    state.sourceSnapshots[a.id]=[snap,...list].slice(0,10);
+    if(changed)addNotification('Scholarship source snapshot changed',a.uni+' · '+a.name+' differs from the previous locally recorded snapshot.','source');
+  });
+  save();renderHistory();toast('Local source snapshots refreshed');
+}
+
 function renderAll(){
-  renderHero();renderFilters();renderStream();renderCompareTray();renderNavCounts();
+  renderHero();renderFilters();renderStream();renderCompareTray();renderNavCounts();renderRadar();renderArchive();renderCommunity();renderNotifications();
   switchView(state.view,false);
 }
 
