@@ -500,12 +500,13 @@ function renderApplications(){
   $('#application-meta').textContent=ids.length?ids.length+' saved scholarship workspace'+(ids.length===1?'':'s'):'Track an award to begin.';
   const root=$('#application-list');
   if(!ids.length){
-    root.innerHTML='<div class="empty"><b>No application workspaces yet.</b><p>Track a scholarship from Discover or Eligibility. Its own checklist, notes, stages and reminders will appear here.</p><button data-action-view="discover">Browse scholarships →</button></div>';
+    root.innerHTML='<div class="empty"><b>No application workspaces yet.</b><p>Track a scholarship from Discover or Eligibility. Its own checklist, notes, stages, handoffs and reminders will appear here.</p><button data-action-view="discover">Browse scholarships →</button></div>';
     return;
   }
   root.innerHTML=ids.map(id=>{
     const a=award(id),app=appState(id),pct=applicationProgress(app);
     const reminderCount=state.reminders.filter(r=>r.awardId===id).length;
+    const reviewRequests=state.reviews.filter(r=>r.awardId===id);
     return `<article class="application-card" data-app="${id}">
       <div class="app-head">
         <div><span>${esc(a.uni)}</span><h2>${esc(a.name)}</h2><p>${esc(a.benefit)} · ${esc(a.deadline)}</p></div>
@@ -513,6 +514,7 @@ function renderApplications(){
       </div>
       <div class="app-stage-row">
         <label><span>Stage</span><select data-app-field="stage" data-app-id="${id}">${['Researching','Preparing documents','Ready to submit','Submitted','Interview','Result'].map(v=>`<option ${app.stage===v?'selected':''}>${v}</option>`).join('')}</select></label>
+        <label><span>Target submission</span><input type="date" data-target-date="${id}" value="${esc(app.targetDate||'')}"></label>
         <div><span>Reminders</span><b>${reminderCount}</b></div>
         <a href="${esc(a.source)}" target="_blank" rel="noopener">Official source ↗</a>
       </div>
@@ -529,27 +531,36 @@ function renderApplications(){
           <label class="select-row"><span>Result</span><select data-app-field="result" data-app-id="${id}">${['Pending','Awarded','Not awarded','Waitlisted'].map(v=>`<option ${app.result===v?'selected':''}>${v}</option>`).join('')}</select></label>
         </section>
       </div>
-      <div class="notes-row"><label><span>Notes</span><textarea data-notes="${id}" placeholder="Questions, source details, document issues, interview notes…">${esc(app.notes)}</textarea></label><div><button data-reminder-for="${id}">＋ Reminder</button><button data-compare="${id}">⇄ Compare</button><button class="danger-lite" data-track="${id}">Remove workspace</button></div></div>
+      <div class="handoff-row">
+        <div><span>KMate handoffs</span><p>Carry this application context into writing guidance, interview preparation, or a peer-review checklist.</p></div>
+        <div><a href="${KMATE_BASE}/gks" target="_blank" rel="noopener">Open GKS Assistant ↗</a><a href="${KMATE_BASE}/interview-db" target="_blank" rel="noopener">Interview DB ↗</a><button data-review-for="${id}">＋ Peer review request</button></div>
+      </div>
+      ${reviewRequests.length?`<div class="review-requests">${reviewRequests.map(r=>`<article><span>${esc(r.artifact)}</span><p>${esc(r.focus)}</p><small>Local review request · ${new Date(r.created).toLocaleString()}</small><button data-delete-review="${r.id}">×</button></article>`).join('')}</div>`:''}
+      <div class="notes-row"><label><span>Notes</span><textarea data-notes="${id}" placeholder="Questions, source details, document issues, interview notes…">${esc(app.notes)}</textarea></label><div><button data-reminder-for="${id}">＋ Reminder</button><button data-compare="${id}">⇄ Compare</button><button data-assistant-for="${id}">Ask scholarship</button><button class="danger-lite" data-track="${id}">Remove workspace</button></div></div>
     </article>`;
   }).join('');
 }
 
 function timelineItems(){
-  return state.reminders.map(r=>({...r,dateObj:new Date(r.date+'T00:00:00')})).sort((a,b)=>a.dateObj-b.dateObj);
+  const manual=state.reminders.map(r=>({...r,dateObj:new Date(r.date+'T00:00:00'),auto:false}));
+  const auto=allPathwayTasks().map(r=>({...r,dateObj:new Date(r.date+'T00:00:00'),auto:true}));
+  return [...manual,...auto].sort((a,b)=>a.dateObj-b.dateObj);
 }
 function renderTimeline(){
   const root=$('#timeline');
   const items=timelineItems();
   if(!items.length){
-    root.innerHTML='<div class="timeline-empty">No custom reminders yet. Add one for documents, university checks, submission prep, or interviews.</div>';
+    root.innerHTML='<div class="timeline-empty">No timeline items yet. Add a reminder or set a target submission date to generate application tasks automatically.</div>';
     return;
   }
   root.innerHTML=items.map((r,i)=>{
     const prev=items[i-1],next=items[i+1];
     const close=[prev,next].filter(Boolean).some(x=>Math.abs((x.dateObj-r.dateObj)/86400000)<=3);
     const a=award(r.awardId);
-    return `<div class="timeline-item ${close?'collision':''}"><div class="timeline-date"><b>${esc(fmtDate(r.date))}</b><small>${r.date<todayISO()?'past':'upcoming'}</small></div><div><span>${esc(a?.uni||'General')}</span><strong>${esc(r.label)}</strong><p>${a?esc(a.name):'General Scholarship Studio reminder'}</p></div>${close?'<i>Deadline collision</i>':''}<button data-delete-reminder="${r.id}">×</button></div>`;
+    return `<div class="timeline-item ${close?'collision':''} ${r.auto?'auto':''}"><div class="timeline-date"><b>${esc(fmtDate(r.date))}</b><small>${r.date<todayISO()?'past':'upcoming'} · ${r.auto?'auto plan':'reminder'}</small></div><div><span>${esc(a?.uni||'General')}</span><strong>${esc(r.label)}</strong><p>${a?esc(a.name):'General Scholarship Studio reminder'}</p></div>${close?'<i>Deadline collision</i>':''}${r.auto?'<span class="auto-badge">Auto</span>':`<button data-delete-reminder="${r.id}">×</button>`}</div>`;
   }).join('');
+  const upcoming=items.filter(x=>x.date>=todayISO()&&((new Date(x.date+'T00:00:00')-new Date())/86400000)<=7);
+  if(upcoming.length)addNotification('Upcoming scholarship tasks',`${upcoming.length} timeline item${upcoming.length===1?' is':'s are'} due within 7 days.`,'deadline');
 }
 
 function renderCompare(){
@@ -576,12 +587,23 @@ function renderCompare(){
 
 function renderHistory(){
   const ids=state.compare.length?state.compare:(state.tracked.length?state.tracked:AWARDS.slice(0,5).map(a=>a.id));
+  const health=sourceHealth();
   $('#source-history').innerHTML=ids.map(id=>{
     const a=award(id);if(!a)return'';
-    return `<article><div><span>${esc(a.uni)}</span><h3>${esc(a.name)}</h3></div><div><small>Source checked</small><b>${SOURCE_CHECKED}</b></div><div><small>Deadline record</small><b>${esc(a.deadline)}</b></div><div class="history-state"><i></i><span>No earlier change recorded in this preview</span></div><a href="${esc(a.source)}" target="_blank" rel="noopener">Source ↗</a></article>`;
+    const snaps=state.sourceSnapshots[id]||[];
+    const last=snaps[0];
+    const previous=snaps[1];
+    const changed=last&&previous&&(last.deadline!==previous.deadline||last.benefit!==previous.benefit||last.language!==previous.language);
+    return `<article>
+      <div><span>${esc(a.uni)}</span><h3>${esc(a.name)}</h3></div>
+      <div><small>Source checked</small><b>${SOURCE_CHECKED}</b></div>
+      <div><small>Source health</small><b class="health-${health.className}">${health.label} · ${health.days}d</b></div>
+      <div class="history-state"><i class="${changed?'changed':''}"></i><span>${changed?'Local snapshot difference detected':snaps.length?snaps.length+' local verification snapshot'+(snaps.length===1?'':'s'):'No local verification snapshot yet'}</span></div>
+      <div><small>Deadline record</small><b>${esc(a.deadline)}</b></div>
+      <a href="${esc(a.source)}" target="_blank" rel="noopener">Source ↗</a>
+    </article>`;
   }).join('');
 }
-
 
 function daysSince(iso){
   const d=new Date(iso+'T00:00:00');
