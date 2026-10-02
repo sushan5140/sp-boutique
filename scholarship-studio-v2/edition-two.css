@@ -1509,3 +1509,175 @@ svg{display:block}
   html{scroll-behavior:auto}
   *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
+
+
+/* ---- Live university desk -------------------------------------------- */
+.desk-universities{
+  margin-top:12px;
+  padding:12px;
+  border:1px solid #2d302a;
+  border-radius:13px;
+  background:#151712;
+}
+.desk-universities-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:9px;
+  color:#8c9087;
+  font-size:7px;
+  font-weight:750;
+}
+.desk-universities-head small{color:#5e625a;font-size:7px}
+.desk-universities-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+.desk-universities-grid button{
+  min-height:58px;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-template-areas:"num name" "num count";
+  gap:1px 8px;
+  align-items:center;
+  padding:9px;
+  border:1px solid #2a2d27;
+  border-radius:10px;
+  background:#1a1c17;
+  color:#fff;
+  text-align:left;
+  transition:background-color 150ms ease,border-color 150ms ease,transform 140ms var(--ease-out);
+}
+.desk-universities-grid button span{
+  grid-area:num;
+  width:24px;height:24px;
+  display:grid;place-items:center;
+  border-radius:8px;
+  background:#252820;
+  color:var(--signal);
+  font-size:7px;
+  font-weight:800;
+}
+.desk-universities-grid button b{
+  grid-area:name;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:8px;
+  font-weight:700;
+}
+.desk-universities-grid button small{
+  grid-area:count;
+  color:#72766d;
+  font-size:7px;
+}
+@media(hover:hover) and (pointer:fine){
+  .desk-universities-grid button:hover{
+    border-color:#4a4d45;
+    background:#22251e;
+    transform:translateY(-1px);
+  }
+  .desk-universities-grid button:hover span{background:var(--signal);color:var(--ink)}
+}
+.desk-universities-grid button:active{transform:scale(.985)}
+
+/* ---- Persistent comparison tray -------------------------------------- */
+.selection-tray{
+  position:fixed;
+  left:calc(224px + (100vw - 224px)/2);
+  bottom:18px;
+  z-index:70;
+  width:min(620px,calc(100vw - 280px));
+  min-height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:9px 10px 9px 14px;
+  border:1px solid #2a2c27;
+  border-radius:14px;
+  background:rgba(17,18,15,.97);
+  color:#fff;
+  box-shadow:0 20px 50px rgba(17,18,15,.22);
+  transform:translateX(-50%);
+  backdrop-filter:blur(14px);
+}
+.selection-tray-copy{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.selection-tray-copy>span{
+  flex:none;
+  color:#8d9188;
+  font-size:7px;
+  font-weight:800;
+}
+.selection-tray-copy>div{
+  display:flex;
+  gap:5px;
+  min-width:0;
+  overflow:hidden;
+}
+.selection-tray-copy button{
+  min-height:32px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  max-width:150px;
+  padding:0 9px;
+  border:1px solid #30332c;
+  border-radius:8px;
+  background:#1c1e19;
+  color:#d9dcd4;
+  font-size:7px;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.selection-tray-copy button b{color:var(--signal);font-size:10px}
+.selection-tray-action{
+  flex:none;
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:0 13px;
+  border:0;
+  border-radius:10px;
+  background:var(--signal);
+  color:var(--ink);
+  font-size:8px;
+  font-weight:800;
+  transition:transform 140ms var(--ease-out),background-color 150ms ease;
+}
+.selection-tray-action:active{transform:scale(.97)}
+@media(hover:hover) and (pointer:fine){
+  .selection-tray-action:hover{background:#ffe76c}
+  .selection-tray-copy button:hover{background:#252820}
+}
+@media(max-width:920px){
+  .selection-tray{
+    left:12px;
+    right:12px;
+    bottom:82px;
+    width:auto;
+    transform:none;
+  }
+}
+@media(max-width:640px){
+  .desk-universities-grid{grid-template-columns:1fr 1fr}
+  .selection-tray{
+    min-height:54px;
+    gap:8px;
+    padding:8px;
+  }
+  .selection-tray-copy>span{display:none}
+  .selection-tray-copy button{max-width:95px}
+  .selection-tray-action{min-height:38px;padding-inline:11px}
+}
