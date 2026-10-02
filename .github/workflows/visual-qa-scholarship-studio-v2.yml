@@ -38,6 +38,8 @@ jobs:
               if(await p.locator('.nuri-hero').count()!==1)throw Error(label+' Nuri hero missing');
               if(await p.locator('.nuri-desk-card').count()!==1)throw Error(label+' scholarship desk missing');
               if(await p.locator('.nuri-role-row').count()!==1)throw Error(label+' role row missing');
+              if(await p.locator('.nuri-role-card').count()!==4)throw Error(label+' interactive role cards missing');
+              if(await p.locator('.nuri-metrics>button').count()!==4)throw Error(label+' interactive hero metrics missing');
               if(await p.locator('.discovery-search-label').count()!==1)throw Error(label+' finder search missing');
               if((await p.locator('.edition-badge').innerText()).trim()!=='NURI EDITION')throw Error(label+' Nuri Edition badge missing');
               const count=await p.locator('.scholarship-card').count();
@@ -46,6 +48,14 @@ jobs:
               console.log(JSON.stringify({label,count,overflow,errors,indigo}));
               if(count!==15 || overflow || errors.length)throw Error('Failed '+label);
               if(indigo!=='#5b55e7')throw Error('Refined Nuri indigo token missing: '+indigo);
+              const firstPeek=p.locator('[data-expand]').first();
+              if(await firstPeek.count()!==1)throw Error('quick look trigger missing');
+              await firstPeek.click();
+              if((await firstPeek.getAttribute('aria-expanded'))!=='true')throw Error('quick look did not expand');
+              const expandedCard=firstPeek.locator('xpath=ancestor::article[contains(@class,"scholarship-card")]');
+              if(!(await expandedCard.evaluate(el=>el.classList.contains('is-expanded'))))throw Error('expanded card state missing');
+              if(await expandedCard.locator('.card-detail-grid').count()!==1)throw Error('quick look details missing');
+              await firstPeek.click();
               if(label==='mobile-v2'){
                 const nav=await p.locator('.nav-item').first().evaluate(el=>el.getBoundingClientRect().height);
                 const inputSize=await p.locator('.input').first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
