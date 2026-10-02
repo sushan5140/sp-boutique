@@ -35,7 +35,9 @@ jobs:
               const errors=[];
               p.on('pageerror',err=>errors.push(err.message));
               await p.goto(url,{waitUntil:'networkidle'});
-              if(await p.locator('.nuri-hero').count()!==1)throw Error(label+' Nuri hero missing');\n              if(await p.locator('.nuri-desk-card').count()!==1)throw Error(label+' scholarship desk missing');\n              if(await p.locator('.nuri-role-row').count()!==1)throw Error(label+' role row missing');
+              if(await p.locator('.nuri-hero').count()!==1)throw Error(label+' Nuri hero missing');
+              if(await p.locator('.nuri-desk-card').count()!==1)throw Error(label+' scholarship desk missing');
+              if(await p.locator('.nuri-role-row').count()!==1)throw Error(label+' role row missing');
               if(await p.locator('.discovery-search-label').count()!==1)throw Error(label+' finder search missing');
               if((await p.locator('.edition-badge').innerText()).trim()!=='NURI EDITION')throw Error(label+' Nuri Edition badge missing');
               const count=await p.locator('.scholarship-card').count();
