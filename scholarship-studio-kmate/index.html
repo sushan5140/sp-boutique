@@ -92,6 +92,11 @@
           </aside>
         </section>
 
+        <section class="next-action-board">
+          <div class="section-title compact"><div><span>Next Best Action</span><h2>One useful move, right now.</h2><p>A deterministic action engine looks at your profile, tracked applications, missing evidence and target dates. No admission probability is used.</p></div><button id="refresh-next-action">Refresh action</button></div>
+          <div id="next-action-content" class="next-action-content"></div>
+        </section>
+
         <section id="stream" class="stream-wrap">
           <div class="stream-tools">
             <div class="stream-head">
@@ -169,6 +174,16 @@
           <div id="gap-results" class="gap-results"></div>
         </section>
 
+        <section class="evidence-graph-panel">
+          <div class="section-title"><div><span>Universal Evidence Graph</span><h2>One document portfolio across every application.</h2><p>See which saved evidence can flow into which tracked scholarship and where a document is still missing or needs official verification.</p></div><div class="evidence-summary" id="evidence-summary"></div></div>
+          <div id="evidence-graph" class="evidence-graph"></div>
+        </section>
+
+        <section class="dependency-panel">
+          <div class="section-title compact"><div><span>Requirement Dependency Graph</span><h2>What unlocks what?</h2><p>Shows how profile fields and evidence affect downstream readiness, so a change in TOPIK, IELTS or documents immediately exposes the dependent work.</p></div></div>
+          <div id="dependency-graph" class="dependency-graph"></div>
+        </section>
+
         <section class="vault-panel">
           <div class="section-title"><div><span>Document Vault</span><h2>Store once. Reuse across applications.</h2><p>Files stay inside this browser preview using IndexedDB. Production KMate will move this to account-backed storage.</p></div><div class="vault-count"><b id="vault-count">0</b><span>saved files</span></div></div>
           <div class="vault-grid">
@@ -193,8 +208,19 @@
           <div class="heading-stat"><small>ACTIVE WORKSPACES</small><strong id="application-count">0</strong><p id="application-meta">Track an award to begin.</p></div>
         </header>
 
+        <section class="operations-grid">
+          <article class="workload-board">
+            <div class="section-title compact"><div><span>Workload Map</span><h2>How much work is left?</h2><p>Measures preparation burden only — not admission chances.</p></div></div>
+            <div id="workload-map" class="workload-map"></div>
+          </article>
+          <article class="portfolio-board">
+            <div class="section-title compact"><div><span>Portfolio Planner</span><h2>Reuse more. Duplicate less.</h2><p>Combines tracked applications into one preparation portfolio and highlights reusable work.</p></div></div>
+            <div id="portfolio-plan" class="portfolio-plan"></div>
+          </article>
+        </section>
+
         <section class="pathway-board">
-          <div class="section-title"><div><span>Application Pathway</span><h2>One plan across every tracked scholarship.</h2><p>Generate a combined preparation route from target submission dates, reusable documents and unresolved checks.</p></div><div class="pathway-actions"><button id="generate-pathway">Generate pathway</button><button id="export-calendar">Export calendar</button><button id="export-workspace">Export workspace</button><label class="import-button">Import workspace<input id="import-workspace" type="file" accept="application/json"></label></div></div>
+          <div class="section-title"><div><span>Application Pathway</span><h2>One plan across every tracked scholarship.</h2><p>Generate a combined preparation route from target submission dates, reusable documents and unresolved checks.</p></div><div class="pathway-actions"><button id="generate-pathway">Generate pathway</button><button id="email-update-button">Import email update</button><button id="export-calendar">Export calendar</button><button id="export-workspace">Export workspace</button><label class="import-button">Import workspace<input id="import-workspace" type="file" accept="application/json"></label></div></div>
           <div id="pathway-content" class="pathway-content"></div>
         </section>
 
@@ -211,6 +237,11 @@
           <div><span>Comparison field</span><h1>Compare the terms, not the hype.</h1><p>Place up to three awards side by side across funding, published criteria, deadline behavior, renewal notes and official sources.</p></div>
           <div class="heading-stat"><small>SELECTED</small><strong id="compare-heading-count">0/3</strong><button id="clear-compare">Clear comparison</button></div>
         </header>
+        <section class="change-panel">
+          <div class="section-title"><div><span>What Changed?</span><h2>Compare the current record with your previous local snapshot.</h2><p>This never invents historical values. A diff appears only when Scholarship Studio has two locally recorded source snapshots for the same award.</p></div><button id="capture-change-snapshot">Capture current snapshot</button></div>
+          <div id="change-mode" class="change-mode"></div>
+        </section>
+
         <section class="funding-calculator">
           <div class="section-title"><div><span>Funding calculator</span><h2>Estimate the gap after published scholarship support.</h2><p>Enter your own tuition/living assumptions. This is a planning calculator, not an official cost-of-attendance estimate.</p></div></div>
           <div class="calculator-inputs">
@@ -232,6 +263,16 @@
   </div>
 
   <div id="compare-tray" class="compare-tray" hidden></div>
+
+  <dialog id="email-update-dialog">
+    <form method="dialog" class="dialog-card email-update-dialog" id="email-update-form">
+      <div class="dialog-head"><div><span>Application update parser</span><h2>Turn an email into a suggested update</h2></div><button value="cancel" formnovalidate aria-label="Close">×</button></div>
+      <label><span>Application</span><select id="email-update-award"></select></label>
+      <label><span>Email text</span><textarea id="email-update-text" placeholder="Paste the relevant university email here. The preview only parses this local text; it does not connect to your inbox."></textarea></label>
+      <div id="email-update-suggestion" class="email-update-suggestion"><p>Paste an email to generate a suggested application update. Nothing changes until you approve it.</p></div>
+      <div class="dialog-actions"><button value="cancel" formnovalidate>Close</button><button type="button" id="parse-email-update">Parse update</button><button type="button" id="apply-email-update" disabled>Apply suggested update</button></div>
+    </form>
+  </dialog>
 
   <dialog id="reminder-dialog">
     <form method="dialog" id="reminder-form" class="dialog-card">
