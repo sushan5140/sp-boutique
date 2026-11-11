@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://images.unsplash.com">
-<link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ClothingStore","name":"SP Boutique","slogan":"Stitched in Tandur, worn everywhere","telephone":"+919848054521","image":"assets/shopfront.jpg","address":{"@type":"PostalAddress","streetAddress":"Adarsh Nagar","addressLocality":"Tandur","addressRegion":"Telangana","postalCode":"501141","addressCountry":"IN"},"sameAs":["https://www.instagram.com/sp_boutique_tandur"]}
@@ -123,8 +123,18 @@
   <section class="studio" id="studio">
     <div class="wrap studio__grid">
       <div class="studio__form">
-        <h2>Outfit Studio</h2>
-        <p class="studio__lede">Put together the outfit you have in mind. Your choices go to us on WhatsApp and we reply with the price.</p>
+        <p class="studio__eyebrow">The little design atelier <span>✳</span> SP Boutique</p>
+        <h2>Outfit <em>Studio</em></h2>
+        <p class="studio__lede">A little imagination, a few thoughtful details, and a look that's yours. Explore a starting style or build your own — your sketch changes as you choose.</p>
+        <div class="studio__presets">
+          <div class="studio__presets-head"><span>01 — Pick a starting look</span><small>Optional · every detail can change</small></div>
+          <div class="look-presets" id="lookPresets" role="group" aria-label="Starting outfit styles">
+            <button type="button" class="look-preset" data-preset="signature" aria-pressed="true"><span class="look-preset__mark">✳</span><span><b>SP Signature</b><small>Elegant every day</small></span></button>
+            <button type="button" class="look-preset" data-preset="festive" aria-pressed="false"><span class="look-preset__mark">✦</span><span><b>Festive drape</b><small>For the occasion</small></span></button>
+            <button type="button" class="look-preset" data-preset="bridal" aria-pressed="false"><span class="look-preset__mark">❋</span><span><b>Bridal craft</b><small>A little extra detail</small></span></button>
+          </div>
+        </div>
+        <div class="studio__configure"><span>02 — Make it your own</span><button type="button" id="studioReset">Reset choices ↺</button></div>
         <form id="studioForm" novalidate>
           <fieldset class="opt"><legend>Garment</legend><div class="chips" data-group="garment"></div></fieldset>
           <fieldset class="opt"><legend>Neck</legend><div class="chips" data-group="neck"></div></fieldset>
@@ -143,14 +153,18 @@
         <div class="slip">
           <div class="slip__head">
             <span class="mark"><img src="assets/logo.png" alt="" width="40" height="40"></span>
-            <div><b>SP Boutique</b><span>Outfit slip, draft</span></div>
+            <div><b>SP Boutique</b><span>Your design, taking shape</span></div>
           </div>
+          <div class="slip__look"><span class="slip__label">Live atelier preview</span><strong id="lookName">Signature blouse</strong><span class="slip__live-dot" aria-hidden="true"></span></div>
           <div class="slip__sketch" id="sketch" role="img" aria-label="Sketch of your outfit"></div>
+          <p class="slip__caption" id="lookDescription" aria-live="polite">Your choices appear on this sketch as you make them.</p>
           <dl class="slip__rows" id="slipRows"></dl>
           <p class="slip__price"><span>Price</span><b>Shared on WhatsApp</b></p>
           <a class="btn btn--navy btn--block" id="studioSend" href="https://wa.me/919848054521" target="_blank" rel="noopener">
             <svg class="wa" width="18" height="18"><use href="#i-wa"/></svg>Send this outfit on WhatsApp
           </a>
+          <button class="slip__copy" id="studioCopy" type="button">Copy outfit details <span aria-hidden="true">↗</span></button>
+          <p class="slip__fineprint">Concept sketch only — fabric, fit and final price are confirmed with the boutique.</p>
         </div>
       </aside>
     </div>
@@ -166,7 +180,7 @@
              src="https://images.unsplash.com/photo-1691690803358-64d463845bf0?auto=format&fit=crop&w=400&h=400&q=70">
       </div>
       <div class="stitch__body">
-        <h2>Stitching, alterations and classes</h2>
+        <p class="section-kicker">Craft, care &amp; the right fit</p><h2>Made with care.<br><em>Made for you.</em></h2><p class="stitch__intro">A beautiful outfit is only the beginning. We can help you stitch something new, find a better fit, or learn the craft yourself.</p>
         <ul class="svc">
           <li>
             <h3>Custom stitching</h3>
@@ -190,21 +204,32 @@
 
     <div class="wrap">
       <div class="steps">
-        <h3 class="steps__title">How an order works</h3>
-        <ol>
-          <li><b>Send us the design</b><span>Pick one here, build one in the Outfit Studio, or WhatsApp a photo you like.</span></li>
-          <li><b>We confirm price and fabric</b><span>You get the price for your fabric and work before anything is cut.</span></li>
-          <li><b>Measurements at the shop</b><span>Come in to be measured, or bring a garment that fits you well.</span></li>
-          <li><b>Fitting and collection</b><span>Try it on, we adjust what is needed, and it is ready to take home.</span></li>
+        <p class="section-kicker">From idea to the final fit</p><h3 class="steps__title">A simple journey, <em>beautifully made.</em></h3><p class="steps__intro">Select a step to see where you are in the process.</p>
+        <ol id="journeySteps" aria-label="Order journey">
+          <li><button class="journey-step" type="button" data-journey="0" aria-pressed="true"><b>Send us the design</b><span>Choose a design here, build one in the studio, or send a photo.</span></button></li>
+          <li><button class="journey-step" type="button" data-journey="1" aria-pressed="false"><b>We confirm price and fabric</b><span>We'll discuss the cloth and work before anything begins.</span></button></li>
+          <li><button class="journey-step" type="button" data-journey="2" aria-pressed="false"><b>Measurements at the shop</b><span>Drop by to be measured, or bring a garment that fits.</span></button></li>
+          <li><button class="journey-step" type="button" data-journey="3" aria-pressed="false"><b>Fitting and collection</b><span>Try it on and discuss any finishing adjustments.</span></button></li>
         </ol>
+        <div class="journey-progress" aria-label="Step of the order process"><span id="journeyBar"></span></div>
+        <div class="journey-foot"><span id="journeyStatus" aria-live="polite">Step 01 of 04 — Send us the design</span><button type="button" id="journeyNext">Explore the next step <span aria-hidden="true">↗</span></button></div>
       </div>
 
       <div class="rates">
         <div class="rates__head">
+          <p class="section-kicker">A good place to start</p>
           <h3>Common stitching work</h3>
           <p>Rates depend on the fabric and the work involved. Tap a row to ask.</p>
         </div>
         <ul id="rates"></ul>
+      </div>
+      <div class="answers">
+        <div class="answers__intro"><p class="section-kicker">Good to know</p><h3>A few things you might <em>wonder.</em></h3><p>Answers before you start a conversation.</p></div>
+        <div class="answers__list">
+          <details><summary>Can I bring my own fabric?<span aria-hidden="true">+</span></summary><p>Yes. For stitching, you can bring fabric you already have or enquire about choosing fabric with the boutique.</p></details>
+          <details><summary>How do I know the final price?<span aria-hidden="true">+</span></summary><p>Share the style you like, the fabric and the work required. We'll discuss the price with you before the order is confirmed.</p></details>
+          <details><summary>Can I ask about stitching classes?<span aria-hidden="true">+</span></summary><p>Of course. Ask on WhatsApp for the upcoming batch dates, available seats and fees. Class availability is confirmed directly by the boutique.</p></details>
+        </div>
       </div>
     </div>
   </section>
@@ -213,7 +238,7 @@
   <section class="visit" id="visit">
     <div class="wrap visit__grid">
       <div class="visit__info">
-        <h2>Visit the boutique</h2>
+        <p class="section-kicker">A little closer to us</p><h2>Find us in <em>Tandur.</em></h2>
         <figure class="visit__photo">
           <img loading="lazy" src="assets/shopfront.jpg" width="1200" height="769" alt="SP Boutique shopfront in Adarsh Nagar, Tandur">
         </figure>
@@ -229,7 +254,7 @@
       </div>
 
       <form class="enquiry" id="enquiry" novalidate>
-        <h3>Send an enquiry</h3>
+        <p class="section-kicker">Start a conversation</p><h3>Tell us what you <em>have in mind.</em></h3>
         <p>This opens WhatsApp with your message filled in. Nothing is sent until you press send there.</p>
         <label for="eName">Your name</label>
         <input id="eName" name="name" autocomplete="name" required>
@@ -243,7 +268,8 @@
           <option>Something else</option>
         </select>
         <label for="eMsg">Message <span>(optional)</span></label>
-        <textarea id="eMsg" name="msg" rows="4" placeholder="Garment, occasion, date needed…"></textarea>
+        <textarea id="eMsg" name="msg" rows="4" placeholder="Tell us about your outfit, occasion or preferred date…"></textarea>
+        <div class="enquiry__preview"><div class="enquiry__preview-head"><span class="enquiry__preview-dot" aria-hidden="true"></span><b>WhatsApp message preview</b><span>Updates as you type</span></div><p id="ePreview" aria-live="polite">Hello SP Boutique, this is [your name].</p></div>
         <button class="btn btn--navy btn--block" type="submit"><svg class="wa" width="18" height="18"><use href="#i-wa"/></svg>Continue on WhatsApp</button>
       </form>
     </div>
@@ -251,6 +277,10 @@
 </main>
 
 <footer class="foot">
+  <div class="wrap foot__opening">
+    <div><span class="foot__eyebrow">From the first idea to the last stitch</span><h2>Something special <em>in mind?</em></h2></div>
+    <a class="btn btn--foot" data-wa="Hello SP Boutique, I have an outfit idea and would love to discuss it." href="https://wa.me/919848054521" target="_blank" rel="noopener">Let's talk about it <span aria-hidden="true">↗</span></a>
+  </div>
   <div class="wrap foot__grid">
     <div class="foot__brand">
       <img src="assets/logo.png" alt="SP Boutique" width="96" height="96">
