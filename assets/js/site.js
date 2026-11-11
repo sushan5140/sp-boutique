@@ -154,6 +154,24 @@
   /* ---------- product sheet ---------- */
   const sheet = $("#sheet");
   let current = null;
+  let zoomed = false;
+  const setPhotoZoom = (value) => {
+    zoomed = value;
+    $("#sheetMedia").classList.toggle("is-zoomed", zoomed);
+    $("#sheetZoom").setAttribute("aria-pressed", String(zoomed));
+    $("#sheetZoom").innerHTML = zoomed
+      ? 'Reset photo <span aria-hidden="true">−</span>'
+      : 'Zoom photo <span aria-hidden="true">+</span>';
+    if (!zoomed) $("#sheetImg").style.transformOrigin = "center";
+  };
+  $("#sheetZoom").addEventListener("click", () => setPhotoZoom(!zoomed));
+  $("#sheetMedia").addEventListener("pointermove", (e) => {
+    if (!zoomed || e.pointerType === "touch") return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = Math.min(100, Math.max(0, (e.clientX - rect.left) / rect.width * 100));
+    const y = Math.min(100, Math.max(0, (e.clientY - rect.top) / rect.height * 100));
+    $("#sheetImg").style.transformOrigin = x + "% " + y + "%";
+  });
 
   const sheetExtra = () => {
     const f = new FormData($("#sheetForm"));
@@ -169,6 +187,7 @@
 
   const fillSheet = (p) => {
     current = p;
+    setPhotoZoom(false);
     const img = $("#sheetImg");
     img.removeAttribute("srcset");
     if (p.image) { img.src = p.image; }
@@ -185,7 +204,15 @@
       ? "Final price depends on the fabric and work you choose."
       : "It depends on fabric and work. We reply with the exact price.";
     $("#sheetDesc").textContent = p.desc;
-    $("#sheetCode").textContent = `Code ${p.code}`;
+    $("#sheetCode").textContent = p.code;
+    const similar = D.products.filter((x) => x.cat === p.cat && x.id !== p.id).slice(0, 3);
+    $("#sheetRelated").innerHTML = similar.map((x) =>
+      '<button type="button" class="sheet__related-item" data-related="' + esc(x.id) +
+      '" aria-label="View ' + esc(x.name) + '">' +
+      '<img src="' + esc(thumb(x)) + '" alt="" loading="lazy" width="60" height="75">' +
+      '<span>' + esc(x.name) + '<small>' + esc(x.code) + '</small></span></button>'
+    ).join("");
+    $("#sheetRelated").closest(".sheet__related").hidden = !similar.length;
     syncSheetWa();
     syncSheetSave();
   };
@@ -205,6 +232,10 @@
 
   $("#sheetPrev").addEventListener("click", () => stepSheet(-1));
   $("#sheetNext").addEventListener("click", () => stepSheet(1));
+  $("#sheetRelated").addEventListener("click", (e) => {
+    const related = e.target.closest("[data-related]");
+    if (related) openSheet(related.dataset.related);
+  });
   $("#sheetForm").addEventListener("input", syncSheetWa);
   $("#sheetForm").addEventListener("submit", (e) => e.preventDefault());
   $("#sheetSave").addEventListener("click", () => toggleList(current.id));

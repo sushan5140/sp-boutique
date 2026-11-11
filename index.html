@@ -397,15 +397,16 @@
 <dialog class="sheet" id="sheet" aria-labelledby="sheetName">
   <div class="sheet__box">
     <button class="iconbtn sheet__close" type="button" data-close aria-label="Close"><svg width="20" height="20"><use href="#i-x"/></svg></button>
-    <div class="sheet__media">
+    <div class="sheet__media" id="sheetMedia">
       <img id="sheetImg" alt="" width="800" height="1000">
+      <button class="sheet__zoom" type="button" id="sheetZoom" aria-pressed="false" aria-label="Zoom product style reference photo">Zoom photo <span aria-hidden="true">+</span></button>
       <div class="sheet__nav">
         <button class="iconbtn" type="button" id="sheetPrev" aria-label="Previous design"><svg width="20" height="20" style="transform:scaleX(-1)"><use href="#i-chev"/></svg></button>
         <button class="iconbtn" type="button" id="sheetNext" aria-label="Next design"><svg width="20" height="20"><use href="#i-chev"/></svg></button>
       </div>
     </div>
     <div class="sheet__body">
-      <p class="sheet__cat" id="sheetCat"></p>
+      <div class="sheet__eyebrow"><p class="sheet__cat" id="sheetCat"></p><span id="sheetCode" class="sheet__code"></span></div>
       <h2 id="sheetName"></h2>
       <p class="sheet__price"><b id="sheetPrice"></b><span id="sheetPriceNote"></span></p>
       <p class="sheet__desc" id="sheetDesc"></p>
@@ -427,7 +428,11 @@
           <button class="btn btn--ghost" type="button" id="sheetShare"><svg width="18" height="18"><use href="#i-link"/></svg>Copy link</button>
         </div>
       </div>
-      <p class="sheet__ref"><span id="sheetCode"></span> · Style reference photo. Your piece is made to order.</p>
+      <p class="sheet__ref">Style-reference photograph. Your piece is discussed and made or sourced to order.</p>
+      <section class="sheet__related" aria-labelledby="sheetRelatedTitle">
+        <h3 id="sheetRelatedTitle">Explore similar styles</h3>
+        <div class="sheet__related-list" id="sheetRelated"></div>
+      </section>
     </div>
   </div>
 </dialog>
