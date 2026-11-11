@@ -451,6 +451,36 @@
   $("#needBy").min = localToday;
   $("#studioNote").addEventListener("input", renderStudio);
 
+  /* Three real catalogue references, presented as a considered edit.
+     Keep this synchronized with catalogue.js, including enquiry code and price. */
+  const EDIT_IDS = [
+    "navy-pattu-gold-butta",
+    "work-blouse-embroidered-sleeves",
+    "sage-green-anarkali-gown"
+  ];
+  const renderEdit = (index) => {
+    const id = EDIT_IDS[index], p = byId(id);
+    if (!p) return;
+    $(".edit__choice").forEach((el, i) => el.setAttribute("aria-pressed", String(i === index)));
+    const image = $("#editImage");
+    image.alt = "Style reference: " + p.name;
+    image.src = p.image || src(p, 900, 1100, 73);
+    image.removeAttribute("srcset");
+    $("#editIndex").textContent = String(index + 1).padStart(2, "0") + " — 03";
+    $("#editCategory").textContent = catName(p.cat) + " / " + p.code;
+    $("#editName").textContent = p.name;
+    $("#editDescription").textContent = p.desc;
+    $("#editViewDesign").dataset.open = p.id;
+    $("#editWhatsApp").href = wa(itemMessage(p));
+  };
+  $(".edit__choices").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-edit]");
+    if (!b) return;
+    const index = EDIT_IDS.indexOf(b.dataset.edit);
+    if (index !== -1) renderEdit(index);
+  });
+  renderEdit(0);
+
   /* ---------- stitching: classes and rates ---------- */
   $("#classes").innerHTML = D.classes.map((c) => `<li><b>${esc(c.name)}<small>${esc(c.level)}</small></b><span>${esc(c.note)}</span></li>`).join("");
   $("#rates").innerHTML = D.services.map((s) => `
