@@ -1,64 +1,74 @@
 # SP Boutique — Website
 
-A single-page marketing site for **SP Boutique**, a women's clothing boutique, tailoring
-shop, and stitching school in Tandur, Vikarabad District, Telangana 501141.
+The website for **SP Boutique**, a women's clothing boutique, tailoring shop and stitching
+school in Adarsh Nagar, Tandur, Vikarabad District, Telangana 501141.
 
-The site covers the three sides of the business:
+Customers browse the collections, open a design, and enquire or order on WhatsApp. There is
+no cart, checkout or payment gateway.
 
-- **Boutique** — ready and custom Indian womenswear
-- **Tailoring** — stitching, fitting, and alterations
-- **Classes** — hands-on stitching and tailoring courses
+## What is on the site
 
-Live site: <https://sushan5140.github.io/sp-boutique/>
+- **Collections** — designs by category with filters, a detail view for each design, and
+  a shareable link per design (`#design=<id>`).
+- **Enquiry list** — customers save several designs and send them in one WhatsApp message.
+- **Outfit Studio** — choose garment, neck, sleeve, work, colour and fabric; a live sketch
+  and summary slip are sent to the shop on WhatsApp.
+- **Stitching, alterations and classes** — services, how an order works, common work rates.
+- **Visit** — shopfront, address, phone, Instagram, directions, and an enquiry form that
+  opens WhatsApp with the message filled in (nothing is stored or sent by the site itself).
 
 ## Stack
 
-Deliberately none. This is one hand-written `index.html` containing its own `<style>` and
-`<script>` blocks — no build step, no framework, no dependencies. Fonts come from Google
-Fonts over CDN; everything else is local.
+Plain HTML, CSS and JavaScript. No build step, no framework, no dependencies.
 
 ```
-index.html          the entire site (markup, CSS, JS)
-assets/logo.png     brand logo, also used as the favicon
-assets/shopfront.jpg  shopfront photo, used as the hero background via --hero-bg
+index.html               page markup
+assets/css/site.css      design system and layout
+assets/js/catalogue.js   SHOP DATA: designs, prices, contact details, services, classes
+assets/js/site.js        behaviour (filters, design sheet, enquiry list, studio, WhatsApp links)
+assets/logo.png          brand logo (also the favicon)
+assets/shopfront.jpg     shopfront photo
+vercel.json              Vercel headers and clean URLs
+.vercelignore            keeps the unrelated prototypes in this repo out of the Vercel deploy
 ```
+
+## Updating designs and prices
+
+Everything the shop needs to change is in `assets/js/catalogue.js`.
+
+- **Price**: set `price: 1850` to show "₹1,850". Leave `price: null` to show "Ask for price".
+  Add `priceFrom: true` to show "From ₹1,850".
+- **Own photo**: add `image: "assets/products/my-photo.jpg"` to a design (4:5, about
+  1200 × 1500 px). It replaces the stock photo.
+- **New design**: copy an entry, give it a unique `id` and `code`, and set its `cat`.
+- **Stitching rates**: set `price` on the entries in `services`.
+- **Phone, WhatsApp, Instagram, address**: the `contact` block. The address and phone also
+  appear as plain text in `index.html` (hero, visit section, footer).
 
 ## Running locally
 
-Because the page loads images by relative path, open it through a local web server rather
-than double-clicking the file:
-
 ```bash
 python -m http.server 8000
-# then visit http://localhost:8000
 ```
 
-Any equivalent works — `npx serve`, VS Code's Live Server extension, etc. Opening
-`index.html` directly via `file://` will mostly work too, but a server matches production.
+Then open <http://localhost:8000>.
 
 ## Deploying
 
-The site is deployed with **GitHub Pages** from the `main` branch, root directory.
-Pushing to `main` republishes it; a deploy usually goes live within a minute.
+The Vercel project is connected to this GitHub repository; pushing to `main` deploys the
+site. GitHub Pages also still serves the repository root.
 
-To point it at a custom domain later, add a `CNAME` file at the repo root containing the
-domain, then set the matching DNS records at your registrar.
+## Still needed from the business
 
-## Known placeholders
+- **Real product photos.** Collection photos are Unsplash stock photos used as style
+  references and are loaded from Unsplash's image servers. The site says so.
+- **Prices** for designs and stitching work (all show "Ask for price").
+- **Shop timings.** The site asks customers to call or WhatsApp before visiting.
+- **Class batch dates, durations and fees.**
+- **Address confirmation.** The site uses the signboard address (Adarsh Nagar). The
+  "Get directions" link is the earlier `maps.app.goo.gl` shortlink, which was created
+  against an Indira Nagar address and should be checked.
+- **Delivery area**, if the shop sends orders outside Tandur.
 
-These are intentional and still need real values before launch:
-
-- **Prices** show `₹X` throughout.
-- **Class batch dates and seat counts** show `X`.
-- **Photography** — around 39 images are Unsplash stock URLs pending replacement with
-  real shop photos.
-- **Address** — the page currently reads *Sai Tharun Hospital Lane, near Fly Over, Indira
-  Nagar, Tandur, Telangana 501141*, which does not match the *Adarsh Nagar, Tandur -
-  501141, Vikarabad Dist.* address on the shop signboard. Confirmation pending. The
-  locality name is coupled across three places: the contact-list text, the Google Maps
-  iframe `?q=` string, and the "Get Directions" link — and that last one is an opaque
-  `maps.app.goo.gl` shortlink encoding a map pin, so it cannot be text-edited and must be
-  regenerated from Google Maps if the pin changes.
-
-The phone number (`+91 98480 54521`), WhatsApp links, and Instagram handle
-(`sp_boutique_tandur`) are real and current.
+The phone number (`+91 98480 54521`), WhatsApp link and Instagram handle
+(`sp_boutique_tandur`) are the ones recorded as current in the previous version of this file.

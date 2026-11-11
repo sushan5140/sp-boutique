@@ -1,0 +1,11 @@
+# Only the boutique site is deployed to Vercel. The prototypes below share this
+# repository (and GitHub Pages) but are not part of SP Boutique.
+.agents
+.claude
+.github
+scripts
+skills-lock.json
+hallim*
+haneul*
+scholarship-studio*
+README.md

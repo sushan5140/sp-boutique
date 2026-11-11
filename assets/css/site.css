@@ -506,12 +506,10 @@ dialog[open]::backdrop { opacity: 1; }
   .sheet { margin: auto 0 0; width: 100vw; transform: translateY(100%); opacity: 1; transition: transform .25s ease, overlay .25s allow-discrete, display .25s allow-discrete; }
   .sheet[open] { transition: transform .5s var(--ease-drawer), overlay .5s allow-discrete, display .5s allow-discrete; }
   @starting-style { .sheet[open] { opacity: 1; transform: translateY(100%); } }
-  .sheet__box { grid-template-columns: 1fr; grid-template-rows: auto 1fr; border-radius: 26px 26px 0 0; max-height: 92dvh; overflow-y: auto; overscroll-behavior: contain; }
-  .sheet__media { aspect-ratio: 1; }
+  .sheet__box { grid-template-columns: 1fr; grid-template-rows: auto auto; border-radius: 26px 26px 0 0; max-height: 92dvh; overflow-y: auto; overscroll-behavior: contain; }
+  .sheet__media { grid-row: 1; grid-column: 1; height: min(100vw, 48dvh); }
   .sheet__media > img { object-position: 50% 22%; }
   .sheet__body { grid-row: 2; grid-column: 1; overflow: visible; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
-  .sheet__close { position: sticky; top: 12px; margin: 12px 12px -56px auto; grid-row: 1; grid-column: 1; }
-  .sheet__media { grid-row: 1; grid-column: 1; }
 }
 @media (max-width: 420px) {
   .brand__name { letter-spacing: .14em; }
