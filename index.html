@@ -255,7 +255,7 @@
         </div>
         <figure class="craft__photo">
           <img loading="lazy" width="640" height="800" alt="Tailoring work at a sewing machine" src="https://images.unsplash.com/photo-1616674202799-054e7c831378?auto=format&fit=crop&w=640&h=800&q=70">
-          <figcaption>TAILORING / ALTERATIONS / LEARNING</figcaption>
+          <figcaption>Illustrative tailoring photograph · SP Boutique enquiries by WhatsApp</figcaption>
         </figure>
       </div>
 
@@ -265,6 +265,7 @@
           <div>
             <h3>Custom stitching</h3>
             <p>Blouses, salwar sets, lehengas and gowns cut to your measurements. Bring your own fabric or ask about choosing fabric at the boutique.</p>
+            <details class="craft__more"><summary>What to bring <span aria-hidden="true">+</span></summary><p>A reference picture, a garment that already fits you well, or your fabric if you have it. Measurements and any extra requirements can be discussed at the shop.</p></details>
             <a class="craft__link" data-wa="Hello SP Boutique, I would like to get an outfit stitched. Please let me know the details." href="https://wa.me/919848054521" target="_blank" rel="noopener">Enquire about stitching <span aria-hidden="true">↗</span></a>
           </div>
         </article>
@@ -273,6 +274,7 @@
           <div>
             <h3>Alterations &amp; restyling</h3>
             <p>Blouse fit corrections, saree fall and pico, resizing, and adapting an older garment for a better fit.</p>
+            <details class="craft__more"><summary>What to bring <span aria-hidden="true">+</span></summary><p>Bring the actual garment and explain what needs adjusting. The boutique can discuss what is feasible after seeing the fabric and construction.</p></details>
             <a class="craft__link" data-wa="Hello SP Boutique, I have a garment that needs alteration. Please let me know the details." href="https://wa.me/919848054521" target="_blank" rel="noopener">Enquire about alterations <span aria-hidden="true">↗</span></a>
           </div>
         </article>
@@ -281,6 +283,7 @@
           <div>
             <h3>Stitching classes</h3>
             <p>Learn the practical skills behind a well-finished outfit. Ask which batches are currently available.</p>
+            <details class="craft__more"><summary>What to ask <span aria-hidden="true">+</span></summary><p>Ask for the next batch dates, fees, class levels and whether you need to bring any materials. Places and schedules must be confirmed with the boutique.</p></details>
             <ul class="levels" id="classes"></ul>
             <a class="craft__link" data-wa="Hello SP Boutique, I am interested in your stitching classes. Please share the next batch dates, duration and fees." href="https://wa.me/919848054521" target="_blank" rel="noopener">Ask about class dates &amp; fees <span aria-hidden="true">↗</span></a>
           </div>
@@ -331,24 +334,24 @@
           </ul>
         </div>
         <form class="enquiry" id="enquiry" novalidate>
-          <p class="enquiry__kicker">SEND AN ENQUIRY</p>
-          <h3>Tell us what<br><em>you need.</em></h3>
-          <p>We'll open WhatsApp with your details filled in. You decide when to send the message.</p>
-          <label for="eName">Your name</label>
-          <input id="eName" name="name" autocomplete="name" placeholder="How should we address you?" required>
-          <p class="err" id="eNameErr" hidden>Please enter your name so we know who's writing.</p>
-          <label for="eTopic">I'm enquiring about</label>
-          <select id="eTopic" name="topic">
-            <option>A design from the collections</option>
-            <option>Custom stitching</option>
-            <option>An alteration</option>
-            <option>Stitching classes</option>
-            <option>Something else</option>
-          </select>
-          <label for="eMsg">A few details <span>(optional)</span></label>
-          <textarea id="eMsg" name="msg" rows="4" placeholder="Style, measurements, fabric or date needed"></textarea>
-          <button class="btn btn--navy btn--block" type="submit"><svg class="wa" width="18" height="18"><use href="#i-wa"/></svg>Continue on WhatsApp</button>
-          <p class="enquiry__fineprint">Nothing is submitted on this website.</p>
+          <p class="enquiry__kicker">THE ENQUIRY DESK</p>
+          <h3>Start with<br><em>a conversation.</em></h3>
+          <p>One short message is enough. Choose what you're looking for and we'll open WhatsApp with the details.</p>
+          <fieldset class="enquiry__intents">
+            <legend>I'm interested in</legend>
+            <div class="enquiry__intent-grid">
+              <label class="enquiry__intent"><input type="radio" name="topic" value="A design from the collections" checked><span>Clothing design</span></label>
+              <label class="enquiry__intent"><input type="radio" name="topic" value="Custom stitching"><span>Custom stitching</span></label>
+              <label class="enquiry__intent"><input type="radio" name="topic" value="An alteration"><span>Alterations</span></label>
+              <label class="enquiry__intent"><input type="radio" name="topic" value="Stitching classes"><span>Stitching classes</span></label>
+            </div>
+          </fieldset>
+          <label for="eMsg">Tell us a little more <span>(optional)</span></label>
+          <textarea id="eMsg" name="msg" rows="3" maxlength="500" placeholder="An occasion, a fabric or a design you have in mind…"></textarea>
+          <label for="eName">Your name <span>(optional)</span></label>
+          <input id="eName" name="name" autocomplete="name" placeholder="How should we address you?">
+          <button class="btn btn--navy btn--block" type="submit"><svg class="wa" width="18" height="18"><use href="#i-wa"/></svg>Continue to WhatsApp <span aria-hidden="true">↗</span></button>
+          <p class="enquiry__fineprint">Nothing is submitted here. Review the message in WhatsApp before sending.</p>
         </form>
       </div>
     </div>

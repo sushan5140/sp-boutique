@@ -489,24 +489,22 @@
       <em>${s.price ? `From ₹${Number(s.price).toLocaleString("en-IN")}` : "Ask for price"}</em>
     </a></li>`).join("");
 
-  /* ---------- enquiry form -> WhatsApp ---------- */
+  /* Enquiry desk: one real WhatsApp message; no pretend booking or submission. */
   $("#enquiry").addEventListener("submit", (e) => {
     e.preventDefault();
-    const name = $("#eName"), err = $("#eNameErr");
-    const ok = name.value.trim().length > 0;
-    name.setAttribute("aria-invalid", String(!ok));
-    err.hidden = ok;
-    if (!ok) return name.focus();
-    const msg = $("#eMsg").value.trim();
+    const data = new FormData(e.currentTarget);
+    const topic = String(data.get("topic") || "A design from the collections");
+    const name = String(data.get("name") || "").trim();
+    const note = String(data.get("msg") || "").trim();
     const text = [
-      `Hello SP Boutique, this is ${name.value.trim()}.`,
-      `I am interested in: ${$("#eTopic").value}.`,
-      ...(msg ? ["", msg] : [])
+      "Hello SP Boutique,",
+      ...(name ? ["My name is " + name + "."] : []),
+      "I would like to enquire about: " + topic + ".",
+      ...(note ? ["", note] : []),
+      "",
+      "Please let me know the details."
     ].join("\n");
     window.open(wa(text), "_blank", "noopener");
-  });
-  $("#eName").addEventListener("input", (e) => {
-    if (e.target.value.trim()) { e.target.removeAttribute("aria-invalid"); $("#eNameErr").hidden = true; }
   });
 
   /* ---------- scroll spy for nav pill and dock ---------- */
