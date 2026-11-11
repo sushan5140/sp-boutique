@@ -270,6 +270,21 @@
   const pick = { garment: "blouse", neck: "boat", sleeve: "elbow", work: "computer", colour: "Coral", fabric: "own" };
   const labelOf = (g, v) => (STUDIO[g].find((o) => o[0] === v) || [])[1];
 
+  /* Curated starting looks: these are design suggestions, not stocked garments. */
+  const PRESETS = {
+    signature: { name: "SP Signature", garment: "blouse", neck: "boat", sleeve: "elbow", work: "computer", colour: "Coral", fabric: "own" },
+    festive: { name: "Festive drape", garment: "half", neck: "sweet", sleeve: "puff", work: "zari", colour: "Maroon", fabric: "shop" },
+    bridal: { name: "Bridal craft", garment: "lehenga", neck: "square", sleeve: "elbow", work: "maggam", colour: "Rani pink", fabric: "shop" }
+  };
+  let studioShareText = "";
+  const activePreset = () => Object.keys(PRESETS).find((k) =>
+    ["garment", "neck", "sleeve", "work", "colour", "fabric"].every((g) => PRESETS[k][g] === pick[g]));
+  const syncPresetButtons = () => {
+    const selected = activePreset();
+    $("#lookPresets [data-preset]").forEach((b) =>
+      b.setAttribute("aria-pressed", String(b.dataset.preset === selected)));
+  };
+
   $$("#studioForm [data-group]").forEach((box) => {
     const g = box.dataset.group;
     box.innerHTML = STUDIO[g].map(([v, l]) => g === "colour"
@@ -379,18 +394,48 @@
     $("#sketch").setAttribute("aria-label", `Sketch: ${pick.colour} ${labelOf("garment", pick.garment)}, ${labelOf("neck", pick.neck)} neck, ${labelOf("sleeve", pick.sleeve)} sleeve, ${labelOf("work", pick.work)}`);
     $("#slipRows").innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("");
     $("#colourName").textContent = pick.colour;
-    $("#studioSend").href = wa([
+    const selected = activePreset();
+    const lookTitle = selected ? PRESETS[selected].name : `Your ${labelOf("garment", pick.garment).toLowerCase()}`;
+    $("#lookName").textContent = lookTitle;
+    $("#lookDescription").textContent =
+      `${pick.colour} · ${labelOf("neck", pick.neck)} neck · ${labelOf("work", pick.work)}. Every change is reflected above.`;
+    syncPresetButtons();
+    studioShareText = [
       "Hello SP Boutique, I put this outfit together in the Outfit Studio on your website:",
       "",
       ...rows.map(([k, v]) => `${k}: ${k === "Fabric" ? labelOf("fabric", pick.fabric) : v}`),
       "",
       "Please share the price and how long it will take."
-    ].join("\n"));
+    ].join("\n");
+    $("#studioSend").href = wa(studioShareText);
   };
 
   $("#studioForm").addEventListener("change", (e) => {
     if (e.target.name in pick) pick[e.target.name] = e.target.value;
     renderStudio();
+  });
+  const choosePreset = (id) => {
+    const preset = PRESETS[id];
+    if (!preset) return;
+    Object.keys(pick).forEach((g) => {
+      pick[g] = preset[g];
+      const input = $('input[name="' + g + '"]', $("#studioForm")).find((el) => el.value === pick[g]);
+      if (input) input.checked = true;
+    });
+    $("#needBy").value = "";
+    renderStudio();
+  };
+  $("#lookPresets").addEventListener("click", (e) => {
+    const button = e.target.closest("[data-preset]");
+    if (button) choosePreset(button.dataset.preset);
+  });
+  $("#studioReset").addEventListener("click", () => { choosePreset("signature"); toast("Original look restored"); });
+  $("#studioCopy").addEventListener("click", async () => {
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard not available");
+      await navigator.clipboard.writeText(studioShareText);
+      toast("Outfit details copied");
+    } catch { toast("Copy unavailable — use WhatsApp to share this look"); }
   });
   $("#studioForm").addEventListener("submit", (e) => e.preventDefault());
   $("#needBy").min = new Date().toISOString().slice(0, 10);
@@ -403,7 +448,17 @@
       <em>${s.price ? `From ₹${Number(s.price).toLocaleString("en-IN")}` : "Ask for price"}</em>
     </a></li>`).join("");
 
-  /* ---------- enquiry form -> WhatsApp ---------- */
+  /* ---------- enquiry form -> WhatsApp, with a truthful live message preview ---------- */
+  const enquiryText = () => {
+    const name = $("#eName").value.trim() || "[your name]";
+    const note = $("#eMsg").value.trim();
+    return [
+      `Hello SP Boutique, this is ${name}.`,
+      `I am interested in: ${$("#eTopic").value}.`,
+      ...(note ? ["", note] : [])
+    ].join("\n");
+  };
+  const renderEnquiryPreview = () => { $("#ePreview").textContent = enquiryText(); };
   $("#enquiry").addEventListener("submit", (e) => {
     e.preventDefault();
     const name = $("#eName"), err = $("#eNameErr");
@@ -411,17 +466,38 @@
     name.setAttribute("aria-invalid", String(!ok));
     err.hidden = ok;
     if (!ok) return name.focus();
-    const msg = $("#eMsg").value.trim();
-    const text = [
-      `Hello SP Boutique, this is ${name.value.trim()}.`,
-      `I am interested in: ${$("#eTopic").value}.`,
-      ...(msg ? ["", msg] : [])
-    ].join("\n");
-    window.open(wa(text), "_blank", "noopener");
+    window.open(wa(enquiryText()), "_blank", "noopener");
   });
+  $("#enquiry").addEventListener("input", renderEnquiryPreview);
+  $("#eTopic").addEventListener("change", renderEnquiryPreview);
   $("#eName").addEventListener("input", (e) => {
     if (e.target.value.trim()) { e.target.removeAttribute("aria-invalid"); $("#eNameErr").hidden = true; }
   });
+
+  /* ---------- interactive order journey ---------- */
+  const journeyLabels = [
+    "Send us the design", "We confirm price and fabric",
+    "Measurements at the shop", "Fitting and collection"
+  ];
+  let journeyIndex = 0;
+  const setJourney = (index) => {
+    journeyIndex = (index + journeyLabels.length) % journeyLabels.length;
+    $("#journeySteps .journey-step").forEach((b) =>
+      b.setAttribute("aria-pressed", String(Number(b.dataset.journey) === journeyIndex)));
+    $("#journeyStatus").textContent =
+      `Step ${String(journeyIndex + 1).padStart(2, "0")} of 04 — ${journeyLabels[journeyIndex]}`;
+    $("#journeyBar").style.width = `${(journeyIndex + 1) * 25}%`;
+    $("#journeyNext").innerHTML = journeyIndex === 3
+      ? 'Back to the first step <span aria-hidden="true">↺</span>'
+      : 'Explore the next step <span aria-hidden="true">↗</span>';
+  };
+  $("#journeySteps").addEventListener("click", (e) => {
+    const button = e.target.closest("[data-journey]");
+    if (button) setJourney(Number(button.dataset.journey));
+  });
+  $("#journeyNext").addEventListener("click", () => setJourney(journeyIndex + 1));
+  setJourney(0);
+  renderEnquiryPreview();
 
   /* ---------- scroll spy for nav pill and dock ---------- */
   const spyLinks = $$("[data-spy]");
