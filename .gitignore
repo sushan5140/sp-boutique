@@ -16,3 +16,6 @@ desktop.ini
 node_modules/
 .cache/
 dist/
+
+.vercel
+.env*
