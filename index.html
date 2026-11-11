@@ -137,18 +137,41 @@
             <span>01 / 02</span>
           </div>
           <h3>Start with your outfit.</h3>
+          <div class="studio__stepper" role="tablist" aria-label="Design your outfit">
+            <button type="button" class="studio__step-tab" id="studioTab1" role="tab" aria-selected="true" aria-controls="studioStep1" tabindex="0" data-studio-step="0"><span class="studio__step-num">01</span><span>Silhouette</span></button>
+            <button type="button" class="studio__step-tab" id="studioTab2" role="tab" aria-selected="false" aria-controls="studioStep2" tabindex="-1" data-studio-step="1"><span class="studio__step-num">02</span><span>Details</span></button>
+            <button type="button" class="studio__step-tab" id="studioTab3" role="tab" aria-selected="false" aria-controls="studioStep3" tabindex="-1" data-studio-step="2"><span class="studio__step-num">03</span><span>Finish</span></button>
+          </div>
           <form id="studioForm" novalidate>
-            <fieldset class="opt opt--garment"><legend>01. Garment</legend><div class="chips" data-group="garment"></div></fieldset>
-            <fieldset class="opt opt--neck"><legend>02. Neckline</legend><div class="chips" data-group="neck"></div></fieldset>
-            <fieldset class="opt opt--sleeve"><legend>03. Sleeves</legend><div class="chips" data-group="sleeve"></div></fieldset>
-            <fieldset class="opt opt--work"><legend>04. Embroidery and finishing</legend><div class="chips" data-group="work"></div></fieldset>
-            <fieldset class="opt opt--colour"><legend>05. Colour <span id="colourName" class="opt__selected"></span></legend><div class="swatches" data-group="colour"></div></fieldset>
-            <fieldset class="opt opt--fabric"><legend>06. Fabric</legend><div class="chips" data-group="fabric"></div></fieldset>
-            <div class="opt opt--date">
-              <label for="needBy">Needed by <span>(optional)</span></label>
-              <input type="date" id="needBy" name="needBy">
+            <div class="studio__step" id="studioStep1" role="tabpanel" aria-labelledby="studioTab1">
+              <p class="studio__step-intro">The silhouette comes first. Choose what you'd like us to make.</p>
+              <fieldset class="opt opt--garment"><legend>Garment</legend><div class="chips" data-group="garment"></div></fieldset>
+              <fieldset class="opt opt--neck"><legend>Neckline</legend><div class="chips" data-group="neck"></div></fieldset>
+            </div>
+            <div class="studio__step" id="studioStep2" role="tabpanel" aria-labelledby="studioTab2" hidden>
+              <p class="studio__step-intro">Now the details that make it yours. See them on the sketch alongside.</p>
+              <fieldset class="opt opt--sleeve"><legend>Sleeves</legend><div class="chips" data-group="sleeve"></div></fieldset>
+              <fieldset class="opt opt--work"><legend>Embroidery &amp; finishing</legend><div class="chips" data-group="work"></div></fieldset>
+              <fieldset class="opt opt--colour"><legend>Colour <span id="colourName" class="opt__selected"></span></legend><div class="swatches" data-group="colour"></div></fieldset>
+            </div>
+            <div class="studio__step" id="studioStep3" role="tabpanel" aria-labelledby="studioTab3" hidden>
+              <p class="studio__step-intro">Last few details before you enquire. Nothing is booked or charged here.</p>
+              <fieldset class="opt opt--fabric"><legend>Fabric</legend><div class="chips" data-group="fabric"></div></fieldset>
+              <div class="opt opt--date">
+                <label for="needBy">When do you need it? <span>(optional)</span></label>
+                <input type="date" id="needBy" name="needBy">
+              </div>
+              <div class="opt studio__note">
+                <label for="studioNote">An occasion or detail to remember <span>(optional)</span></label>
+                <textarea id="studioNote" name="studioNote" rows="3" maxlength="240" placeholder="For a wedding, matching a saree, a particular pattern…"></textarea>
+              </div>
             </div>
           </form>
+          <div class="studio__step-actions">
+            <button type="button" class="studio__back" id="studioBack" hidden>← Previous</button>
+            <span id="studioStepStatus" role="status" aria-live="polite">Silhouette · 1 of 3</span>
+            <button type="button" class="studio__next" id="studioNext">Choose details <span aria-hidden="true">→</span></button>
+          </div>
           <div class="studio__form-note">
             <span>Already have a picture in mind?</span>
             <a data-wa="Hello SP Boutique, I have an outfit reference photo and would like to discuss custom stitching." href="https://wa.me/919848054521" target="_blank" rel="noopener">Share it on WhatsApp <span aria-hidden="true">↗</span></a>

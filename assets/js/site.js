@@ -367,6 +367,7 @@
   let studioText = "";
   const renderStudio = () => {
     const need = fmtDate($("#needBy").value);
+    const note = $("#studioNote").value.trim();
     const rows = [
       ["Garment", labelOf("garment", pick.garment)],
       ["Neck", labelOf("neck", pick.neck)],
@@ -374,7 +375,8 @@
       ["Work", labelOf("work", pick.work)],
       ["Colour", pick.colour],
       ["Fabric", pick.fabric === "own" ? "My own fabric" : "Choose at the shop"],
-      ...(need ? [["Needed by", need]] : [])
+      ...(need ? [["Needed by", need]] : []),
+      ...(note ? [["Design note", note]] : [])
     ];
     $("#sketch").innerHTML = sketch();
     $("#sketch").setAttribute("aria-label", `Sketch: ${pick.colour} ${labelOf("garment", pick.garment)}, ${labelOf("neck", pick.neck)} neck, ${labelOf("sleeve", pick.sleeve)} sleeve, ${labelOf("work", pick.work)}`);
@@ -392,6 +394,46 @@
     $("#studioSend").href = wa(studioText);
   };
 
+  /* The wardrobe worksheet: three concise groups; choices persist between tabs. */
+  let studioStep = 0;
+  const STAGE_NAMES = ["Silhouette", "Details", "Finish"];
+  const STAGE_NEXT = ["Choose details", "Finishing touches", "Review your sketch"];
+  const setStudioStep = (next, focusTab = false) => {
+    studioStep = Math.max(0, Math.min(2, next));
+    $(".studio__step").forEach((panel, i) => { panel.hidden = i !== studioStep; });
+    $(".studio__step-tab").forEach((tab, i) => {
+      const active = i === studioStep;
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
+      if (active && focusTab) tab.focus();
+    });
+    $("#studioStepStatus").textContent = STAGE_NAMES[studioStep] + " · " + (studioStep + 1) + " of 3";
+    $("#studioBack").hidden = studioStep === 0;
+    $("#studioNext").innerHTML = STAGE_NEXT[studioStep] + ' <span aria-hidden="true">→</span>';
+  };
+  $(".studio__stepper").addEventListener("click", (e) => {
+    const button = e.target.closest("[data-studio-step]");
+    if (button) setStudioStep(Number(button.dataset.studioStep));
+  });
+  $(".studio__stepper").addEventListener("keydown", (e) => {
+    const tab = e.target.closest("[data-studio-step]");
+    if (!tab || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+    e.preventDefault();
+    const next = e.key === "Home" ? 0 : e.key === "End" ? 2
+      : (studioStep + (e.key === "ArrowRight" ? 1 : 2)) % 3;
+    setStudioStep(next, true);
+  });
+  $("#studioBack").addEventListener("click", () => setStudioStep(studioStep - 1));
+  $("#studioNext").addEventListener("click", () => {
+    if (studioStep < 2) return setStudioStep(studioStep + 1);
+    $(".slipwrap").scrollIntoView({
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "start"
+    });
+    $("#studioSend").focus({ preventScroll: true });
+  });
+  setStudioStep(0);
+
   $("#studioForm").addEventListener("change", (e) => {
     if (e.target.name in pick) pick[e.target.name] = e.target.value;
     renderStudio();
@@ -407,6 +449,7 @@
   const today = new Date();
   const localToday = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
   $("#needBy").min = localToday;
+  $("#studioNote").addEventListener("input", renderStudio);
 
   /* ---------- stitching: classes and rates ---------- */
   $("#classes").innerHTML = D.classes.map((c) => `<li><b>${esc(c.name)}<small>${esc(c.level)}</small></b><span>${esc(c.note)}</span></li>`).join("");
