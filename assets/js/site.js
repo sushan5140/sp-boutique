@@ -154,6 +154,24 @@
   /* ---------- product sheet ---------- */
   const sheet = $("#sheet");
   let current = null;
+  let zoomed = false;
+  const setPhotoZoom = (value) => {
+    zoomed = value;
+    $("#sheetMedia").classList.toggle("is-zoomed", zoomed);
+    $("#sheetZoom").setAttribute("aria-pressed", String(zoomed));
+    $("#sheetZoom").innerHTML = zoomed
+      ? 'Reset photo <span aria-hidden="true">−</span>'
+      : 'Zoom photo <span aria-hidden="true">+</span>';
+    if (!zoomed) $("#sheetImg").style.transformOrigin = "center";
+  };
+  $("#sheetZoom").addEventListener("click", () => setPhotoZoom(!zoomed));
+  $("#sheetMedia").addEventListener("pointermove", (e) => {
+    if (!zoomed || e.pointerType === "touch") return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = Math.min(100, Math.max(0, (e.clientX - rect.left) / rect.width * 100));
+    const y = Math.min(100, Math.max(0, (e.clientY - rect.top) / rect.height * 100));
+    $("#sheetImg").style.transformOrigin = x + "% " + y + "%";
+  });
 
   const sheetExtra = () => {
     const f = new FormData($("#sheetForm"));
@@ -169,6 +187,7 @@
 
   const fillSheet = (p) => {
     current = p;
+    setPhotoZoom(false);
     const img = $("#sheetImg");
     img.removeAttribute("srcset");
     if (p.image) { img.src = p.image; }
@@ -185,7 +204,15 @@
       ? "Final price depends on the fabric and work you choose."
       : "It depends on fabric and work. We reply with the exact price.";
     $("#sheetDesc").textContent = p.desc;
-    $("#sheetCode").textContent = `Code ${p.code}`;
+    $("#sheetCode").textContent = p.code;
+    const similar = D.products.filter((x) => x.cat === p.cat && x.id !== p.id).slice(0, 3);
+    $("#sheetRelated").innerHTML = similar.map((x) =>
+      '<button type="button" class="sheet__related-item" data-related="' + esc(x.id) +
+      '" aria-label="View ' + esc(x.name) + '">' +
+      '<img src="' + esc(thumb(x)) + '" alt="" loading="lazy" width="60" height="75">' +
+      '<span>' + esc(x.name) + '<small>' + esc(x.code) + '</small></span></button>'
+    ).join("");
+    $("#sheetRelated").closest(".sheet__related").hidden = !similar.length;
     syncSheetWa();
     syncSheetSave();
   };
@@ -205,6 +232,10 @@
 
   $("#sheetPrev").addEventListener("click", () => stepSheet(-1));
   $("#sheetNext").addEventListener("click", () => stepSheet(1));
+  $("#sheetRelated").addEventListener("click", (e) => {
+    const related = e.target.closest("[data-related]");
+    if (related) openSheet(related.dataset.related);
+  });
   $("#sheetForm").addEventListener("input", syncSheetWa);
   $("#sheetForm").addEventListener("submit", (e) => e.preventDefault());
   $("#sheetSave").addEventListener("click", () => toggleList(current.id));
@@ -273,7 +304,7 @@
   $$("#studioForm [data-group]").forEach((box) => {
     const g = box.dataset.group;
     box.innerHTML = STUDIO[g].map(([v, l]) => g === "colour"
-      ? `<label class="swatch" style="--c:${l}" title="${v}"><input type="radio" name="${g}" value="${v}" aria-label="${v}" ${pick[g] === v ? "checked" : ""}><span></span></label>`
+      ? `<label class="swatch" style="--c:${l}"><input type="radio" name="${g}" value="${v}" aria-label="${v}" ${pick[g] === v ? "checked" : ""}><span class="swatch__colour"></span><span class="swatch__name">${v}</span></label>`
       : `<label class="chip"><input type="radio" name="${g}" value="${v}" ${pick[g] === v ? "checked" : ""}><span>${l}</span></label>`
     ).join("");
   });
@@ -364,8 +395,10 @@
     return isNaN(d) ? "" : d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
   };
 
+  let studioText = "";
   const renderStudio = () => {
     const need = fmtDate($("#needBy").value);
+    const note = $("#studioNote").value.trim();
     const rows = [
       ["Garment", labelOf("garment", pick.garment)],
       ["Neck", labelOf("neck", pick.neck)],
@@ -373,54 +406,106 @@
       ["Work", labelOf("work", pick.work)],
       ["Colour", pick.colour],
       ["Fabric", pick.fabric === "own" ? "My own fabric" : "Choose at the shop"],
-      ...(need ? [["Needed by", need]] : [])
+      ...(need ? [["Needed by", need]] : []),
+      ...(note ? [["Design note", note]] : [])
     ];
     $("#sketch").innerHTML = sketch();
     $("#sketch").setAttribute("aria-label", `Sketch: ${pick.colour} ${labelOf("garment", pick.garment)}, ${labelOf("neck", pick.neck)} neck, ${labelOf("sleeve", pick.sleeve)} sleeve, ${labelOf("work", pick.work)}`);
     $("#slipRows").innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("");
     $("#colourName").textContent = pick.colour;
-    $("#studioSend").href = wa([
+    $("#lookName").textContent = `Your ${labelOf("garment", pick.garment).toLowerCase()}`;
+    $("#lookDescription").textContent = `${pick.colour} · ${labelOf("neck", pick.neck)} neck · ${labelOf("work", pick.work)}`;
+    studioText = [
       "Hello SP Boutique, I put this outfit together in the Outfit Studio on your website:",
       "",
       ...rows.map(([k, v]) => `${k}: ${k === "Fabric" ? labelOf("fabric", pick.fabric) : v}`),
       "",
       "Please share the price and how long it will take."
-    ].join("\n"));
+    ].join("\n");
+    $("#studioSend").href = wa(studioText);
   };
+
+  /* The wardrobe worksheet: three concise groups; choices persist between tabs. */
+  let studioStep = 0;
+  const STAGE_NAMES = ["Silhouette", "Details", "Finish"];
+  const STAGE_NEXT = ["Choose details", "Finishing touches", "Review your sketch"];
+  const setStudioStep = (next, focusTab = false) => {
+    studioStep = Math.max(0, Math.min(2, next));
+    $(".studio__step").forEach((panel, i) => { panel.hidden = i !== studioStep; });
+    $(".studio__step-tab").forEach((tab, i) => {
+      const active = i === studioStep;
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
+      if (active && focusTab) tab.focus();
+    });
+    $("#studioStepStatus").textContent = STAGE_NAMES[studioStep] + " · " + (studioStep + 1) + " of 3";
+    $("#studioBack").hidden = studioStep === 0;
+    $("#studioNext").innerHTML = STAGE_NEXT[studioStep] + ' <span aria-hidden="true">→</span>';
+  };
+  $(".studio__stepper").addEventListener("click", (e) => {
+    const button = e.target.closest("[data-studio-step]");
+    if (button) setStudioStep(Number(button.dataset.studioStep));
+  });
+  $(".studio__stepper").addEventListener("keydown", (e) => {
+    const tab = e.target.closest("[data-studio-step]");
+    if (!tab || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+    e.preventDefault();
+    const next = e.key === "Home" ? 0 : e.key === "End" ? 2
+      : (studioStep + (e.key === "ArrowRight" ? 1 : 2)) % 3;
+    setStudioStep(next, true);
+  });
+  $("#studioBack").addEventListener("click", () => setStudioStep(studioStep - 1));
+  $("#studioNext").addEventListener("click", () => {
+    if (studioStep < 2) return setStudioStep(studioStep + 1);
+    $(".slipwrap").scrollIntoView({
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "start"
+    });
+    $("#studioSend").focus({ preventScroll: true });
+  });
+  setStudioStep(0);
 
   $("#studioForm").addEventListener("change", (e) => {
     if (e.target.name in pick) pick[e.target.name] = e.target.value;
     renderStudio();
   });
   $("#studioForm").addEventListener("submit", (e) => e.preventDefault());
-  $("#needBy").min = new Date().toISOString().slice(0, 10);
+  $("#studioCopy").addEventListener("click", async () => {
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard unsupported");
+      await navigator.clipboard.writeText(studioText);
+      toast("Design details copied");
+    } catch { toast("Copy unavailable — use WhatsApp to send this design"); }
+  });
+  const today = new Date();
+  const localToday = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
+  $("#needBy").min = localToday;
+  $("#studioNote").addEventListener("input", renderStudio);
 
   /* ---------- stitching: classes and rates ---------- */
   $("#classes").innerHTML = D.classes.map((c) => `<li><b>${esc(c.name)}<small>${esc(c.level)}</small></b><span>${esc(c.note)}</span></li>`).join("");
   $("#rates").innerHTML = D.services.map((s) => `
-    <li><a href="${wa(`Hello SP Boutique, what is the charge for: ${s.name}?`)}" target="_blank" rel="noopener">
-      <div><b>${esc(s.name)}</b><span>${esc(s.note)}</span></div>
-      <em>${s.price ? `From ₹${Number(s.price).toLocaleString("en-IN")}` : "Ask for price"}</em>
+    <li><a href="${wa(`Hello SP Boutique, I would like to enquire about ${s.name}. Please share the details, price and expected turnaround time.`)}" target="_blank" rel="noopener" aria-label="Enquire about ${esc(s.name)} on WhatsApp">
+      <span class="rates__item-copy"><b>${esc(s.name)}</b><span>${esc(s.note)}</span></span>
+      <span class="rates__item-action">${s.price ? `From ₹${Number(s.price).toLocaleString("en-IN")}` : "Enquire"} <span aria-hidden="true">↗</span></span>
     </a></li>`).join("");
 
-  /* ---------- enquiry form -> WhatsApp ---------- */
+  /* Enquiry desk: one real WhatsApp message; no pretend booking or submission. */
   $("#enquiry").addEventListener("submit", (e) => {
     e.preventDefault();
-    const name = $("#eName"), err = $("#eNameErr");
-    const ok = name.value.trim().length > 0;
-    name.setAttribute("aria-invalid", String(!ok));
-    err.hidden = ok;
-    if (!ok) return name.focus();
-    const msg = $("#eMsg").value.trim();
+    const data = new FormData(e.currentTarget);
+    const topic = String(data.get("topic") || "A design from the collections");
+    const name = String(data.get("name") || "").trim();
+    const note = String(data.get("msg") || "").trim();
     const text = [
-      `Hello SP Boutique, this is ${name.value.trim()}.`,
-      `I am interested in: ${$("#eTopic").value}.`,
-      ...(msg ? ["", msg] : [])
+      "Hello SP Boutique,",
+      ...(name ? ["My name is " + name + "."] : []),
+      "I would like to enquire about: " + topic + ".",
+      ...(note ? ["", note] : []),
+      "",
+      "Please let me know the details."
     ].join("\n");
     window.open(wa(text), "_blank", "noopener");
-  });
-  $("#eName").addEventListener("input", (e) => {
-    if (e.target.value.trim()) { e.target.removeAttribute("aria-invalid"); $("#eNameErr").hidden = true; }
   });
 
   /* ---------- scroll spy for nav pill and dock ---------- */

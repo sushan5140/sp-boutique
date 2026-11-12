@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://images.unsplash.com">
-<link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ClothingStore","name":"SP Boutique","slogan":"Stitched in Tandur, worn everywhere","telephone":"+919848054521","image":"assets/shopfront.jpg","address":{"@type":"PostalAddress","streetAddress":"Adarsh Nagar","addressLocality":"Tandur","addressRegion":"Telangana","postalCode":"501141","addressCountry":"IN"},"sameAs":["https://www.instagram.com/sp_boutique_tandur"]}
@@ -119,133 +119,250 @@
     </div>
   </section>
 
-  <!-- ============ STUDIO ============ -->
-  <section class="studio" id="studio">
-    <div class="wrap studio__grid">
-      <div class="studio__form">
-        <h2>Outfit Studio</h2>
-        <p class="studio__lede">Put together the outfit you have in mind. Your choices go to us on WhatsApp and we reply with the price.</p>
-        <form id="studioForm" novalidate>
-          <fieldset class="opt"><legend>Garment</legend><div class="chips" data-group="garment"></div></fieldset>
-          <fieldset class="opt"><legend>Neck</legend><div class="chips" data-group="neck"></div></fieldset>
-          <fieldset class="opt"><legend>Sleeve</legend><div class="chips" data-group="sleeve"></div></fieldset>
-          <fieldset class="opt"><legend>Work</legend><div class="chips" data-group="work"></div></fieldset>
-          <fieldset class="opt"><legend>Colour <span id="colourName"></span></legend><div class="swatches" data-group="colour"></div></fieldset>
-          <fieldset class="opt"><legend>Fabric</legend><div class="chips" data-group="fabric"></div></fieldset>
-          <div class="opt opt--date">
-            <label for="needBy">Needed by <span>(optional)</span></label>
-            <input type="date" id="needBy" name="needBy">
-          </div>
-        </form>
-      </div>
-
-      <aside class="slipwrap" aria-label="Your outfit summary">
-        <div class="slip">
-          <div class="slip__head">
-            <span class="mark"><img src="assets/logo.png" alt="" width="40" height="40"></span>
-            <div><b>SP Boutique</b><span>Outfit slip, draft</span></div>
-          </div>
-          <div class="slip__sketch" id="sketch" role="img" aria-label="Sketch of your outfit"></div>
-          <dl class="slip__rows" id="slipRows"></dl>
-          <p class="slip__price"><span>Price</span><b>Shared on WhatsApp</b></p>
-          <a class="btn btn--navy btn--block" id="studioSend" href="https://wa.me/919848054521" target="_blank" rel="noopener">
-            <svg class="wa" width="18" height="18"><use href="#i-wa"/></svg>Send this outfit on WhatsApp
-          </a>
+  <!-- ============ SP BOUTIQUE WORKROOM ============ -->
+  <section class="studio" id="studio" aria-labelledby="studioTitle">
+    <div class="wrap">
+      <header class="studio__intro">
+        <div class="studio__intro-title">
+          <p class="studio__kicker">THE SP BOUTIQUE WORKROOM <span aria-hidden="true">/</span> MADE TO ORDER</p>
+          <h2 id="studioTitle">Choose the cut.<br><em>We'll stitch the rest.</em></h2>
         </div>
-      </aside>
+        <p>Choose a garment, neckline, sleeves and embroidery. Your sketch changes with each choice. Send the details on WhatsApp to discuss fabric, measurements and the final price.</p>
+      </header>
+
+      <div class="studio__grid">
+        <div class="studio__form">
+          <div class="studio__form-head">
+            <span>THE DETAILS</span>
+            <span>01 / 02</span>
+          </div>
+          <h3>Start with your outfit.</h3>
+          <div class="studio__stepper" role="tablist" aria-label="Design your outfit">
+            <button type="button" class="studio__step-tab" id="studioTab1" role="tab" aria-selected="true" aria-controls="studioStep1" tabindex="0" data-studio-step="0"><span class="studio__step-num">01</span><span>Silhouette</span></button>
+            <button type="button" class="studio__step-tab" id="studioTab2" role="tab" aria-selected="false" aria-controls="studioStep2" tabindex="-1" data-studio-step="1"><span class="studio__step-num">02</span><span>Details</span></button>
+            <button type="button" class="studio__step-tab" id="studioTab3" role="tab" aria-selected="false" aria-controls="studioStep3" tabindex="-1" data-studio-step="2"><span class="studio__step-num">03</span><span>Finish</span></button>
+          </div>
+          <form id="studioForm" novalidate>
+            <div class="studio__step" id="studioStep1" role="tabpanel" aria-labelledby="studioTab1">
+              <p class="studio__step-intro">The silhouette comes first. Choose what you'd like us to make.</p>
+              <fieldset class="opt opt--garment"><legend>Garment</legend><div class="chips" data-group="garment"></div></fieldset>
+              <fieldset class="opt opt--neck"><legend>Neckline</legend><div class="chips" data-group="neck"></div></fieldset>
+            </div>
+            <div class="studio__step" id="studioStep2" role="tabpanel" aria-labelledby="studioTab2" hidden>
+              <p class="studio__step-intro">Now the details that make it yours. See them on the sketch alongside.</p>
+              <fieldset class="opt opt--sleeve"><legend>Sleeves</legend><div class="chips" data-group="sleeve"></div></fieldset>
+              <fieldset class="opt opt--work"><legend>Embroidery &amp; finishing</legend><div class="chips" data-group="work"></div></fieldset>
+              <fieldset class="opt opt--colour"><legend>Colour <span id="colourName" class="opt__selected"></span></legend><div class="swatches" data-group="colour"></div></fieldset>
+            </div>
+            <div class="studio__step" id="studioStep3" role="tabpanel" aria-labelledby="studioTab3" hidden>
+              <p class="studio__step-intro">Last few details before you enquire. Nothing is booked or charged here.</p>
+              <fieldset class="opt opt--fabric"><legend>Fabric</legend><div class="chips" data-group="fabric"></div></fieldset>
+              <div class="opt opt--date">
+                <label for="needBy">When do you need it? <span>(optional)</span></label>
+                <input type="date" id="needBy" name="needBy">
+              </div>
+              <div class="opt studio__note">
+                <label for="studioNote">An occasion or detail to remember <span>(optional)</span></label>
+                <textarea id="studioNote" name="studioNote" rows="3" maxlength="240" placeholder="For a wedding, matching a saree, a particular pattern…"></textarea>
+              </div>
+            </div>
+          </form>
+          <div class="studio__step-actions">
+            <button type="button" class="studio__back" id="studioBack" hidden>← Previous</button>
+            <span id="studioStepStatus" role="status" aria-live="polite">Silhouette · 1 of 3</span>
+            <button type="button" class="studio__next" id="studioNext">Choose details <span aria-hidden="true">→</span></button>
+          </div>
+          <div class="studio__form-note">
+            <span>Already have a picture in mind?</span>
+            <a data-wa="Hello SP Boutique, I have an outfit reference photo and would like to discuss custom stitching." href="https://wa.me/919848054521" target="_blank" rel="noopener">Share it on WhatsApp <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+
+        <aside class="slipwrap" aria-label="Outfit sketch and enquiry details">
+          <div class="slip">
+            <div class="slip__head">
+              <span class="mark"><img src="assets/logo.png" alt="" width="40" height="40"></span>
+              <div><b>SP Boutique</b><span>Made-to-order design notes</span></div>
+              <span class="slip__index" aria-hidden="true">02 / 02</span>
+            </div>
+            <div class="slip__canvas">
+              <div class="slip__canvas-label"><span>WORKROOM SKETCH</span><span>LIVE PREVIEW</span></div>
+              <div class="slip__sketch" id="sketch" role="img" aria-label="Sketch of your outfit"></div>
+              <p class="slip__caption">Illustrative sketch, not a photograph of the finished garment.</p>
+            </div>
+            <div class="slip__details">
+              <span class="slip__eyebrow">YOUR SELECTED DESIGN</span>
+              <h3 id="lookName">Custom blouse</h3>
+              <p id="lookDescription">Your selected neckline, sleeves and colour will appear here.</p>
+              <dl class="slip__rows" id="slipRows"></dl>
+              <p class="slip__price"><span>Final price</span><b>Confirmed on WhatsApp</b></p>
+              <a class="btn btn--navy btn--block" id="studioSend" href="https://wa.me/919848054521" target="_blank" rel="noopener">
+                <svg class="wa" width="18" height="18"><use href="#i-wa"/></svg>Ask about this outfit
+              </a>
+              <button class="slip__copy" id="studioCopy" type="button">Copy the design details <span aria-hidden="true">↗</span></button>
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
   </section>
 
-  <!-- ============ STITCHING ============ -->
-  <section class="sec" id="stitching">
-    <div class="wrap stitch">
-      <div class="stitch__media">
-        <img class="stitch__img1" loading="lazy" width="640" height="800" alt="Women learning at sewing machines in a tailoring class"
-             src="https://images.unsplash.com/photo-1616674202799-054e7c831378?auto=format&fit=crop&w=640&h=800&q=70">
-        <img class="stitch__img2" loading="lazy" width="400" height="400" alt="Close view of a sewing machine at work"
-             src="https://images.unsplash.com/photo-1691690803358-64d463845bf0?auto=format&fit=crop&w=400&h=400&q=70">
-      </div>
-      <div class="stitch__body">
-        <h2>Stitching, alterations and classes</h2>
-        <ul class="svc">
-          <li>
-            <h3>Custom stitching</h3>
-            <p>Blouses, salwar sets, lehengas and gowns cut to your measurements. Bring your own fabric or choose one with us.</p>
-            <a class="textlink" data-wa="Hello SP Boutique, I would like to get an outfit stitched. Please let me know the details." href="https://wa.me/919848054521" target="_blank" rel="noopener">Ask about stitching</a>
-          </li>
-          <li>
-            <h3>Alterations and restyling</h3>
-            <p>Blouse fit corrections, saree fall and pico, resizing, and reworking older lehengas and dresses into something you will wear again.</p>
-            <a class="textlink" data-wa="Hello SP Boutique, I have a garment that needs alteration. Please let me know the details." href="https://wa.me/919848054521" target="_blank" rel="noopener">Ask about an alteration</a>
-          </li>
-          <li>
-            <h3>Stitching classes</h3>
-            <p>Hands-on batches for learning to stitch on your own, in three levels.</p>
-            <ul class="levels" id="classes"></ul>
-            <a class="textlink" data-wa="Hello SP Boutique, I am interested in your stitching classes. Please share the next batch dates, duration and fees." href="https://wa.me/919848054521" target="_blank" rel="noopener">Ask for batch dates and fees</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
+  <!-- ============ CRAFT & SERVICES ============ -->
+  <section class="sec craft" id="stitching" aria-labelledby="craftTitle">
     <div class="wrap">
-      <div class="steps">
-        <h3 class="steps__title">How an order works</h3>
-        <ol>
-          <li><b>Send us the design</b><span>Pick one here, build one in the Outfit Studio, or WhatsApp a photo you like.</span></li>
-          <li><b>We confirm price and fabric</b><span>You get the price for your fabric and work before anything is cut.</span></li>
-          <li><b>Measurements at the shop</b><span>Come in to be measured, or bring a garment that fits you well.</span></li>
-          <li><b>Fitting and collection</b><span>Try it on, we adjust what is needed, and it is ready to take home.</span></li>
+      <div class="craft__lead">
+        <div class="craft__heading">
+          <p class="section-kicker">STITCHING &amp; ALTERATIONS</p>
+          <h2 id="craftTitle">A better fit is<br><em>in the details.</em></h2>
+          <p>A good fit, thoughtful finishing and the little details that make a piece feel yours. Explore the work we can help with.</p>
+        </div>
+        <figure class="craft__photo">
+          <img loading="lazy" decoding="async" width="900" height="1050" alt="Illustrative close-up of an artisan hand-stitching decorative beadwork on fabric" src="https://images.pexels.com/photos/10566062/pexels-photo-10566062.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1000" referrerpolicy="no-referrer">
+          <figcaption><span>HANDWORK IN DETAIL</span><a href="https://www.pexels.com/photo/hands-doing-needlework-10566062/" target="_blank" rel="noopener noreferrer">Illustrative photograph · Mohamed Rizly / Pexels</a></figcaption>
+        </figure>
+      </div>
+
+      <div class="craft__services" aria-label="SP Boutique tailoring services">
+        <article class="craft__service">
+          <span class="craft__number">01</span>
+          <div>
+            <h3>Custom stitching</h3>
+            <p>Blouses, suits, lehengas and occasionwear, tailored to your measurements and style.</p>
+            <details class="craft__more"><summary>What to bring <span aria-hidden="true">+</span></summary><p>A reference picture, a garment that already fits you well, or your fabric if you have it. Measurements and any extra requirements can be discussed at the shop.</p></details>
+            <a class="craft__link" data-wa="Hello SP Boutique, I would like to get an outfit stitched. Please let me know the details." href="https://wa.me/919848054521" target="_blank" rel="noopener">Enquire about stitching <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+        <article class="craft__service">
+          <span class="craft__number">02</span>
+          <div>
+            <h3>Alterations &amp; restyling</h3>
+            <p>Fit adjustments, fall and pico, resizing, and giving favourite pieces a second life.</p>
+            <details class="craft__more"><summary>What to bring <span aria-hidden="true">+</span></summary><p>Bring the actual garment and explain what needs adjusting. The boutique can discuss what is feasible after seeing the fabric and construction.</p></details>
+            <a class="craft__link" data-wa="Hello SP Boutique, I have a garment that needs alteration. Please let me know the details." href="https://wa.me/919848054521" target="_blank" rel="noopener">Enquire about alterations <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+        <article class="craft__service">
+          <span class="craft__number">03</span>
+          <div>
+            <h3>Stitching classes</h3>
+            <p>Practical sewing skills, from first seams to garment construction. Ask about available batches.</p>
+            <details class="craft__more"><summary>What to ask <span aria-hidden="true">+</span></summary><p>Ask for the next batch dates, fees, class levels and whether you need to bring any materials. Places and schedules must be confirmed with the boutique.</p></details>
+            <ul class="levels" id="classes"></ul>
+            <a class="craft__link" data-wa="Hello SP Boutique, I am interested in your stitching classes. Please share the next batch dates, duration and fees." href="https://wa.me/919848054521" target="_blank" rel="noopener">Ask about class dates &amp; fees <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+      </div>
+
+      <div class="journey" aria-labelledby="journeyTitle">
+        <div class="journey__lead">
+          <p class="section-kicker">HOW IT WORKS</p>
+          <h3 id="journeyTitle">From a picture<br><em>to a fitting.</em></h3>
+          <p>Four straightforward steps, with the final details confirmed directly by the boutique.</p>
+        </div>
+        <ol class="journey__steps">
+          <li><span>01</span><div><b>Share the design</b><p>Choose a style here, use the Outfit Studio, or send a reference photo on WhatsApp.</p></div></li>
+          <li><span>02</span><div><b>Discuss fabric &amp; price</b><p>We'll discuss the cloth, embroidery and final quote before work begins.</p></div></li>
+          <li><span>03</span><div><b>Arrange measurements</b><p>Visit the shop for measurements, or bring a garment that fits well.</p></div></li>
+          <li><span>04</span><div><b>Try it on &amp; collect</b><p>Come in for fitting, discuss adjustments if needed, and collect the finished piece.</p></div></li>
         </ol>
       </div>
 
-      <div class="rates">
+      <section class="rates" aria-labelledby="requestsHeading">
         <div class="rates__head">
-          <h3>Common stitching work</h3>
-          <p>Rates depend on the fabric and the work involved. Tap a row to ask.</p>
+          <p class="section-kicker">COMMON REQUESTS</p>
+          <h3 id="requestsHeading">Stitching, finishing <em>&amp; a better fit.</em></h3>
+          <p>Here are the types of work you can ask us about. Send a design or garment photo and we'll discuss the fabric, work, price and timing directly.</p>
+          <a class="rates__custom" data-wa="Hello SP Boutique, I have a different stitching or alteration request. Can I share a photo and get the details?" href="https://wa.me/919848054521" target="_blank" rel="noopener">Have something else in mind? <span aria-hidden="true">↗</span></a>
         </div>
-        <ul id="rates"></ul>
-      </div>
+        <div class="rates__body">
+          <div class="rates__legend"><span>POPULAR ENQUIRIES</span><span>ASK FOR A QUOTE</span></div>
+          <ul id="rates">
+            <li><a href="https://wa.me/919848054521?text=Hello%20SP%20Boutique%2C%20I%20would%20like%20to%20enquire%20about%20Blouse%20stitching%20%26%20fitting.%20Please%20share%20the%20details%2C%20price%20and%20expected%20turnaround%20time." target="_blank" rel="noopener" aria-label="Enquire about Blouse stitching &amp; fitting on WhatsApp">
+              <span class="rates__item-copy"><b>Blouse stitching &amp; fitting</b><span>Plain, lined, princess-cut or custom neckline</span></span>
+              <span class="rates__item-action">Enquire <span aria-hidden="true">↗</span></span>
+            </a></li>
+            <li><a href="https://wa.me/919848054521?text=Hello%20SP%20Boutique%2C%20I%20would%20like%20to%20enquire%20about%20Maggam%20%2F%20Aari%20work.%20Please%20share%20the%20details%2C%20price%20and%20expected%20turnaround%20time." target="_blank" rel="noopener" aria-label="Enquire about Maggam / Aari work on WhatsApp">
+              <span class="rates__item-copy"><b>Maggam / Aari work</b><span>Blouse embroidery, motifs and detailed finishing</span></span>
+              <span class="rates__item-action">Enquire <span aria-hidden="true">↗</span></span>
+            </a></li>
+            <li><a href="https://wa.me/919848054521?text=Hello%20SP%20Boutique%2C%20I%20would%20like%20to%20enquire%20about%20Salwar%2C%20churidar%20%26%20kurta.%20Please%20share%20the%20details%2C%20price%20and%20expected%20turnaround%20time." target="_blank" rel="noopener" aria-label="Enquire about Salwar, churidar &amp; kurta on WhatsApp">
+              <span class="rates__item-copy"><b>Salwar, churidar &amp; kurta</b><span>Matching top, bottom and finishing details</span></span>
+              <span class="rates__item-action">Enquire <span aria-hidden="true">↗</span></span>
+            </a></li>
+            <li><a href="https://wa.me/919848054521?text=Hello%20SP%20Boutique%2C%20I%20would%20like%20to%20enquire%20about%20Langa%20voni%20%2F%20half%20saree.%20Please%20share%20the%20details%2C%20price%20and%20expected%20turnaround%20time." target="_blank" rel="noopener" aria-label="Enquire about Langa voni / half saree on WhatsApp">
+              <span class="rates__item-copy"><b>Langa voni / half saree</b><span>Ask about blouse, skirt and drape stitching</span></span>
+              <span class="rates__item-action">Enquire <span aria-hidden="true">↗</span></span>
+            </a></li>
+            <li><a href="https://wa.me/919848054521?text=Hello%20SP%20Boutique%2C%20I%20would%20like%20to%20enquire%20about%20Lehenga%2C%20Anarkali%20%26%20gown.%20Please%20share%20the%20details%2C%20price%20and%20expected%20turnaround%20time." target="_blank" rel="noopener" aria-label="Enquire about Lehenga, Anarkali &amp; gown on WhatsApp">
+              <span class="rates__item-copy"><b>Lehenga, Anarkali &amp; gown</b><span>Occasionwear stitching and fit enquiries</span></span>
+              <span class="rates__item-action">Enquire <span aria-hidden="true">↗</span></span>
+            </a></li>
+            <li><a href="https://wa.me/919848054521?text=Hello%20SP%20Boutique%2C%20I%20would%20like%20to%20enquire%20about%20Pattu%20pavadai.%20Please%20share%20the%20details%2C%20price%20and%20expected%20turnaround%20time." target="_blank" rel="noopener" aria-label="Enquire about Pattu pavadai on WhatsApp">
+              <span class="rates__item-copy"><b>Pattu pavadai</b><span>Traditional children's outfit enquiries</span></span>
+              <span class="rates__item-action">Enquire <span aria-hidden="true">↗</span></span>
+            </a></li>
+            <li><a href="https://wa.me/919848054521?text=Hello%20SP%20Boutique%2C%20I%20would%20like%20to%20enquire%20about%20Saree%20fall%20%26%20pico.%20Please%20share%20the%20details%2C%20price%20and%20expected%20turnaround%20time." target="_blank" rel="noopener" aria-label="Enquire about Saree fall &amp; pico on WhatsApp">
+              <span class="rates__item-copy"><b>Saree fall &amp; pico</b><span>Fall stitching and edge finishing</span></span>
+              <span class="rates__item-action">Enquire <span aria-hidden="true">↗</span></span>
+            </a></li>
+            <li><a href="https://wa.me/919848054521?text=Hello%20SP%20Boutique%2C%20I%20would%20like%20to%20enquire%20about%20Blouse%20%26%20garment%20alterations.%20Please%20share%20the%20details%2C%20price%20and%20expected%20turnaround%20time." target="_blank" rel="noopener" aria-label="Enquire about Blouse &amp; garment alterations on WhatsApp">
+              <span class="rates__item-copy"><b>Blouse &amp; garment alterations</b><span>Resizing, neck, sleeve and fit adjustments</span></span>
+              <span class="rates__item-action">Enquire <span aria-hidden="true">↗</span></span>
+            </a></li>
+            <li><a href="https://wa.me/919848054521?text=Hello%20SP%20Boutique%2C%20I%20would%20like%20to%20enquire%20about%20Lehenga%20alterations.%20Please%20share%20the%20details%2C%20price%20and%20expected%20turnaround%20time." target="_blank" rel="noopener" aria-label="Enquire about Lehenga alterations on WhatsApp">
+              <span class="rates__item-copy"><b>Lehenga alterations</b><span>Waist adjustments, panels and restyling</span></span>
+              <span class="rates__item-action">Enquire <span aria-hidden="true">↗</span></span>
+            </a></li>
+            <li><a href="https://wa.me/919848054521?text=Hello%20SP%20Boutique%2C%20I%20would%20like%20to%20enquire%20about%20Everyday%20repairs.%20Please%20share%20the%20details%2C%20price%20and%20expected%20turnaround%20time." target="_blank" rel="noopener" aria-label="Enquire about Everyday repairs on WhatsApp">
+              <span class="rates__item-copy"><b>Everyday repairs</b><span>Seams, zips, hooks, hems and small repairs</span></span>
+              <span class="rates__item-action">Enquire <span aria-hidden="true">↗</span></span>
+            </a></li>
+          </ul>
+          <p class="rates__note">All services are enquiries, not confirmed bookings. Quotes and availability depend on the garment and work requested.</p>
+        </div>
+      </section>
     </div>
   </section>
 
-  <!-- ============ VISIT ============ -->
-  <section class="visit" id="visit">
-    <div class="wrap visit__grid">
-      <div class="visit__info">
-        <h2>Visit the boutique</h2>
-        <figure class="visit__photo">
-          <img loading="lazy" src="assets/shopfront.jpg" width="1200" height="769" alt="SP Boutique shopfront in Adarsh Nagar, Tandur">
-        </figure>
-        <ul class="contact">
-          <li><svg width="20" height="20"><use href="#i-pin"/></svg>
-            <div><b>Adarsh Nagar, Tandur 501141</b><span>Vikarabad District, Telangana</span>
-            <a class="textlink" href="https://maps.app.goo.gl/NTVmJQ5ktLZbze8V6" target="_blank" rel="noopener">Get directions</a></div></li>
-          <li><svg width="20" height="20"><use href="#i-phone"/></svg>
-            <div><b><a href="tel:+919848054521">+91 98480 54521</a></b><span>Call or WhatsApp before you visit to check today's timings.</span></div></li>
-          <li><svg width="20" height="20"><use href="#i-insta"/></svg>
-            <div><b><a href="https://www.instagram.com/sp_boutique_tandur" target="_blank" rel="noopener">@sp_boutique_tandur</a></b><span>New work on Instagram</span></div></li>
-        </ul>
+  <!-- ============ VISIT & CONTACT ============ -->
+  <section class="visit" id="visit" aria-labelledby="visitTitle">
+    <div class="wrap">
+      <div class="visit__header">
+        <div><p class="section-kicker">FIND US IN TANDUR</p><h2 id="visitTitle">Come by the <em>boutique.</em></h2></div>
+        <p>Adarsh Nagar, Tandur. Call or message before visiting to confirm the day's timings.</p>
       </div>
-
-      <form class="enquiry" id="enquiry" novalidate>
-        <h3>Send an enquiry</h3>
-        <p>This opens WhatsApp with your message filled in. Nothing is sent until you press send there.</p>
-        <label for="eName">Your name</label>
-        <input id="eName" name="name" autocomplete="name" required>
-        <p class="err" id="eNameErr" hidden>Please enter your name so we know who is writing.</p>
-        <label for="eTopic">I am interested in</label>
-        <select id="eTopic" name="topic">
-          <option>A design from the collections</option>
-          <option>Custom stitching</option>
-          <option>An alteration</option>
-          <option>Stitching classes</option>
-          <option>Something else</option>
-        </select>
-        <label for="eMsg">Message <span>(optional)</span></label>
-        <textarea id="eMsg" name="msg" rows="4" placeholder="Garment, occasion, date needed…"></textarea>
-        <button class="btn btn--navy btn--block" type="submit"><svg class="wa" width="18" height="18"><use href="#i-wa"/></svg>Continue on WhatsApp</button>
-      </form>
+      <div class="visit__grid">
+        <div class="visit__info">
+          <figure class="visit__photo">
+            <img loading="lazy" src="assets/shopfront.jpg" width="1200" height="769" alt="SP Boutique shopfront in Adarsh Nagar, Tandur">
+          </figure>
+          <ul class="contact">
+            <li><svg width="20" height="20"><use href="#i-pin"/></svg><div><b>Adarsh Nagar, Tandur 501141</b><span>Vikarabad District, Telangana</span><a class="textlink" href="https://maps.app.goo.gl/NTVmJQ5ktLZbze8V6" target="_blank" rel="noopener">Get directions <span aria-hidden="true">↗</span></a></div></li>
+            <li><svg width="20" height="20"><use href="#i-phone"/></svg><div><b><a href="tel:+919848054521">+91 98480 54521</a></b><span>Call or WhatsApp for timings and enquiries.</span></div></li>
+            <li><svg width="20" height="20"><use href="#i-insta"/></svg><div><b><a href="https://www.instagram.com/sp_boutique_tandur" target="_blank" rel="noopener">@sp_boutique_tandur</a></b><span>Follow our work on Instagram.</span></div></li>
+          </ul>
+        </div>
+        <form class="enquiry" id="enquiry" novalidate>
+          <p class="enquiry__kicker">THE ENQUIRY DESK</p>
+          <h3>Start with<br><em>a conversation.</em></h3>
+          <p>One short message is enough. Choose what you're looking for and we'll open WhatsApp with the details.</p>
+          <fieldset class="enquiry__intents">
+            <legend>I'm interested in</legend>
+            <div class="enquiry__intent-grid">
+              <label class="enquiry__intent"><input type="radio" name="topic" value="A design from the collections" checked><span>Clothing design</span></label>
+              <label class="enquiry__intent"><input type="radio" name="topic" value="Custom stitching"><span>Custom stitching</span></label>
+              <label class="enquiry__intent"><input type="radio" name="topic" value="An alteration"><span>Alterations</span></label>
+              <label class="enquiry__intent"><input type="radio" name="topic" value="Stitching classes"><span>Stitching classes</span></label>
+            </div>
+          </fieldset>
+          <label for="eMsg">Tell us a little more <span>(optional)</span></label>
+          <textarea id="eMsg" name="msg" rows="3" maxlength="500" placeholder="An occasion, a fabric or a design you have in mind…"></textarea>
+          <label for="eName">Your name <span>(optional)</span></label>
+          <input id="eName" name="name" autocomplete="name" placeholder="How should we address you?">
+          <button class="btn btn--navy btn--block" type="submit"><svg class="wa" width="18" height="18"><use href="#i-wa"/></svg>Continue to WhatsApp <span aria-hidden="true">↗</span></button>
+          <p class="enquiry__fineprint">Nothing is submitted here. Review the message in WhatsApp before sending.</p>
+        </form>
+      </div>
     </div>
   </section>
 </main>
@@ -253,24 +370,27 @@
 <footer class="foot">
   <div class="wrap foot__grid">
     <div class="foot__brand">
-      <img src="assets/logo.png" alt="SP Boutique" width="96" height="96">
-      <p>Stitched in Tandur, worn everywhere.</p>
+      <img src="assets/logo.png" alt="SP Boutique logo" width="96" height="96">
+      <p>SP Boutique</p>
+      <span>Stitched in Tandur, worn everywhere.</span>
     </div>
     <nav aria-label="Footer">
-      <a href="#collections">Collections</a>
+      <span class="foot__title">EXPLORE</span>
+      <a href="#collections">Clothing collections</a>
       <a href="#studio">Outfit Studio</a>
-      <a href="#stitching">Stitching and classes</a>
-      <a href="#visit">Visit us</a>
+      <a href="#stitching">Stitching &amp; classes</a>
+      <a href="#visit">Visit the boutique</a>
     </nav>
     <div class="foot__contact">
-      <a data-wa="Hello SP Boutique!" href="https://wa.me/919848054521" target="_blank" rel="noopener">WhatsApp +91 98480 54521</a>
+      <span class="foot__title">SAY HELLO</span>
+      <a data-wa="Hello SP Boutique, I would like to enquire about a design." href="https://wa.me/919848054521" target="_blank" rel="noopener">WhatsApp +91 98480 54521</a>
       <a href="https://www.instagram.com/sp_boutique_tandur" target="_blank" rel="noopener">Instagram @sp_boutique_tandur</a>
       <a href="https://maps.app.goo.gl/NTVmJQ5ktLZbze8V6" target="_blank" rel="noopener">Adarsh Nagar, Tandur 501141</a>
     </div>
   </div>
   <div class="wrap foot__note">
-    <p>Collection photos are style references. Every piece is made or sourced to order, and the final fabric, colour and price are confirmed with you on WhatsApp.</p>
-    <p>© 2026 SP Boutique, Tandur</p>
+    <p>Collection photos are style references. Final fabric, colour and price are confirmed with SP Boutique before your order.</p>
+    <p>© 2026 SP Boutique · Tandur</p>
   </div>
 </footer>
 
@@ -286,15 +406,16 @@
 <dialog class="sheet" id="sheet" aria-labelledby="sheetName">
   <div class="sheet__box">
     <button class="iconbtn sheet__close" type="button" data-close aria-label="Close"><svg width="20" height="20"><use href="#i-x"/></svg></button>
-    <div class="sheet__media">
+    <div class="sheet__media" id="sheetMedia">
       <img id="sheetImg" alt="" width="800" height="1000">
+      <button class="sheet__zoom" type="button" id="sheetZoom" aria-pressed="false" aria-label="Zoom product style reference photo">Zoom photo <span aria-hidden="true">+</span></button>
       <div class="sheet__nav">
         <button class="iconbtn" type="button" id="sheetPrev" aria-label="Previous design"><svg width="20" height="20" style="transform:scaleX(-1)"><use href="#i-chev"/></svg></button>
         <button class="iconbtn" type="button" id="sheetNext" aria-label="Next design"><svg width="20" height="20"><use href="#i-chev"/></svg></button>
       </div>
     </div>
     <div class="sheet__body">
-      <p class="sheet__cat" id="sheetCat"></p>
+      <div class="sheet__eyebrow"><p class="sheet__cat" id="sheetCat"></p><span id="sheetCode" class="sheet__code"></span></div>
       <h2 id="sheetName"></h2>
       <p class="sheet__price"><b id="sheetPrice"></b><span id="sheetPriceNote"></span></p>
       <p class="sheet__desc" id="sheetDesc"></p>
@@ -316,7 +437,11 @@
           <button class="btn btn--ghost" type="button" id="sheetShare"><svg width="18" height="18"><use href="#i-link"/></svg>Copy link</button>
         </div>
       </div>
-      <p class="sheet__ref"><span id="sheetCode"></span> · Style reference photo. Your piece is made to order.</p>
+      <p class="sheet__ref">Style-reference photograph. Your piece is discussed and made or sourced to order.</p>
+      <section class="sheet__related" aria-labelledby="sheetRelatedTitle">
+        <h3 id="sheetRelatedTitle">Explore similar styles</h3>
+        <div class="sheet__related-list" id="sheetRelated"></div>
+      </section>
     </div>
   </div>
 </dialog>
