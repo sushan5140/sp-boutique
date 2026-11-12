@@ -485,9 +485,9 @@
   /* ---------- stitching: classes and rates ---------- */
   $("#classes").innerHTML = D.classes.map((c) => `<li><b>${esc(c.name)}<small>${esc(c.level)}</small></b><span>${esc(c.note)}</span></li>`).join("");
   $("#rates").innerHTML = D.services.map((s) => `
-    <li><a href="${wa(`Hello SP Boutique, what is the charge for: ${s.name}?`)}" target="_blank" rel="noopener">
-      <div><b>${esc(s.name)}</b><span>${esc(s.note)}</span></div>
-      <em>${s.price ? `From ₹${Number(s.price).toLocaleString("en-IN")}` : "Ask for price"}</em>
+    <li><a href="${wa(`Hello SP Boutique, I would like to enquire about ${s.name}. Please share the details, price and expected turnaround time.`)}" target="_blank" rel="noopener" aria-label="Enquire about ${esc(s.name)} on WhatsApp">
+      <span class="rates__item-copy"><b>${esc(s.name)}</b><span>${esc(s.note)}</span></span>
+      <span class="rates__item-action">${s.price ? `From ₹${Number(s.price).toLocaleString("en-IN")}` : "Enquire"} <span aria-hidden="true">↗</span></span>
     </a></li>`).join("");
 
   /* Enquiry desk: one real WhatsApp message; no pretend booking or submission. */

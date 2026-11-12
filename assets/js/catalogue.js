@@ -167,11 +167,16 @@ window.SPB = {
 
   /* Stitching work. Fill in `price` (a number) when ready and the site shows "From ₹…". */
   services: [
-    { name: "Blouse stitching",       note: "With your fabric, plain or lined",          price: null },
-    { name: "Saree fall and pico",    note: "Fall stitching and edge finishing",         price: null },
-    { name: "Salwar or churidar set", note: "Top, bottom and dupatta finishing",         price: null },
-    { name: "Lehenga alteration",     note: "Resizing, panels and restyling",            price: null },
-    { name: "Basic repairs",          note: "Seams, zips, hooks and hems",               price: null }
+    { name: "Blouse stitching & fitting", note: "Plain, lined, princess-cut or custom neckline", price: null },
+    { name: "Maggam / Aari work", note: "Blouse embroidery, motifs and detailed finishing", price: null },
+    { name: "Salwar, churidar & kurta", note: "Matching top, bottom and finishing details", price: null },
+    { name: "Langa voni / half saree", note: "Ask about blouse, skirt and drape stitching", price: null },
+    { name: "Lehenga, Anarkali & gown", note: "Occasionwear stitching and fit enquiries", price: null },
+    { name: "Pattu pavadai", note: "Traditional children's outfit enquiries", price: null },
+    { name: "Saree fall & pico", note: "Fall stitching and edge finishing", price: null },
+    { name: "Blouse & garment alterations", note: "Resizing, neck, sleeve and fit adjustments", price: null },
+    { name: "Lehenga alterations", note: "Waist adjustments, panels and restyling", price: null },
+    { name: "Everyday repairs", note: "Seams, zips, hooks, hems and small repairs", price: null }
   ],
 
   classes: [
