@@ -1336,3 +1336,15 @@ p { line-height: 1.72; }
 @media(max-width:940px){.spb-styles__grid--salwar{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.spb-styles__grid--salwar{grid-template-columns:minmax(0,1fr);gap:20px;max-width:440px;margin-inline:auto}.spb-style-card--full .spb-style-card__body{min-height:0;padding:15px}.spb-style-card--full .spb-style-card__body h5{font-size:1.48rem}.spb-style-card--full .spb-style-card__body p{font-size:.78rem}.spb-styles__group-head--salwar{margin-top:35px}.spb-chooser-jump + .spb-chooser-jump{margin-left:0}}
 /* END B2 — Salwar styles */
+
+
+/* B3 — Langa Voni style edit (four full-length selected designs) */
+.spb-styles__group-head--langa{margin-top:clamp(38px,5vw,65px);padding-top:clamp(27px,3vw,40px);border-top:1px solid #ddd8d1}
+.spb-styles__grid--langa{grid-template-columns:repeat(4,minmax(0,1fr))}
+.spb-style-card--langa .spb-style-card__visual{aspect-ratio:4/5;background:#ece2db}
+.spb-style-card--langa .spb-style-card__visual img{object-fit:contain;object-position:center center}
+.spb-style-card--langa .spb-style-card__body{min-height:158px}
+@media(max-width:980px){.spb-styles__grid--langa{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.spb-styles__grid--langa{gap:12px}.spb-style-card--langa .spb-style-card__body{min-height:175px}}
+@media(max-width:380px){.spb-styles__grid--langa{grid-template-columns:minmax(0,1fr);max-width:420px;margin-inline:auto}.spb-style-card--langa .spb-style-card__body{min-height:0}}
+/* END B3 Langa Voni styles */
