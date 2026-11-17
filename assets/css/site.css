@@ -1324,3 +1324,15 @@ p { line-height: 1.72; }
 @media(max-width:360px){.spb-styles__grid{gap:8px}.spb-style-card__body{min-height:177px;padding:11px 9px}.spb-style-card__body h5{font-size:1.08rem}.spb-style-card__index{left:7px;top:7px}}
 @media(prefers-reduced-motion:reduce){.spb-style-card>a,.spb-style-card__visual img{transition:none}}
 /* END Styles We Stitch */
+
+
+/* B2 — Full-length suit silhouette cards: preserve hems, pleats and ankle folds */
+.spb-chooser-jump + .spb-chooser-jump{margin-left:clamp(12px,2vw,24px)}
+.spb-styles__group-head--salwar{margin-top:clamp(38px,5vw,65px);padding-top:clamp(27px,3vw,40px);border-top:1px solid #ddd8d1}
+.spb-styles__grid--salwar{grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(15px,2.3vw,28px)}
+.spb-style-card--full .spb-style-card__visual{aspect-ratio:3/4;background:#ebe1d9}
+.spb-style-card--full .spb-style-card__visual img{object-fit:contain;object-position:center center}
+.spb-style-card--full .spb-style-card__body{min-height:136px}
+@media(max-width:940px){.spb-styles__grid--salwar{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.spb-styles__grid--salwar{grid-template-columns:minmax(0,1fr);gap:20px;max-width:440px;margin-inline:auto}.spb-style-card--full .spb-style-card__body{min-height:0;padding:15px}.spb-style-card--full .spb-style-card__body h5{font-size:1.48rem}.spb-style-card--full .spb-style-card__body p{font-size:.78rem}.spb-styles__group-head--salwar{margin-top:35px}.spb-chooser-jump + .spb-chooser-jump{margin-left:0}}
+/* END B2 — Salwar styles */
