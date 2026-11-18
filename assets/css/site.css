@@ -1267,3 +1267,94 @@ p { line-height: 1.72; }
 @media (max-width: 350px) {
   .rates__body #rates a { grid-template-columns: 1fr; }
 }
+
+/* SP Boutique — Phase A ten-image garment chooser */
+.spb-garment-chooser{margin:clamp(20px,3vw,36px) 0 clamp(32px,5vw,56px)}
+.spb-garment-chooser__head{max-width:680px;margin-bottom:24px}
+.spb-garment-chooser__head h3{color:var(--navy,#002544);font-size:clamp(1.35rem,2.5vw,2rem);line-height:1.2;margin:0 0 9px}
+.spb-garment-chooser__head p{color:var(--muted,#50637a);margin:0;line-height:1.6}
+.spb-garment-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(10px,1.7vw,20px)}
+.spb-garment-card{min-width:0}
+.spb-garment-card a{display:block;height:100%;text-decoration:none;color:inherit;background:var(--paper,#fbf8f6);border:1px solid rgba(0,37,68,.12);border-radius:16px;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease}
+.spb-garment-card a:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,37,68,.13)}
+.spb-garment-card a:focus-visible{outline:3px solid var(--coral,#e8656c);outline-offset:3px}
+.spb-garment-card img{display:block;width:100%;aspect-ratio:3/4;height:auto;object-fit:cover;object-position:center top;background:#ece3dc}
+.spb-garment-card__content{padding:11px 12px 13px;min-height:68px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.spb-garment-card__content span:first-child{font-weight:700;font-size:clamp(.78rem,1vw,.93rem);line-height:1.3;color:var(--navy,#002544)}
+.spb-garment-card__content span:last-child{font-size:1.1rem;color:var(--coral,#e8656c)}
+@media(max-width:1000px){.spb-garment-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.spb-garment-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.spb-garment-card__content{min-height:70px;padding:10px}}
+@media(prefers-reduced-motion:reduce){.spb-garment-card a{transition:none}}
+/* END SP Boutique — Phase A ten-image garment chooser */
+
+
+/* Styles We Stitch — blouse variations, isolated from existing garment and design grids */
+.spb-chooser-jump{display:inline-flex;align-items:center;gap:9px;margin-top:14px;padding:3px 0;border-bottom:1px solid #b9696d;color:#954b53;font:700 .84rem/1.55 var(--body);text-decoration:none}
+.spb-chooser-jump:hover,.spb-chooser-jump:focus-visible{color:var(--navy);border-color:var(--navy)}
+.spb-styles{margin:clamp(34px,5vw,64px) 0 clamp(38px,5vw,66px);padding:clamp(30px,4.5vw,58px) 0 clamp(35px,4vw,52px);border-top:1px solid #d8d4cd;border-bottom:1px solid #d8d4cd}
+.spb-styles__eyebrow{margin:0 0 10px;color:#a45761;font:700 .68rem/1.5 var(--body);letter-spacing:.14em;text-transform:uppercase}
+.spb-styles__intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:clamp(25px,3vw,40px)}
+.spb-styles__intro h3,.spb-designs-intro h3{margin:0;color:var(--navy,#002544);font:600 clamp(2.4rem,4.4vw,4.2rem)/.96 var(--display);letter-spacing:-.025em}
+.spb-styles__lede{max-width:59ch;margin-top:14px;color:#5b6a72;font-size:.92rem;line-height:1.75}
+.spb-styles__count{color:#9c8782;font:600 .74rem/1.5 var(--body);letter-spacing:.12em;white-space:nowrap}
+.spb-styles__group-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;scroll-margin-top:135px;margin-bottom:20px}
+.spb-styles__group-head h4{margin:0;color:#17384c;font:600 clamp(1.8rem,2.8vw,2.65rem)/1.05 var(--display);letter-spacing:-.015em}
+.spb-styles__group-head h4 span{font:600 .74rem/1.2 var(--body);color:#ac5b62;vertical-align:top;padding-left:8px}
+.spb-styles__group-head>p{max-width:26ch;color:#64717a;font-size:.79rem;line-height:1.55;text-align:right}
+.spb-styles__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,1.7vw,21px)}
+.spb-style-card{min-width:0}
+.spb-style-card>a{display:block;height:100%;overflow:hidden;border-radius:15px;border:1px solid #dedad3;background:#fffefa;color:inherit;text-decoration:none;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.spb-style-card>a:hover{transform:translateY(-4px);border-color:#c6a39d;box-shadow:0 14px 30px rgba(17,43,53,.095)}
+.spb-style-card>a:focus-visible{outline:3px solid #b44e5e;outline-offset:3px}
+.spb-style-card__visual{position:relative;overflow:hidden;aspect-ratio:4/5;background:#e9e0d8}
+.spb-style-card__visual img{display:block;width:100%;height:100%;object-fit:cover;object-position:center center;transition:transform .32s ease}
+.spb-style-card>a:hover img{transform:scale(1.035)}
+.spb-style-card__index{position:absolute;left:12px;top:12px;padding:5px 7px;border-radius:3px;background:rgba(252,250,247,.9);color:#304555;font:700 .63rem/1 var(--body);letter-spacing:.08em}
+.spb-style-card__body{display:flex;min-height:154px;flex-direction:column;gap:7px;padding:16px 15px 17px}
+.spb-style-card__body h5{margin:0;font:600 clamp(1.19rem,1.65vw,1.5rem)/1.1 var(--display);color:#18384b}
+.spb-style-card__body p{margin:0;color:#607079;font-size:.73rem;line-height:1.5}
+.spb-style-card__cta{margin-top:auto;padding-top:8px;display:flex;align-items:center;justify-content:space-between;gap:6px;color:#a7505d;font:700 .71rem/1.3 var(--body)}
+.spb-style-card__cta span{font-size:1rem}
+.spb-styles__note{margin-top:18px;color:#718088;font-size:.72rem;line-height:1.7}
+.spb-designs-intro{margin-bottom:22px}
+.spb-designs-intro h3{font-size:clamp(2rem,3.3vw,3.1rem)}
+.spb-designs-intro>p:last-child{margin-top:9px;color:#5f707a;font-size:.84rem;line-height:1.6}
+@media(max-width:900px){.spb-styles__grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.spb-styles__intro{align-items:flex-start;gap:8px;flex-direction:column}.spb-styles__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.spb-styles__group-head>p{display:none}.spb-style-card__body{padding:13px 11px 14px;min-height:164px}.spb-style-card__body h5{font-size:1.16rem}.spb-style-card__body p{font-size:.7rem}.spb-style-card__cta{font-size:.68rem}.spb-styles__intro h3{font-size:clamp(2.3rem,9vw,3.3rem)}.spb-styles__lede{font-size:.82rem}.spb-styles__group-head{scroll-margin-top:110px}}
+@media(max-width:360px){.spb-styles__grid{gap:8px}.spb-style-card__body{min-height:177px;padding:11px 9px}.spb-style-card__body h5{font-size:1.08rem}.spb-style-card__index{left:7px;top:7px}}
+@media(prefers-reduced-motion:reduce){.spb-style-card>a,.spb-style-card__visual img{transition:none}}
+/* END Styles We Stitch */
+
+
+/* B2 — Full-length suit silhouette cards: preserve hems, pleats and ankle folds */
+.spb-chooser-jump + .spb-chooser-jump{margin-left:clamp(12px,2vw,24px)}
+.spb-styles__group-head--salwar{margin-top:clamp(38px,5vw,65px);padding-top:clamp(27px,3vw,40px);border-top:1px solid #ddd8d1}
+.spb-styles__grid--salwar{grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(15px,2.3vw,28px)}
+.spb-style-card--full .spb-style-card__visual{aspect-ratio:3/4;background:#ebe1d9}
+.spb-style-card--full .spb-style-card__visual img{object-fit:contain;object-position:center center}
+.spb-style-card--full .spb-style-card__body{min-height:136px}
+@media(max-width:940px){.spb-styles__grid--salwar{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.spb-styles__grid--salwar{grid-template-columns:minmax(0,1fr);gap:20px;max-width:440px;margin-inline:auto}.spb-style-card--full .spb-style-card__body{min-height:0;padding:15px}.spb-style-card--full .spb-style-card__body h5{font-size:1.48rem}.spb-style-card--full .spb-style-card__body p{font-size:.78rem}.spb-styles__group-head--salwar{margin-top:35px}.spb-chooser-jump + .spb-chooser-jump{margin-left:0}}
+/* END B2 — Salwar styles */
+
+
+/* B3 — Langa Voni style edit (four full-length selected designs) */
+.spb-styles__group-head--langa{margin-top:clamp(38px,5vw,65px);padding-top:clamp(27px,3vw,40px);border-top:1px solid #ddd8d1}
+.spb-styles__grid--langa{grid-template-columns:repeat(4,minmax(0,1fr))}
+.spb-style-card--langa .spb-style-card__visual{aspect-ratio:4/5;background:#ece2db}
+.spb-style-card--langa .spb-style-card__visual img{object-fit:contain;object-position:center center}
+.spb-style-card--langa .spb-style-card__body{min-height:158px}
+@media(max-width:980px){.spb-styles__grid--langa{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.spb-styles__grid--langa{gap:12px}.spb-style-card--langa .spb-style-card__body{min-height:175px}}
+@media(max-width:380px){.spb-styles__grid--langa{grid-template-columns:minmax(0,1fr);max-width:420px;margin-inline:auto}.spb-style-card--langa .spb-style-card__body{min-height:0}}
+/* END B3 Langa Voni styles */
+
+
+/* B4 — Pattu Pavadai styles: full-length, uncropped textile photography */
+.spb-styles__group-head--pavadai{margin-top:clamp(38px,5vw,65px);padding-top:clamp(27px,3vw,40px);border-top:1px solid #ddd8d1}
+.spb-styles__grid--pavadai{grid-template-columns:repeat(2,minmax(0,1fr));max-width:850px;gap:clamp(15px,2.3vw,28px)}
+.spb-style-card--pavadai .spb-style-card__visual{aspect-ratio:3/4;background:#ede4dc}
+.spb-style-card--pavadai .spb-style-card__visual img{object-fit:contain;object-position:center center}
+.spb-style-card--pavadai .spb-style-card__body{min-height:132px}
+@media(max-width:600px){.spb-styles__grid--pavadai{grid-template-columns:minmax(0,1fr);max-width:440px;margin-inline:auto}.spb-style-card--pavadai .spb-style-card__body{min-height:0;padding:15px}.spb-style-card--pavadai .spb-style-card__body h5{font-size:1.48rem}.spb-style-card--pavadai .spb-style-card__body p{font-size:.78rem}}
+/* END B4 Pattu Pavadai styles */
