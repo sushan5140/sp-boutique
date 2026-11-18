@@ -1348,3 +1348,13 @@ p { line-height: 1.72; }
 @media(max-width:650px){.spb-styles__grid--langa{gap:12px}.spb-style-card--langa .spb-style-card__body{min-height:175px}}
 @media(max-width:380px){.spb-styles__grid--langa{grid-template-columns:minmax(0,1fr);max-width:420px;margin-inline:auto}.spb-style-card--langa .spb-style-card__body{min-height:0}}
 /* END B3 Langa Voni styles */
+
+
+/* B4 — Pattu Pavadai styles: full-length, uncropped textile photography */
+.spb-styles__group-head--pavadai{margin-top:clamp(38px,5vw,65px);padding-top:clamp(27px,3vw,40px);border-top:1px solid #ddd8d1}
+.spb-styles__grid--pavadai{grid-template-columns:repeat(2,minmax(0,1fr));max-width:850px;gap:clamp(15px,2.3vw,28px)}
+.spb-style-card--pavadai .spb-style-card__visual{aspect-ratio:3/4;background:#ede4dc}
+.spb-style-card--pavadai .spb-style-card__visual img{object-fit:contain;object-position:center center}
+.spb-style-card--pavadai .spb-style-card__body{min-height:132px}
+@media(max-width:600px){.spb-styles__grid--pavadai{grid-template-columns:minmax(0,1fr);max-width:440px;margin-inline:auto}.spb-style-card--pavadai .spb-style-card__body{min-height:0;padding:15px}.spb-style-card--pavadai .spb-style-card__body h5{font-size:1.48rem}.spb-style-card--pavadai .spb-style-card__body p{font-size:.78rem}}
+/* END B4 Pattu Pavadai styles */
