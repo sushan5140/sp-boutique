@@ -74,7 +74,7 @@
           <div><b>${esc(p.name)}</b><span>${priceText(p)}</span></div>
           <button class="iconbtn" type="button" data-remove="${p.id}" aria-label="Remove ${esc(p.name)}"><svg width="18" height="18"><use href="#i-x"/></svg></button>
         </div>`).join("")
-      : `<div class="drawer__empty"><svg width="36" height="36"><use href="#i-heart"/></svg><p>Your list is empty.<br>Tap the heart on any design to add it here.</p></div>`;
+      : `<div class="drawer__empty"><svg width="36" height="36"><use href="#i-heart"/></svg><p>Your list is empty.<br>Open a featured design to add it here.</p></div>`;
     const send = $("#listSend");
     send.href = list.length ? wa(listMessage()) : "#collections";
     send.setAttribute("aria-disabled", String(!list.length));
@@ -95,61 +95,9 @@
     toast(on ? "Added to your enquiry list" : "Removed from your enquiry list");
   };
 
-  /* ---------- collections ---------- */
-  const FIRST = 12;
-  let filter = "all";
-  let expanded = false;
-  const shown = () => (filter === "all" ? D.products : D.products.filter((p) => p.cat === filter));
-
-  $("#cats").innerHTML = D.categories.map((c) => `
-    <button class="cat" type="button" role="listitem" data-cat="${c.id}" aria-pressed="false">
-      <span class="cat__img"><img src="${unsplash(c.cover, 200, 200, 65)}" alt="" width="92" height="92"></span>
-      <span>${esc(c.name)}</span>
-    </button>`).join("");
-
-  $("#filters").innerHTML = [{ id: "all", name: "All designs" }, ...D.categories].map((c) => {
-    const n = c.id === "all" ? D.products.length : D.products.filter((p) => p.cat === c.id).length;
-    return `<button class="filter" type="button" data-filter="${c.id}" aria-pressed="${c.id === filter}">${esc(c.name)}<small>${n}</small></button>`;
-  }).join("");
-
-  const renderGrid = () => {
-    const all = shown();
-    const items = filter === "all" && !expanded ? all.slice(0, FIRST) : all;
-    $("#grid").innerHTML = items.map((p, i) => `
-      <article class="card" style="--i:${Math.min(i, 11)}">
-        <button class="card__open" type="button" data-open="${p.id}" aria-label="View ${esc(p.name)}">
-          <img ${imgAttrs(p, "(max-width: 860px) 46vw, (max-width: 1040px) 30vw, 270px")} alt="${esc(p.name)}" width="480" height="600" loading="lazy">
-        </button>
-        <button class="heart" type="button" data-heart="${p.id}" aria-pressed="${list.includes(p.id)}" aria-label="Save ${esc(p.name)} to enquiry list"><svg width="20" height="20"><use href="#i-heart"/></svg></button>
-        <div class="card__meta">
-          <p class="card__cat">${esc(catName(p.cat))}</p>
-          <h3><button type="button" data-open="${p.id}">${esc(p.name)}</button></h3>
-          <div class="card__row">
-            <span class="price">${priceText(p)}</span>
-            <a class="card__wa" href="${wa(itemMessage(p))}" target="_blank" rel="noopener" aria-label="Enquire about ${esc(p.name)} on WhatsApp"><svg width="15" height="15"><use href="#i-wa"/></svg>Enquire</a>
-          </div>
-        </div>
-      </article>`).join("");
-    const more = $("#more");
-    more.hidden = !(filter === "all" && !expanded && all.length > FIRST);
-    more.textContent = `Show all ${all.length} designs`;
-    $$(".filter").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filter === filter)));
-    $$(".cat").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.cat === filter)));
-  };
-
-  const setFilter = (id) => { filter = id; renderGrid(); };
-
-  $("#filters").addEventListener("click", (e) => {
-    const b = e.target.closest("[data-filter]");
-    if (b) setFilter(b.dataset.filter);
-  });
-  $("#cats").addEventListener("click", (e) => {
-    const b = e.target.closest("[data-cat]");
-    if (!b) return;
-    setFilter(b.dataset.cat);
-    $("#collections").scrollIntoView();
-  });
-  $("#more").addEventListener("click", () => { expanded = true; renderGrid(); });
+  /* ---------- curated style galleries ---------- */
+  // The editorial "Styles we stitch" cards use direct WhatsApp links.
+  // Retain the product details modal for existing deep links and the featured hero design.
 
   /* ---------- product sheet ---------- */
   const sheet = $("#sheet");
@@ -225,7 +173,7 @@
     if (push) history.replaceState(null, "", `#design=${id}`);
   };
   const stepSheet = (dir) => {
-    const pool = shown().includes(current) ? shown() : D.products;
+    const pool = D.products;
     const i = pool.indexOf(current);
     openSheet(pool[(i + dir + pool.length) % pool.length].id);
   };
@@ -530,7 +478,6 @@
   });
 
   /* ---------- go ---------- */
-  renderGrid();
   renderList();
   renderStudio();
   fromHash();
