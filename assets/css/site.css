@@ -1370,3 +1370,83 @@ p { line-height: 1.72; }
 @media(max-width:650px){.spb-styles__grid--kurta{gap:12px}.spb-style-card--kurta .spb-style-card__body{min-height:160px}}
 @media(max-width:380px){.spb-styles__grid--kurta{grid-template-columns:minmax(0,1fr);max-width:420px;margin-inline:auto}.spb-style-card--kurta .spb-style-card__body{min-height:0}}
 /* END B5 Kurta styles */
+
+/* SPB / 2026-11-19 / editorial vertical rhythm */
+/* Keep the handmade editorial breathing room, but never stack three unrelated
+   section spacers between the last garment card and the next heading. */
+#collections {
+  padding-bottom: clamp(14px, 2vw, 28px);
+}
+.spb-garment-chooser {
+  margin-bottom: clamp(18px, 2.3vw, 30px);
+}
+.spb-styles {
+  margin-top: clamp(18px, 2.5vw, 32px);
+  margin-bottom: 0;
+  padding-top: clamp(24px, 3.2vw, 40px);
+  padding-bottom: clamp(24px, 3vw, 38px);
+}
+.spb-styles__group-head--salwar,
+.spb-styles__group-head--langa,
+.spb-styles__group-head--pavadai,
+.spb-styles__group-head--kurta {
+  margin-top: clamp(28px, 3.5vw, 46px);
+  padding-top: clamp(20px, 2.4vw, 30px);
+}
+/* The workroom should follow the gallery without a second empty screen. */
+.studio {
+  padding-block: clamp(43px, 5vw, 66px);
+}
+.studio__intro {
+  margin-bottom: clamp(24px, 3vw, 36px);
+}
+/* Stitching photo and headline share a visual starting line. */
+.craft.sec {
+  padding-block: clamp(46px, 5.2vw, 70px);
+}
+.craft__lead {
+  align-items: start;
+}
+.craft__heading {
+  padding-top: clamp(3px, 0.6vw, 10px);
+}
+.craft__services {
+  margin-top: clamp(43px, 5vw, 66px);
+}
+/* A consistent quieter step between the later editorial blocks. */
+.journey {
+  padding-block: clamp(52px, 6vw, 78px);
+}
+.rates {
+  margin-top: clamp(45px, 5.2vw, 68px);
+}
+.visit {
+  padding-block: clamp(56px, 6vw, 86px);
+}
+@media (max-width: 860px) {
+  .craft__heading { padding-top: 0; }
+  .craft__lead { gap: clamp(20px, 4vw, 32px); }
+}
+@media (max-width: 660px) {
+  #collections { padding-bottom: 14px; }
+  .spb-garment-chooser { margin-bottom: 18px; }
+  .spb-styles {
+    margin-top: 18px;
+    padding-block: 24px 26px;
+  }
+  .spb-styles__group-head--salwar,
+  .spb-styles__group-head--langa,
+  .spb-styles__group-head--pavadai,
+  .spb-styles__group-head--kurta {
+    margin-top: 30px;
+    padding-top: 18px;
+  }
+  .studio { padding-block: clamp(36px, 8vw, 46px); }
+  .studio__intro { margin-bottom: 22px; }
+  .craft.sec { padding-block: clamp(38px, 8vw, 48px); }
+  .craft__services { margin-top: 30px; }
+  .journey { padding-block: clamp(38px, 8vw, 48px); }
+  .rates { margin-top: 36px; }
+  .visit { padding-block: clamp(42px, 8vw, 54px); }
+}
+/* END SPB editorial vertical rhythm */
