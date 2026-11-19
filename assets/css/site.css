@@ -1358,3 +1358,15 @@ p { line-height: 1.72; }
 .spb-style-card--pavadai .spb-style-card__body{min-height:132px}
 @media(max-width:600px){.spb-styles__grid--pavadai{grid-template-columns:minmax(0,1fr);max-width:440px;margin-inline:auto}.spb-style-card--pavadai .spb-style-card__body{min-height:0;padding:15px}.spb-style-card--pavadai .spb-style-card__body h5{font-size:1.48rem}.spb-style-card--pavadai .spb-style-card__body p{font-size:.78rem}}
 /* END B4 Pattu Pavadai styles */
+
+/* B5 / Kurta & Kurti gallery: show complete garment silhouettes */
+.spb-styles__group-head--kurta{margin-top:clamp(38px,5vw,65px);padding-top:clamp(27px,3vw,40px);border-top:1px solid #ddd8d1}
+.spb-styles__grid--kurta{grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,1.7vw,21px)}
+.spb-style-card--kurta .spb-style-card__visual{aspect-ratio:3/4;background:#ede4dc}
+.spb-style-card--kurta .spb-style-card__visual img{object-fit:contain;object-position:center center}
+.spb-style-card--kurta .spb-style-card__body{min-height:158px}
+#b5-kurta-gallery[hidden],#b5-kurta-jump[hidden]{display:none!important}
+@media(max-width:980px){.spb-styles__grid--kurta{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.spb-styles__grid--kurta{gap:12px}.spb-style-card--kurta .spb-style-card__body{min-height:160px}}
+@media(max-width:380px){.spb-styles__grid--kurta{grid-template-columns:minmax(0,1fr);max-width:420px;margin-inline:auto}.spb-style-card--kurta .spb-style-card__body{min-height:0}}
+/* END B5 Kurta styles */
