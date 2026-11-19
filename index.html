@@ -68,39 +68,34 @@
 
 <main id="main">
 
-  <!-- ============ HERO ============ -->
-  <section class="hero" id="home">
+  <!-- ============ HERO — APPROVED EDITORIAL 19 NOV 2026 ============ -->
+  <section class="hero hero--editorial" id="home" aria-labelledby="heroTitle">
     <div class="wrap hero__grid">
       <div class="hero__copy">
-        <p class="hero__place">Adarsh Nagar, Tandur</p>
-        <h1>Stitched in Tandur, worn everywhere.</h1>
-        <p class="hero__lede">Sarees, blouses, half sarees and suits from SP Boutique. Choose a design, ask the price on WhatsApp, and have it stitched to your measurements.</p>
-        <div class="hero__cta">
-          <a class="btn btn--navy" href="#collections">Browse collections</a>
-          <a class="btn btn--ring" href="#studio">Design your own outfit</a>
+        <p class="hero__place">Custom stitching <span aria-hidden="true">·</span> Timeless styles</p>
+        <h1 id="heroTitle">Ethnic wear,<em>tailored for you.</em></h1>
+        <p class="hero__lede">From everyday kurtis to festive lehengas, we stitch the styles you love to fit your wardrobe, your way.</p>
+        <div class="hero__benefits" aria-label="What SP Boutique offers">
+          <span>Custom stitching</span>
+          <span>Embroidery work</span>
+          <span>Made for your fit</span>
         </div>
-        <p class="hero__sign">Sarees and dresses, with a speciality in computer embroidery. It says so on our signboard.</p>
+        <div class="hero__cta">
+          <a class="btn btn--navy" href="#collections">Explore collections <span aria-hidden="true">↗</span></a>
+          <a class="btn btn--ring" href="#studio">Create your outfit <span aria-hidden="true">↗</span></a>
+        </div>
+        <p class="hero__sign">Tailored in Tandur. Worn everywhere.</p>
       </div>
-
-      <div class="hero__art">
-        <svg class="rings" viewBox="0 0 400 400" preserveAspectRatio="none" aria-hidden="true">
-          <ellipse cx="200" cy="200" rx="188" ry="184" transform="rotate(-14 200 200)" pathLength="1"/>
-          <ellipse cx="200" cy="200" rx="181" ry="190" transform="rotate(22 200 200)" pathLength="1"/>
-        </svg>
-        <button class="hero__photo" type="button" data-open="navy-pattu-gold-butta" aria-label="View navy pattu saree with gold butta">
-          <img alt="Woman in a navy pattu saree with gold butta and a red zari border"
-               width="720" height="900" fetchpriority="high"
-               src="https://images.unsplash.com/photo-1610189012906-4c0aa9b9781e?auto=format&fit=crop&w=720&h=900&q=72"
-               srcset="https://images.unsplash.com/photo-1610189012906-4c0aa9b9781e?auto=format&fit=crop&w=480&h=600&q=70 480w, https://images.unsplash.com/photo-1610189012906-4c0aa9b9781e?auto=format&fit=crop&w=720&h=900&q=72 720w, https://images.unsplash.com/photo-1610189012906-4c0aa9b9781e?auto=format&fit=crop&w=1080&h=1350&q=70 1080w"
-               sizes="(max-width: 860px) 78vw, 420px">
-        </button>
-        <button class="hero__tag" type="button" data-open="navy-pattu-gold-butta">
-          <span><b>Navy pattu saree</b><small>Ask for price</small></span>
-          <svg width="18" height="18"><use href="#i-chev"/></svg>
-        </button>
-      </div>
+      <figure class="hero__art">
+        <img class="hero__editorial-img" src="assets/hero/editorial-portrait.svg"
+             width="951" height="850" fetchpriority="high" decoding="async"
+             alt="A woman in an embroidered plum saree seated in a sunlit boutique with an arched garment rack and cane furniture">
+        <figcaption class="hero__folio">
+          <span>SP Boutique · The Style Edit</span>
+          <span>Design inspiration, made to order</span>
+        </figcaption>
+      </figure>
     </div>
-
   </section>
 
   <!-- ============ COLLECTIONS ============ -->
