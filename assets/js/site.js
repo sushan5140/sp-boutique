@@ -410,7 +410,8 @@
     $("#slipRows").innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("");
     $("#colourName").textContent = pick.colour;
     $("#lookName").textContent = `Your ${labelOf("garment", pick.garment).toLowerCase()}`;
-    $("#lookDescription").textContent = `${pick.colour} · ${labelOf("neck", pick.neck)} neck · ${labelOf("work", pick.work)}`;
+    const necklineName = labelOf("neck", pick.neck);
+    $("#lookDescription").textContent = `${pick.colour} · ${necklineName.toLowerCase().includes("neck") ? necklineName : necklineName + " neck"} · ${labelOf("work", pick.work)}`;
     studioText = [
       "Hello SP Boutique, I put this outfit together in the Outfit Studio on your website:",
       "",
