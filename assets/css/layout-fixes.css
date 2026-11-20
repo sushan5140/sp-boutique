@@ -1,0 +1,218 @@
+/* SP Boutique — layout consistency pass, 20 Nov 2026
+   One small set of deliberate overrides over the existing historical styles.
+   Preserve approved typography, palette, garment crops, motion and functionality. */
+
+:root {
+  --spb-layout-rule: #ddd7ce;
+}
+
+/* Prevent multiple accumulated margins from creating empty patches. */
+#collections.sec {
+  padding-bottom: clamp(15px, 2vw, 26px);
+}
+.spb-garment-chooser {
+  margin-top: clamp(25px, 3vw, 42px);
+  margin-bottom: clamp(22px, 2.8vw, 38px);
+}
+.spb-styles {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: clamp(26px, 3.2vw, 42px);
+  padding-bottom: clamp(22px, 2.9vw, 38px);
+}
+.spb-styles__intro {
+  margin-bottom: clamp(24px, 2.8vw, 36px);
+}
+.spb-styles__note {
+  margin-top: clamp(17px, 2vw, 24px);
+  margin-bottom: 0;
+}
+
+/* The chooser previously occupied only half of a wide viewport, with a
+   ragged row of links and an apparently empty right-hand patch. */
+.spb-garment-chooser__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.03fr) minmax(0, .9fr);
+  align-items: start;
+  gap: clamp(24px, 4.5vw, 76px);
+  max-width: none;
+  margin-bottom: clamp(23px, 2.8vw, 36px);
+}
+.spb-garment-chooser__intro {
+  min-width: 0;
+  max-width: 560px;
+}
+.spb-garment-chooser__intro h3 {
+  margin-bottom: 10px;
+}
+.spb-garment-chooser__intro p {
+  max-width: 47ch;
+}
+.spb-chooser-links {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 0 18px;
+  border-top: 1px solid var(--spb-layout-rule);
+}
+.spb-chooser-links .spb-chooser-jump {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  margin: 0;
+  padding: 10px 1px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: clamp(11px, 1vw, 13px);
+  line-height: 1.35;
+  border-bottom: 1px solid var(--spb-layout-rule);
+}
+.spb-chooser-links .spb-chooser-jump span {
+  flex: 0 0 auto;
+}
+.spb-chooser-links .spb-chooser-jump:focus-visible {
+  outline: 2px solid #a44b55;
+  outline-offset: 3px;
+}
+
+/* Correct ragged bottom edges when titles wrap to different line counts.
+   All images retain their established aspect ratios and object-fit settings. */
+.spb-garment-card > a,
+.spb-style-card > a {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+.spb-garment-card > a > img,
+.spb-style-card__visual {
+  flex-shrink: 0;
+}
+.spb-garment-card__content,
+.spb-style-card__body {
+  flex: 1 0 auto;
+}
+.spb-style-card__body .spb-style-card__cta {
+  margin-top: auto;
+}
+
+/* Two or three full-body garments should form a balanced centered editorial
+   row, rather than leaving one large unexplained blank slab on the right. */
+.spb-styles__grid--pavadai,
+.spb-styles__grid--salwar {
+  margin-inline: auto;
+}
+.spb-styles__grid--salwar {
+  max-width: 1120px;
+}
+.spb-styles__grid--pavadai {
+  max-width: 850px;
+}
+.spb-styles__group-head--salwar,
+.spb-styles__group-head--langa,
+.spb-styles__group-head--pavadai,
+.spb-styles__group-head--kurta {
+  margin-top: clamp(29px, 3.7vw, 47px);
+  padding-top: clamp(19px, 2.4vw, 30px);
+}
+
+/* Unified, shorter transitions between the last card and each new chapter. */
+.studio {
+  padding-block: clamp(42px, 5vw, 64px);
+}
+.studio__intro {
+  margin-bottom: clamp(23px, 3vw, 36px);
+}
+.craft.sec {
+  padding-block: clamp(43px, 5vw, 68px);
+}
+.craft__lead {
+  align-items: start;
+}
+.craft__heading {
+  padding-top: 0;
+}
+.craft__services {
+  margin-top: clamp(34px, 4.5vw, 58px);
+}
+.journey {
+  padding-block: clamp(40px, 5vw, 65px);
+}
+.rates {
+  margin-top: clamp(37px, 4.5vw, 59px);
+}
+.visit {
+  padding-block: clamp(47px, 5.5vw, 76px);
+}
+
+/* Anchors should not disappear behind the floating header. */
+#collections, #styles-we-stitch, #studio, #stitching, #visit,
+#blouse-styles, #salwar-styles, #langa-voni-styles,
+#pattu-pavadai-styles, #kurta-styles {
+  scroll-margin-top: 116px;
+}
+@media (max-width: 900px) {
+  .spb-garment-chooser__head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .spb-garment-chooser__intro {
+    max-width: 62ch;
+  }
+  .spb-chooser-links {
+    max-width: 100%;
+  }
+  .craft__lead {
+    gap: clamp(20px, 4vw, 30px);
+  }
+}
+@media (max-width: 600px) {
+  #collections.sec {
+    padding-bottom: 14px;
+  }
+  .spb-garment-chooser {
+    margin-top: 21px;
+    margin-bottom: 22px;
+  }
+  .spb-garment-chooser__head {
+    gap: 18px;
+    margin-bottom: 22px;
+  }
+  .spb-chooser-links {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .spb-chooser-links .spb-chooser-jump {
+    min-height: 42px;
+    font-size: 12px;
+    padding-block: 8px;
+  }
+  .spb-styles {
+    padding-block: 24px 26px;
+  }
+  .spb-styles__group-head--salwar,
+  .spb-styles__group-head--langa,
+  .spb-styles__group-head--pavadai,
+  .spb-styles__group-head--kurta {
+    margin-top: 28px;
+    padding-top: 18px;
+  }
+  .studio, .craft.sec {
+    padding-block: clamp(37px, 8vw, 47px);
+  }
+  .journey {
+    padding-block: clamp(37px, 8vw, 49px);
+  }
+  .rates {
+    margin-top: 32px;
+  }
+  .visit {
+    padding-block: clamp(40px, 8vw, 54px);
+  }
+  #collections, #styles-we-stitch, #studio, #stitching, #visit,
+  #blouse-styles, #salwar-styles, #langa-voni-styles,
+  #pattu-pavadai-styles, #kurta-styles {
+    scroll-margin-top: 93px;
+  }
+}
