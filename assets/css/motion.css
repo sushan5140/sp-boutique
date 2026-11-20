@@ -1,0 +1,196 @@
+/* SP Boutique | Balanced Editorial Motion V1 | 7 agreed interactions
+   Loaded after site.css; JS activates scroll reveals only when supported.
+   No third-party runtime, scroll hijack, or continuous decorative motion. */
+
+:root {
+  --spb-motion-ease: cubic-bezier(.22, 1, .36, 1);
+  --spb-motion-quick: 180ms;
+  --spb-motion-reveal: 400ms;
+}
+
+/* 01 — The real headline and buttons enter; the hero photograph stays still. */
+@keyframes spb-hero-rise {
+  from { opacity: 0; transform: translate3d(0, 17px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.hero--immersive .hero__copy > * {
+  animation: spb-hero-rise 480ms var(--spb-motion-ease) both;
+}
+.hero--immersive .hero__copy > :nth-child(1) { animation-delay: 50ms; }
+.hero--immersive .hero__copy > :nth-child(2) { animation-delay: 110ms; }
+.hero--immersive .hero__copy > :nth-child(3) { animation-delay: 170ms; }
+.hero--immersive .hero__copy > :nth-child(4) { animation-delay: 230ms; }
+.hero--immersive .hero__copy > :nth-child(5) { animation-delay: 290ms; }
+.hero--immersive .hero__copy > :nth-child(6) { animation-delay: 330ms; }
+.hero--immersive .hero__scene-image { animation: none; }
+
+/* 02, 03 — Applied only by JS to elements below the fold.
+   Without JS or IntersectionObserver, every element remains visible. */
+.spb-reveal-pending {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity var(--spb-motion-reveal) ease,
+    transform var(--spb-motion-reveal) var(--spb-motion-ease);
+  transition-delay: var(--spb-motion-delay, 0ms);
+}
+.spb-reveal-pending.spb-reveal-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.spb-card-reveal.spb-reveal-pending {
+  transform: translate3d(0, 12px, 0);
+}
+
+/* 04 — A restrained tactile interaction, not a 3D tilt. */
+@media (hover: hover) and (pointer: fine) {
+  .spb-style-card > a,
+  .spb-garment-card > a {
+    transition: transform var(--spb-motion-quick) var(--spb-motion-ease),
+      box-shadow 230ms ease, border-color 230ms ease;
+  }
+  .spb-style-card > a:hover,
+  .spb-garment-card > a:hover {
+    transform: translateY(-3px);
+  }
+  .spb-style-card > a:hover img,
+  .spb-garment-card > a:hover img {
+    transform: scale(1.02);
+  }
+  .spb-style-card > a:hover .spb-style-card__cta span,
+  .spb-garment-card > a:hover .spb-garment-card__content span:last-child {
+    transform: translate3d(3px, -2px, 0);
+  }
+}
+.spb-style-card__cta span,
+.spb-garment-card__content span:last-child {
+  display: inline-block;
+  transition: transform var(--spb-motion-quick) var(--spb-motion-ease);
+}
+.spb-style-card__visual img,
+.spb-garment-card img {
+  transition: transform 360ms var(--spb-motion-ease);
+}
+.spb-style-card > a:active,
+.spb-garment-card > a:active {
+  transform: scale(.988);
+  transition-duration: 90ms;
+}
+.spb-style-card > a:focus-visible,
+.spb-garment-card > a:focus-visible {
+  outline-offset: 4px;
+}
+
+/* 05 — Existing SVG redraw stays functionally unchanged; each new SVG inks in. */
+@keyframes spb-sketch-ink {
+  from { opacity: .52; transform: translate3d(0, 3px, 0) scale(.991); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes spb-step-enter {
+  from { opacity: .48; transform: translate3d(0, 7px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.spb-motion-live .slip__sketch svg {
+  animation: spb-sketch-ink 340ms var(--spb-motion-ease) both;
+  transform-origin: center;
+}
+.spb-motion-live .studio__step:not([hidden]) {
+  animation: spb-step-enter 280ms var(--spb-motion-ease) both;
+}
+.spb-motion-live .studio__step-tab,
+.spb-motion-live .studio .chip span,
+.spb-motion-live .studio .swatch .swatch__colour {
+  transition-duration: var(--spb-motion-quick);
+  transition-timing-function: var(--spb-motion-ease);
+}
+.spb-motion-live .studio .chip input:checked + span {
+  box-shadow: 0 3px 10px -8px rgba(0,37,68,.7);
+}
+
+/* 06 — A soft coral seam draws down the four existing order steps. */
+.spb-thread-active .journey__steps {
+  position: relative;
+  --spb-thread-progress: 0;
+}
+.spb-thread-active .journey__steps::before,
+.spb-thread-active .journey__steps::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 23px;
+  top: 27px;
+  bottom: 27px;
+  width: 2px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+.spb-thread-active .journey__steps::before {
+  background: rgba(164, 75, 85, .14);
+}
+.spb-thread-active .journey__steps::after {
+  background: #a44b55;
+  transform: scaleY(var(--spb-thread-progress));
+  transform-origin: center top;
+  transition: transform 110ms linear;
+}
+.spb-thread-active .journey__steps li {
+  position: relative;
+  z-index: 1;
+}
+.spb-thread-active .journey__steps li > span {
+  position: relative;
+  display: inline-block;
+  width: max-content;
+  z-index: 1;
+  padding: 0 3px;
+  margin-left: -3px;
+  background: #fffcf8;
+}
+
+/* 07 — JS animates measured accordion content height; native details remain
+   usable whenever JS is absent, animations fail, or reduced motion is requested. */
+.spb-motion-accordion .craft__more > p { transform-origin: top; }
+.spb-motion-accordion .craft__more summary span {
+  transition: transform var(--spb-motion-quick) ease, color var(--spb-motion-quick) ease;
+}
+.spb-motion-accordion .craft__more[open] summary span { transform: rotate(180deg); }
+.spb-motion-accordion .craft__more summary:focus-visible {
+  outline: 2px solid #a44b55;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+@media (max-width: 650px) {
+  .spb-reveal-pending { transform: translate3d(0, 10px, 0); }
+  .spb-thread-active .journey__steps::before,
+  .spb-thread-active .journey__steps::after { left: 19px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  .hero--immersive .hero__copy > *,
+  .spb-motion-live .slip__sketch svg,
+  .spb-motion-live .studio__step:not([hidden]) {
+    animation: none !important;
+  }
+  .spb-reveal-pending,
+  .spb-card-reveal.spb-reveal-pending,
+  .spb-reveal-pending.spb-reveal-visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .spb-style-card > a,
+  .spb-style-card > a:active,
+  .spb-garment-card > a,
+  .spb-garment-card > a:active,
+  .spb-style-card img,
+  .spb-garment-card img,
+  .spb-style-card__cta span,
+  .spb-garment-card__content span:last-child,
+  .spb-thread-active .journey__steps::after,
+  .spb-motion-accordion .craft__more summary span {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
