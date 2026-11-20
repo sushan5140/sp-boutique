@@ -216,3 +216,142 @@
     scroll-margin-top: 93px;
   }
 }
+
+
+/* SP Boutique Atelier — approved compact Hybrid header */
+/* This replaces the old full-height photo introduction. Existing service
+   cards immediately follow the editorial text, with no duplicate tiles. */
+.craft .craft__lead--atelier {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, .82fr);
+  align-items: center;
+  gap: clamp(30px, 6vw, 96px);
+}
+.craft .craft__lead--atelier .craft__heading {
+  min-width: 0;
+  padding: 0;
+}
+.craft .craft__lead--atelier .craft__heading > .section-kicker {
+  margin: 0 0 clamp(15px, 2vw, 24px);
+  color: #a34b56;
+  font: 700 clamp(10px, .82vw, 12px)/1.5 var(--body);
+  letter-spacing: .155em;
+  text-transform: uppercase;
+}
+.craft .craft__edition {
+  margin-left: 10px;
+  color: #98857f;
+  letter-spacing: .12em;
+}
+.craft .craft__lead--atelier .craft__heading h2 {
+  max-width: none;
+  margin: 0;
+  color: #153347;
+  font-size: clamp(3.65rem, 5.5vw, 5.75rem);
+  line-height: .91;
+  font-weight: 500;
+  letter-spacing: -.038em;
+  text-wrap: balance;
+}
+.craft .craft__lead--atelier .craft__heading h2 em {
+  display: inline-block;
+  color: #a44d58;
+  font-weight: 500;
+  padding-top: .08em;
+}
+.craft .craft__aside {
+  min-width: 0;
+  max-width: 430px;
+  align-self: center;
+  padding-top: clamp(10px, 2.1vw, 28px);
+}
+.craft .craft__aside::before {
+  content: "";
+  display: block;
+  width: 46px;
+  height: 1px;
+  margin-bottom: clamp(16px, 2vw, 23px);
+  background: #b4646b;
+}
+.craft .craft__aside > p {
+  margin: 0;
+  max-width: 42ch;
+  color: #566773;
+  font: 400 clamp(14px, 1.12vw, 16px)/1.78 var(--body);
+}
+.craft .craft__disciplines {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: clamp(9px, 1.3vw, 16px);
+  row-gap: 6px;
+  margin-top: clamp(20px, 2.4vw, 30px);
+}
+.craft .craft__disciplines span {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(9px, 1.3vw, 16px);
+  color: #9d525a;
+  font: 700 clamp(10px, .8vw, 11.5px)/1.5 var(--body);
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.craft .craft__disciplines span:not(:last-child)::after {
+  content: "";
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #bf8e8f;
+}
+.craft.sec .craft__services {
+  margin-top: clamp(40px, 4.6vw, 60px);
+}
+@media (max-width: 900px) {
+  .craft .craft__lead--atelier {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(18px, 3vw, 28px);
+  }
+  .craft .craft__lead--atelier .craft__heading h2 {
+    font-size: clamp(3.7rem, 8vw, 5.2rem);
+  }
+  .craft .craft__aside {
+    padding-top: 0;
+    max-width: 66ch;
+  }
+  .craft .craft__aside::before {
+    margin-bottom: 13px;
+  }
+  .craft.sec .craft__services {
+    margin-top: 35px;
+  }
+}
+@media (max-width: 600px) {
+  .craft .craft__lead--atelier {
+    gap: 19px;
+  }
+  .craft .craft__lead--atelier .craft__heading > .section-kicker {
+    margin-bottom: 15px;
+    font-size: 10px;
+    letter-spacing: .12em;
+  }
+  .craft .craft__lead--atelier .craft__heading h2 {
+    font-size: clamp(3.15rem, 10.7vw, 4.2rem);
+    line-height: .96;
+  }
+  .craft .craft__aside > p {
+    font-size: 13.5px;
+    line-height: 1.68;
+  }
+  .craft .craft__disciplines {
+    margin-top: 17px;
+    gap: 6px 11px;
+  }
+  .craft .craft__disciplines span {
+    font-size: 9.5px;
+    gap: 11px;
+  }
+  .craft.sec .craft__services {
+    margin-top: 28px;
+  }
+}
+/* END SP Boutique Atelier */
