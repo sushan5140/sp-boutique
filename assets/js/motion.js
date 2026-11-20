@@ -53,8 +53,17 @@
     ].forEach(selector => $$(selector).forEach(el => track(el)));
 
     const addCards = (cards) => {
-      const columns = window.innerWidth <= 650 ? 2 : window.innerWidth <= 990 ? 3 : 4;
-      cards.forEach((card, i) => track(card, (i % columns) * 60, true));
+      // Calculate row staggering for each real grid, not a page-wide 4-card count.
+      // The Collections grid has five desktop columns; style grids vary from 2 to 4.
+      cards.forEach((card) => {
+        const parent = card.parentElement;
+        const columns = Math.max(1,
+          getComputedStyle(parent).gridTemplateColumns.split(/\\s+/).filter(Boolean).length);
+        const siblings = [...parent.children].filter((el) =>
+          el.matches(".spb-garment-card, .spb-style-card"));
+        const column = Math.max(0, siblings.indexOf(card)) % columns;
+        track(card, column * 60, true);
+      });
     };
     addCards($$(".spb-garment-card, .spb-style-card"));
     const b5 = $("#b5-kurta-gallery");
@@ -80,8 +89,19 @@
         }
       }
     };
-    addEventListener("pageshow", check, { passive: true });
-    addEventListener("focus", check, { passive: true });
+    // An observer may miss a fast jump to an anchor while restoring the page.
+    // This passive, frame-throttled safety check prevents invisible blank patches.
+    let checkQueued = false;
+    const scheduleCheck = () => {
+      if (checkQueued || !pending.size) return;
+      checkQueued = true;
+      requestAnimationFrame(() => { checkQueued = false; check(); });
+    };
+    addEventListener("scroll", scheduleCheck, { passive: true });
+    addEventListener("resize", scheduleCheck, { passive: true });
+    addEventListener("pageshow", scheduleCheck, { passive: true });
+    document.addEventListener("visibilitychange", scheduleCheck);
+    requestAnimationFrame(check);
     reduced.addEventListener?.("change", () => {
       if (reduced.matches) {
         for (const element of pending) element.classList.add("spb-reveal-visible");
