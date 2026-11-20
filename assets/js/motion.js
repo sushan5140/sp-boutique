@@ -42,7 +42,7 @@
       "#styles-we-stitch .spb-styles__group-head",
       "#studio .studio__intro",
       "#stitching .craft__heading",
-      "#stitching .craft__photo",
+      "#stitching .craft__aside",
       ".journey__lead",
       ".journey__steps",
       ".rates__head",
@@ -65,7 +65,9 @@
         track(card, column * 60, true);
       });
     };
-    addCards($$(".spb-garment-card, .spb-style-card"));
+    addCards($(".spb-garment-card, .spb-style-card"));
+    // Stitching service panels follow the header with a restrained stagger.
+    $(".craft__service").forEach((panel, i) => track(panel, i * 60, true));
     const b5 = $("#b5-kurta-gallery");
     if (b5) {
       const newlyVisible = new MutationObserver(() => {
