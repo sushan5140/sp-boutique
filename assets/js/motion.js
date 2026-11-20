@@ -58,7 +58,7 @@
       cards.forEach((card) => {
         const parent = card.parentElement;
         const columns = Math.max(1,
-          getComputedStyle(parent).gridTemplateColumns.split(/\\s+/).filter(Boolean).length);
+          getComputedStyle(parent).gridTemplateColumns.split(/\s+/).filter(Boolean).length);
         const siblings = [...parent.children].filter((el) =>
           el.matches(".spb-garment-card, .spb-style-card"));
         const column = Math.max(0, siblings.indexOf(card)) % columns;
