@@ -1749,3 +1749,22 @@ p { line-height: 1.72; }
   .hero--immersive .hero__scene-image { animation: none; }
 }
 /* END immersive full-bleed hero */
+
+/* Final focal-point calibration — keep model right of live headline */
+@media (min-width: 761px) {
+  .hero--immersive .hero__scene-image {
+    width: 54%;
+    object-position: 0% center;
+  }
+  .hero--immersive::before {
+    background: linear-gradient(90deg,
+      #efe1d1 0%, rgba(239,225,209,.99) 25%,
+      rgba(239,225,209,.92) 33%,
+      rgba(239,225,209,.38) 46%,
+      rgba(239,225,209,0) 58%);
+  }
+}
+@media (max-width: 760px) {
+  .hero--immersive .hero__scene-image { width: 100%; object-position: 49% 38%; }
+}
+/* END focal-point calibration */
