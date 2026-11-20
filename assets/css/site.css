@@ -1624,3 +1624,128 @@ p { line-height: 1.72; }
   .hero--editorial .hero__folio span:last-child { display: none; }
 }
 /* END approved editorial hero */
+
+/* SP Boutique: immersive full-bleed hero 2026-11-20 */
+/* Image belongs to the section, never in a detached column or rectangle. */
+.hero--editorial.hero--immersive {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #efe1d1;
+  min-height: clamp(650px, 57vw, 820px);
+  padding: clamp(145px, 11vw, 174px) 0 clamp(50px, 6vw, 88px);
+}
+.hero--immersive::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg,
+      #efe1d1 0%, rgba(239,225,209,.99) 25%,
+      rgba(239,225,209,.91) 35%,
+      rgba(239,225,209,.40) 50%,
+      rgba(239,225,209,0) 68%);
+}
+.hero--immersive .hero__scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+}
+.hero--immersive .hero__scene-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 64%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 53% 48%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  filter: none;
+}
+.hero--immersive .hero__grid {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  min-height: clamp(455px, 41vw, 565px);
+  gap: 0;
+}
+.hero--immersive .hero__copy {
+  width: min(53%, 620px);
+  max-width: 620px;
+  position: relative;
+  z-index: 2;
+  padding: 0;
+  margin: 0;
+}
+.hero--immersive .hero__copy h1 {
+  max-width: 11.5ch;
+  font-size: clamp(4rem, 6.1vw, 6.35rem);
+  text-wrap: balance;
+}
+.hero--immersive .hero__lede {
+  max-width: 37ch;
+}
+.hero--immersive .hero__sign {
+  margin-top: 24px;
+}
+@media (max-width: 1120px) and (min-width: 761px) {
+  .hero--immersive .hero__scene-image { width: 67%; object-position: 46% center; }
+  .hero--immersive .hero__copy { width: 55%; }
+  .hero--immersive .hero__copy h1 { font-size: clamp(3.5rem, 6.2vw, 5.4rem); }
+  .hero--immersive .hero__cta { gap: 9px; }
+  .hero--immersive .hero__cta .btn { padding-inline: 15px; }
+}
+@media (max-width: 760px) {
+  /* Mobile: edge-to-edge photograph above real HTML text, not a tiny framed card. */
+  .hero--editorial.hero--immersive {
+    min-height: 0;
+    padding: 0 0 clamp(32px, 7vw, 44px);
+    background: #f2e6da;
+  }
+  .hero--immersive::before { display: none; }
+  .hero--immersive .hero__scene {
+    inset: 0 0 auto;
+    height: min(95vw, 480px);
+    background: #d7bca5;
+  }
+  .hero--immersive .hero__scene-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 51% 38%;
+  }
+  .hero--immersive .hero__grid {
+    display: block;
+    min-height: 0;
+    padding-top: calc(min(95vw, 480px) + 26px);
+  }
+  .hero--immersive .hero__copy {
+    width: 100%;
+    max-width: 600px;
+    padding: 0;
+  }
+  .hero--immersive .hero__copy h1 {
+    max-width: 13ch;
+    font-size: clamp(3.55rem, 9vw, 5.1rem);
+  }
+}
+@media (max-width: 480px) {
+  .hero--immersive .hero__grid { padding-top: calc(min(95vw, 480px) + 22px); }
+  .hero--immersive .hero__copy h1 { font-size: clamp(3.2rem, 12.5vw, 4.2rem); }
+  .hero--immersive .hero__benefits { gap: 6px 0; }
+  .hero--immersive .hero__cta { margin-top: 24px; }
+  .hero--immersive .hero__sign { margin-top: 19px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero--immersive .hero__scene-image { animation: none; }
+}
+/* END immersive full-bleed hero */
