@@ -564,7 +564,17 @@
               <p class="studio__step-intro">Now the details that make it yours. See them on the sketch alongside.</p>
               <fieldset class="opt opt--sleeve"><legend>Sleeves</legend><div class="chips" data-group="sleeve"></div></fieldset>
               <fieldset class="opt opt--work"><legend>Embroidery &amp; finishing</legend><div class="chips" data-group="work"></div></fieldset>
-              <fieldset class="opt opt--colour"><legend>Colour <span id="colourName" class="opt__selected"></span></legend><div class="swatches" data-group="colour"></div></fieldset>
+              <fieldset class="opt opt--colour">
+                <legend>Colour <span id="colourName" class="opt__selected"></span></legend>
+                <p class="studio__palette-intro">Explore 36 curated shades, or choose the exact colour you have in mind.</p>
+                <div class="swatches" data-group="colour"></div>
+                <div class="studio__custom-colour" id="studioCustomColourRow">
+                  <label for="studioCustomColour">Your own shade</label>
+                  <input type="color" id="studioCustomColour" value="#b94d68" aria-label="Choose any custom colour">
+                  <span id="studioCustomColourLabel">Pick a precise shade</span>
+                </div>
+                <p class="studio__palette-note">Colours are design references; available fabric shades are confirmed by the boutique.</p>
+              </fieldset>
             </div>
             <div class="studio__step" id="studioStep3" role="tabpanel" aria-labelledby="studioTab3" hidden>
               <p class="studio__step-intro">Last few details before you enquire. Nothing is booked or charged here.</p>
@@ -577,6 +587,12 @@
                 <label for="studioNote">An occasion or detail to remember <span>(optional)</span></label>
                 <textarea id="studioNote" name="studioNote" rows="3" maxlength="240" placeholder="For a wedding, matching a saree, a particular pattern…"></textarea>
               </div>
+              <a class="btn btn--navy studio__finish-send" id="studioFinishSend"
+                 href="https://wa.me/919848054521" target="_blank" rel="noopener">
+                <svg class="wa" width="18" height="18"><use href="#i-wa"/></svg>
+                Send my selected design on WhatsApp <span aria-hidden="true">↗</span>
+              </a>
+              <p class="studio__send-help">All your selected details, colour and notes are included in the message. Nothing is booked or charged here.</p>
             </div>
           </form>
           <div class="studio__step-actions">
@@ -586,7 +602,7 @@
           </div>
           <div class="studio__form-note">
             <span>Already have a picture in mind?</span>
-            <a data-wa="Hello SP Boutique, I have an outfit reference photo and would like to discuss custom stitching." href="https://wa.me/919848054521" target="_blank" rel="noopener">Share it on WhatsApp <span aria-hidden="true">↗</span></a>
+            <a id="studioPhotoWa" href="https://wa.me/919848054521" target="_blank" rel="noopener">Send choices, then attach your photo <span aria-hidden="true">↗</span></a>
           </div>
         </div>
 
@@ -609,7 +625,7 @@
               <dl class="slip__rows" id="slipRows"></dl>
               <p class="slip__price"><span>Final price</span><b>Confirmed on WhatsApp</b></p>
               <a class="btn btn--navy btn--block" id="studioSend" href="https://wa.me/919848054521" target="_blank" rel="noopener">
-                <svg class="wa" width="18" height="18"><use href="#i-wa"/></svg>Ask about this outfit
+                <svg class="wa" width="18" height="18"><use href="#i-wa"/></svg>Send my selected design
               </a>
               <button class="slip__copy" id="studioCopy" type="button">Copy the design details <span aria-hidden="true">↗</span></button>
             </div>
