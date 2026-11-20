@@ -17,6 +17,7 @@
 <link rel="preconnect" href="https://images.unsplash.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/layout-fixes.css">
 <link rel="stylesheet" href="assets/css/motion.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ClothingStore","name":"SP Boutique","slogan":"Stitched in Tandur, worn everywhere","telephone":"+919848054521","image":"assets/shopfront.jpg","address":{"@type":"PostalAddress","streetAddress":"Adarsh Nagar","addressLocality":"Tandur","addressRegion":"Telangana","postalCode":"501141","addressCountry":"IN"},"sameAs":["https://www.instagram.com/sp_boutique_tandur"]}
@@ -105,13 +106,17 @@
       <!-- SP Boutique / Phase A ten-image chooser (concept designs, not inventory) -->
       <div class="spb-garment-chooser" aria-labelledby="spb-garments-title">
         <div class="spb-garment-chooser__head">
-          <h3 id="spb-garments-title">Choose your garment</h3>
-          <p>Explore design inspiration for custom stitching. Images illustrate styles, not ready-to-buy stock. Discuss fabrics, fit and pricing with us.</p>
-          <a class="spb-chooser-jump" href="#blouse-styles">Explore 8 blouse styles <span aria-hidden="true">↘</span></a>
-          <a class="spb-chooser-jump" href="#salwar-styles">Explore 3 salwar styles <span aria-hidden="true">↘</span></a>
-          <a class="spb-chooser-jump" href="#langa-voni-styles">Explore 4 Langa Voni styles <span aria-hidden="true">↘</span></a>
-          <a class="spb-chooser-jump" href="#pattu-pavadai-styles">Explore 2 Pattu Pavadai styles <span aria-hidden="true">↘</span></a>
-          <a id="b5-kurta-jump" class="spb-chooser-jump" href="#kurta-styles" hidden>Explore 4 Kurta styles <span aria-hidden="true">↘</span></a>
+          <div class="spb-garment-chooser__intro">
+            <h3 id="spb-garments-title">Choose your garment</h3>
+            <p>Explore design inspiration for custom stitching. Images illustrate styles, not ready-to-buy stock. Discuss fabrics, fit and pricing with us.</p>
+          </div>
+          <nav class="spb-chooser-links" aria-label="Browse stitching style variations">
+            <a class="spb-chooser-jump" href="#blouse-styles">Explore 8 blouse styles <span aria-hidden="true">↘</span></a>
+            <a class="spb-chooser-jump" href="#salwar-styles">Explore 3 salwar styles <span aria-hidden="true">↘</span></a>
+            <a class="spb-chooser-jump" href="#langa-voni-styles">Explore 4 Langa Voni styles <span aria-hidden="true">↘</span></a>
+            <a class="spb-chooser-jump" href="#pattu-pavadai-styles">Explore 2 Pattu Pavadai styles <span aria-hidden="true">↘</span></a>
+            <a id="b5-kurta-jump" class="spb-chooser-jump" href="#kurta-styles" hidden>Explore 4 Kurta styles <span aria-hidden="true">↘</span></a>
+          </nav>
         </div>
         <div class="spb-garment-grid">
           <article class="spb-garment-card">
