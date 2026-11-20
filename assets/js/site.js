@@ -379,8 +379,8 @@
   const STAGE_NEXT = ["Choose details", "Finishing touches", "Review your sketch"];
   const setStudioStep = (next, focusTab = false) => {
     studioStep = Math.max(0, Math.min(2, next));
-    $(".studio__step").forEach((panel, i) => { panel.hidden = i !== studioStep; });
-    $(".studio__step-tab").forEach((tab, i) => {
+    $$(".studio__step").forEach((panel, i) => { panel.hidden = i !== studioStep; });
+    $$(".studio__step-tab").forEach((tab, i) => {
       const active = i === studioStep;
       tab.setAttribute("aria-selected", String(active));
       tab.tabIndex = active ? 0 : -1;
