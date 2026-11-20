@@ -241,26 +241,74 @@
     sleeve: [["none", "Sleeveless"], ["cap", "Cap"], ["puff", "Puff"], ["elbow", "Elbow"], ["full", "Full"]],
     work: [["plain", "Plain"], ["computer", "Computer embroidery"], ["maggam", "Maggam / aari work"], ["zari", "Zari border"]],
     colour: [
-      ["Coral", "#e8656c"], ["Rani pink", "#c2255c"], ["Maroon", "#7a1f2b"], ["Mustard", "#d9a520"],
-      ["Bottle green", "#1f5d46"], ["Navy", "#1e4a78"], ["Lavender", "#a996d6"], ["Ivory", "#f1e7d3"]
+      // Reds & Pinks
+      ["Coral","#e8656c","Reds & Pinks"],
+      ["Rani pink","#c2255c","Reds & Pinks"],
+      ["Rose pink","#df8da7","Reds & Pinks"],
+      ["Dusty rose","#b77b82","Reds & Pinks"],
+      ["Blush pink","#e9b8b8","Reds & Pinks"],
+      ["Maroon","#7a1f2b","Reds & Pinks"],
+      ["Wine","#562338","Reds & Pinks"],
+      ["Crimson","#a61e38","Reds & Pinks"],
+      ["Rust","#a34832","Reds & Pinks"],
+      // Greens & Teals
+      ["Bottle green","#1f5d46","Greens & Teals"],
+      ["Emerald","#047857","Greens & Teals"],
+      ["Sage","#9ca88c","Greens & Teals"],
+      ["Mint","#b5d5ba","Greens & Teals"],
+      ["Olive","#777b37","Greens & Teals"],
+      ["Mehendi","#6c7531","Greens & Teals"],
+      ["Sea green","#50a69a","Greens & Teals"],
+      ["Peacock teal","#007c83","Greens & Teals"],
+      ["Deep teal","#0e646a","Greens & Teals"],
+      // Blues & Purples
+      ["Navy","#1e4a78","Blues & Purples"],
+      ["Royal blue","#214aab","Blues & Purples"],
+      ["Cobalt","#3061c2","Blues & Purples"],
+      ["Sky blue","#87c6e6","Blues & Purples"],
+      ["Powder blue","#accddf","Blues & Purples"],
+      ["Indigo","#433e87","Blues & Purples"],
+      ["Lavender","#a996d6","Blues & Purples"],
+      ["Lilac","#c8addf","Blues & Purples"],
+      ["Plum","#6b355e","Blues & Purples"],
+      // Golds & Neutrals
+      ["Mustard","#d9a520","Golds & Neutrals"],
+      ["Haldi yellow","#efbc36","Golds & Neutrals"],
+      ["Champagne","#dac3a5","Golds & Neutrals"],
+      ["Ivory","#f1e7d3","Golds & Neutrals"],
+      ["Cream","#f5eada","Golds & Neutrals"],
+      ["Beige","#cdb8a1","Golds & Neutrals"],
+      ["Taupe","#9b8479","Golds & Neutrals"],
+      ["Chocolate","#4c3028","Golds & Neutrals"],
+      ["Black","#222224","Golds & Neutrals"],
     ],
     fabric: [["own", "I will bring my own fabric"], ["shop", "Help me choose fabric at the shop"]]
   };
-  const pick = { garment: "blouse", neck: "boat", sleeve: "elbow", work: "computer", colour: "Coral", fabric: "own" };
+  const pick = { garment: "blouse", neck: "boat", sleeve: "elbow", work: "computer", colour: "Coral", customColour: "#b94d68", fabric: "own" };
   const labelOf = (g, v) => (STUDIO[g].find((o) => o[0] === v) || [])[1];
 
   $$("#studioForm [data-group]").forEach((box) => {
     const g = box.dataset.group;
-    box.innerHTML = STUDIO[g].map(([v, l]) => g === "colour"
-      ? `<label class="swatch" style="--c:${l}"><input type="radio" name="${g}" value="${v}" aria-label="${v}" ${pick[g] === v ? "checked" : ""}><span class="swatch__colour"></span><span class="swatch__name">${v}</span></label>`
-      : `<label class="chip"><input type="radio" name="${g}" value="${v}" ${pick[g] === v ? "checked" : ""}><span>${l}</span></label>`
-    ).join("");
+    if (g === "colour") {
+      const groups = ["Reds & Pinks", "Greens & Teals", "Blues & Purples", "Golds & Neutrals"];
+      box.innerHTML = groups.map((group) => {
+        const swatches = STUDIO.colour.filter((shade) => shade[2] === group).map(([v, hex]) =>
+          `<label class="swatch" style="--c:${hex}"><input type="radio" name="colour" value="${v}" aria-label="${v}" ${pick.colour === v ? "checked" : ""}><span class="swatch__colour"></span><span class="swatch__name">${v}</span></label>`
+        ).join("");
+        return `<div class="swatch-group" role="group" aria-label="${group}"><h4>${group}</h4><div class="swatch-group__grid">${swatches}</div></div>`;
+      }).join("");
+    } else {
+      box.innerHTML = STUDIO[g].map(([v, l]) =>
+        `<label class="chip"><input type="radio" name="${g}" value="${v}" ${pick[g] === v ? "checked" : ""}><span>${l}</span></label>`
+      ).join("");
+    }
   });
 
   /* Flat sketch, 240 x 280. Shoulders and armholes are shared by every garment,
      so neck and sleeve choices work on all of them. */
   const sketch = () => {
-    const fill = STUDIO.colour.find((c) => c[0] === pick.colour)[1];
+    const matchedColour = STUDIO.colour.find((c) => c[0] === pick.colour);
+    const fill = matchedColour ? matchedColour[1] : (pick.customColour || "#b94d68");
     const line = "#002544";
     const gold = pick.colour === "Mustard" || pick.colour === "Ivory" ? "#8a5a12" : "#e0b04a";
     const boat = pick.neck === "boat", high = pick.neck === "high";
@@ -371,6 +419,8 @@
       "Please share the price and how long it will take."
     ].join("\n");
     $("#studioSend").href = wa(studioText);
+    $("#studioFinishSend").href = wa(studioText);
+    $("#studioPhotoWa").href = wa(studioText + "\n\nI will also share a reference photo in this WhatsApp chat.");
   };
 
   /* The wardrobe worksheet: three concise groups; choices persist between tabs. */
@@ -414,9 +464,40 @@
   setStudioStep(0);
 
   $("#studioForm").addEventListener("change", (e) => {
-    if (e.target.name in pick) pick[e.target.name] = e.target.value;
+    if (e.target.name in pick) {
+      pick[e.target.name] = e.target.value;
+      if (e.target.name === "colour") $("#studioCustomColourRow").classList.remove("is-active");
+    }
     renderStudio();
   });
+  const customColour = $("#studioCustomColour");
+  const setCustomColour = () => {
+    pick.customColour = customColour.value.toUpperCase();
+    pick.colour = "Custom shade (" + pick.customColour + ")";
+    $$("#studioForm input[name='colour']").forEach((radio) => { radio.checked = false; });
+    $("#studioCustomColourRow").classList.add("is-active");
+    $("#studioCustomColourLabel").textContent = pick.customColour;
+    renderStudio();
+  };
+  customColour.addEventListener("input", setCustomColour);
+  customColour.addEventListener("change", setCustomColour);
+
+  // All three Studio WhatsApp paths use the same live choices and notes.
+  const refreshStudioBeforeSharing = () => {
+    ["garment", "neck", "sleeve", "work", "fabric"].forEach((g) => {
+      const chosen = $(`#studioForm input[name="${g}"]:checked`);
+      if (chosen) pick[g] = chosen.value;
+    });
+    const selectedColour = $("#studioForm input[name='colour']:checked");
+    if (selectedColour) {
+      pick.colour = selectedColour.value;
+      $("#studioCustomColourRow").classList.remove("is-active");
+    }
+    renderStudio();
+  };
+  ["#studioSend", "#studioFinishSend", "#studioPhotoWa"].forEach((selector) =>
+    $(selector).addEventListener("click", refreshStudioBeforeSharing)
+  );
   $("#studioForm").addEventListener("submit", (e) => e.preventDefault());
   $("#studioCopy").addEventListener("click", async () => {
     try {
@@ -429,6 +510,7 @@
   const localToday = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
   $("#needBy").min = localToday;
   $("#studioNote").addEventListener("input", renderStudio);
+  $("#needBy").addEventListener("input", renderStudio);
 
   /* ---------- stitching: classes and rates ---------- */
   $("#classes").innerHTML = D.classes.map((c) => `<li><b>${esc(c.name)}<small>${esc(c.level)}</small></b><span>${esc(c.note)}</span></li>`).join("");
